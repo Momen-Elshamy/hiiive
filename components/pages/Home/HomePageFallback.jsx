@@ -145,7 +145,11 @@ export default function HomePageFallback() {
             <span>Origin // Berlin</span>
           </div>
           <div className={styles.aboutGrid}>
-            <h2 className={styles.aboutHeading}>We engineer the future of intelligence.</h2>
+            <h2 className={styles.aboutHeading}>
+              <span>We engineer the</span>
+              <span>future of</span>
+              <span>intelligence.</span>
+            </h2>
             <div className={styles.aboutCopy}>
               <p>
                 HIIIVE is a Berlin-native incubator focused exclusively on AI-first companies. We do not just provide capital; we provide the neural architecture, the elite engineering talent, and the strategic foresight required to dominate the next industrial revolution.

@@ -9,13 +9,13 @@
 .bottomCtaInner {
   width: min(100%, 1260px);
   margin: 0 auto;
-  padding-inline: 1.5rem;
+  padding-inline: 1rem;
 }
 
 .sectionInnerNarrow {
   width: min(100%, 980px);
   margin: 0 auto;
-  padding-inline: 1.5rem;
+  padding-inline: 1rem;
 }
 
 .hero {
@@ -138,6 +138,8 @@
 .faqSection {
   background: #ffffff;
   min-height: 42rem;
+  display: flex;
+  align-items: center;
 }
 
 .about,
@@ -153,14 +155,14 @@
 
 .aboutLabel {
   color: #91918c;
-  width: min(100%, 1100px);
+  width: 100%;
   margin: 0 auto 1.8rem;
 }
 
 .aboutGrid {
   display: grid;
   gap: 2rem;
-  width: min(100%, 1100px);
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -169,25 +171,39 @@
 .lightTitle,
 .contactTitle,
 .bottomCtaTitle {
+  align-self: start;
   text-transform: uppercase;
-  /* letter-spacing: -0.05em; */
-  letter-spacing:-0.96px;
+  letter-spacing: -0.05em;
+  /* letter-spacing:-0.90px; */
   line-height: 0.95;
 }
 
 .aboutHeading {
-  max-width: 100%;
-  font-size: clamp(2.8rem, 5vw, 4.4rem);
+  align-self: center;
+  display: grid;
+  gap: 0.14em;
+  max-width: none;
+  font-size: clamp(2.8rem, 4.9vw, 4.15rem);
+  line-height: 0.92;
+}
+
+.aboutHeading span {
+  display: block;
+  white-space: nowrap;
 }
 
 .aboutCopy {
+  align-self: center;
   display: grid;
-  gap: 1.2rem;
-  max-width: 42rem;
-  color: #62625d;
-  font-size: 1rem;
-  line-height: 1.75;
-  
+  gap: 2rem;
+  max-width: 39rem;
+  color: #5f5f5a;
+  font-size: clamp(1rem, 1vw, 1.04rem);
+  line-height: 1.62;
+}
+
+.aboutCopy p {
+  margin: 0;
 }
 
 .modelSection {
@@ -203,7 +219,7 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
-  width: min(100%, 1100px);
+  width: 100%;
   margin-inline: auto;
 }
 
@@ -212,6 +228,7 @@
 .contactTitle,
 .bottomCtaTitle {
   font-size: clamp(2rem, 4vw, 3.4rem);
+  
 }
 
 .sectionMeta {
@@ -221,6 +238,8 @@
 .modelGrid {
   display: grid;
   gap: 1.1rem;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .modelCard {
@@ -285,7 +304,7 @@
 .portfolioGrid {
   display: grid;
   gap: 1.6rem;
-  width: min(100%, 1100px);
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -343,6 +362,7 @@
 }
 
 .contactSection {
+  min-height: 42rem;
   color: #ffffff;
   background:
     radial-gradient(circle at top center, rgba(80, 90, 255, 0.15), transparent 30%),
@@ -497,7 +517,17 @@
 }
 
 @media (min-width: 820px) {
-  .aboutGrid,
+  .aboutGrid {
+    grid-template-columns: minmax(20rem, 30rem) minmax(24rem, 39rem);
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 4.5rem;
+  }
+
+  .aboutCopy {
+    justify-self: start;
+  }
+
   .contactGrid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: center;
