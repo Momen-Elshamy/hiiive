@@ -1,0 +1,28 @@
+.siteShell {
+  --theme-bg: #ffffff;
+  --theme-bg-subtle: #f4f4f1;
+  --theme-surface: #ffffff;
+  --theme-surface-raised: #f7f7f5;
+  --theme-text: #111111;
+  --theme-text-muted: #6c6c68;
+  --theme-text-tertiary: #90908a;
+  --theme-border: rgba(17, 17, 17, 0.12);
+  --theme-border-strong: rgba(17, 17, 17, 0.28);
+  --theme-border-dashed: rgba(17, 17, 17, 0.18);
+  --theme-accent: #0a0a0a;
+  --theme-accent-on-accent: #ffffff;
+  --theme-accent-muted: rgba(17, 17, 17, 0.08);
+  --theme-grid: transparent;
+  --theme-fill: rgba(17, 17, 17, 0.04);
+  --theme-placeholder-stripe: rgba(17, 17, 17, 0.03);
+  --theme-shadow-offset: rgba(17, 17, 17, 0.08);
+  background: #ffffff;
+  color: #111111;
+}
+
+.siteMain {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}

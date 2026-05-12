@@ -1,0 +1,561 @@
+.page {
+  background: #ffffff;
+  color: #111111;
+  
+}
+
+.sectionInner,
+.heroInner,
+.bottomCtaInner {
+  width: min(100%, 1260px);
+  margin: 0 auto;
+  padding-inline: 1.5rem;
+}
+
+.sectionInnerNarrow {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding-inline: 1.5rem;
+}
+
+.hero {
+  display: grid;
+  place-items: center;
+  min-height: 40rem;
+  padding: 5.5rem 0 7rem;
+  background: #ffffff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  width: min(82rem, 96vw);
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: 0.34;
+  background:
+    radial-gradient(circle at center, rgba(17, 17, 17, 0.16) 0 2px, transparent 2.4px 100%),
+    radial-gradient(circle at center, transparent 0 10.8%, rgba(17, 17, 17, 0.08) 10.8% 11.2%, transparent 11.2% 100%),
+    radial-gradient(circle at center, transparent 0 19.8%, rgba(17, 17, 17, 0.08) 19.8% 20.2%, transparent 20.2% 100%),
+    radial-gradient(circle at center, transparent 0 28.8%, rgba(17, 17, 17, 0.08) 28.8% 29.2%, transparent 29.2% 100%),
+    radial-gradient(circle at center, transparent 0 37.8%, rgba(17, 17, 17, 0.08) 37.8% 38.2%, transparent 38.2% 100%),
+    radial-gradient(circle at center, transparent 0 46.8%, rgba(17, 17, 17, 0.08) 46.8% 47.2%, transparent 47.2% 100%);
+  background-size:
+    24px 24px,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-position: center;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 7vw, 5.75rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.heroSubtitle,
+.sectionMeta,
+.sectionMetaLight,
+.aboutLabel,
+.cardIndex,
+.portfolioCategory,
+.metricLabel,
+.faqMeta,
+.field span,
+.footerText {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroSubtitle {
+  margin-top: 0.9rem;
+  color: #7b7b76;
+}
+
+.heroActions {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.formButton,
+.bottomCtaButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0.9rem 1.8rem;
+  border: 1px solid #111111;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.primaryButton,
+.formButton {
+  background: #111111;
+  color: #ffffff;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #111111;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.formButton:hover,
+.bottomCtaButton:hover {
+  transform: translateY(-1px);
+}
+
+.about,
+.portfolioSection,
+.faqSection {
+  background: #ffffff;
+  min-height: 42rem;
+}
+
+.about,
+.modelSection,
+.metricsSection,
+.portfolioSection,
+.contactSection,
+.faqSection,
+.bottomCta {
+  padding-block: 4.5rem;
+
+}
+
+.aboutLabel {
+  color: #91918c;
+  width: min(100%, 1100px);
+  margin: 0 auto 1.8rem;
+}
+
+.aboutGrid {
+  display: grid;
+  gap: 2rem;
+  width: min(100%, 1100px);
+  margin: 0 auto;
+}
+
+.aboutHeading,
+.darkTitle,
+.lightTitle,
+.contactTitle,
+.bottomCtaTitle {
+  text-transform: uppercase;
+  /* letter-spacing: -0.05em; */
+  letter-spacing:-0.96px;
+  line-height: 0.95;
+}
+
+.aboutHeading {
+  max-width: 100%;
+  font-size: clamp(2.8rem, 5vw, 4.4rem);
+}
+
+.aboutCopy {
+  display: grid;
+  gap: 1.2rem;
+  max-width: 42rem;
+  color: #62625d;
+  font-size: 1rem;
+  line-height: 1.75;
+  
+}
+
+.modelSection {
+  color: #ffffff;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 38%),
+    linear-gradient(90deg, #050505, #161616 55%, #090909);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: min(100%, 1100px);
+  margin-inline: auto;
+}
+
+.darkTitle,
+.lightTitle,
+.contactTitle,
+.bottomCtaTitle {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.sectionMeta {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.modelGrid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.modelCard {
+  min-height: 22rem;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+}
+
+.cardIndex {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.cardTitle {
+  margin-top: 1.4rem;
+  font-size: 1.75rem;
+  letter-spacing: -0.03em;
+}
+
+.cardBody {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.75;
+}
+
+.cardList {
+  margin: 1.2rem 0 0;
+  padding-left: 1rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.9;
+}
+
+.metricsSection {
+  background: #3a3a38;
+  color: #ffffff;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1rem;
+  text-align: center;
+}
+
+.metricValue {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.metricLabel {
+  margin-top: 0.55rem;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.sectionMetaLight {
+  color: #9a9a96;
+}
+
+.portfolioGrid {
+  display: grid;
+  gap: 1.6rem;
+  width: min(100%, 1100px);
+  margin: 0 auto;
+}
+
+.portfolioItem {
+  min-height: 15rem;
+  padding: 1.5rem 1.55rem 1.7rem;
+  background: #fcfcfb;
+  border: 1px solid rgba(17, 17, 17, 0.025);
+}
+
+.portfolioTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.portfolioIcon {
+  display: inline-flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #111111;
+}
+
+.portfolioIcon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.portfolioCategory {
+  color: #989893;
+  text-align: right;
+  line-height: 1;
+}
+
+.portfolioTitle {
+  margin-top: 2.85rem;
+  font-size: clamp(1.9rem, 2.3vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.portfolioBody {
+  max-width: 25rem;
+  margin-top: 1rem;
+  color: #63635f;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.contactSection {
+  color: #ffffff;
+  background:
+    radial-gradient(circle at top center, rgba(80, 90, 255, 0.15), transparent 30%),
+    linear-gradient(90deg, #080808, #131327 55%, #0d1020);
+}
+
+.contactGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.contactBody {
+  margin-top: 1rem;
+  max-width: 34rem;
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.8;
+}
+
+.contactList {
+  display: grid;
+  gap: 1rem;
+  margin: 1.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contactList li {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.contactList strong {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.contactList span {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.contactForm {
+  padding: 1.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.field {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1.1rem;
+}
+
+.field span {
+  color: rgba(255, 255, 255, 0.54);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+  color: #ffffff;
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.formButton,
+.bottomCtaButton {
+  width: 100%;
+  background: linear-gradient(90deg, #18b4ff, #1273ff);
+  border-color: transparent;
+}
+
+.faqHeader {
+  text-align: center;
+}
+
+.faqMeta {
+  margin-top: 0.6rem;
+  color: #9b9b95;
+}
+
+.faqList {
+  margin-top: 2.5rem;
+}
+
+.faqItem {
+  border-bottom: 1px solid rgba(17, 17, 17, 0.12);
+}
+
+.faqItem summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1.45rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::after {
+  content: "+";
+  color: #7c7c77;
+  font-size: 1rem;
+}
+
+.faqItem[open] summary::after {
+  content: "−";
+}
+
+.faqItem p {
+  max-width: 45rem;
+  padding: 0 0 1.4rem;
+  color: #666660;
+  line-height: 1.8;
+}
+
+.bottomCta {
+  background: #050505;
+  color: #ffffff;
+}
+
+.bottomCtaInner {
+  text-align: center;
+}
+
+.bottomCtaBody {
+  max-width: 42rem;
+  margin: 1rem auto 0;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.8;
+}
+
+.bottomCtaButton {
+  width: auto;
+  margin-top: 2rem;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #111111;
+}
+
+@media (min-width: 820px) {
+  .aboutGrid,
+  .contactGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .modelGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metricsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .portfolioGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 819px) {
+  .hero {
+    min-height: 23rem;
+    padding: 3.75rem 0 5rem;
+  }
+
+  .hero::before {
+    top: 50%;
+    width: min(40rem, 118vw);
+    background-size:
+      18px 18px,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%;
+  }
+
+  .about,
+  .modelSection,
+  .metricsSection,
+  .portfolioSection,
+  .contactSection,
+  .faqSection,
+  .bottomCta {
+    padding-block: 3rem;
+  }
+
+  .sectionHeader {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .portfolioItem {
+    min-height: auto;
+    padding: 1.35rem 1.2rem 1.45rem;
+  }
+
+  .portfolioTitle {
+    margin-top: 2.1rem;
+    font-size: 1.8rem;
+  }
+}
