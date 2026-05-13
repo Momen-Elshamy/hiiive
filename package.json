@@ -11,9 +11,9 @@
     "add-plugin": "premast-add-plugin"
   },
   "dependencies": {
-    "@premast/site-core": "file:/Users/raniaatef/Documents/premast /premast-packages/packages/site-core",
-    "@premast/site-plugin-seo": "file:/Users/raniaatef/Documents/premast /premast-packages/packages/site-plugin-seo",
-    "@premast/site-plugin-ui": "file:/Users/raniaatef/Documents/premast /premast-packages/packages/site-plugin-ui",
+    "@premast/site-core": "^1.8.1",
+    "@premast/site-plugin-seo": "^1.8.1",
+    "@premast/site-plugin-ui": "^1.8.1",
     "@blocknote/core": "^0.47.3",
     "@blocknote/mantine": "^0.47.3",
     "@blocknote/react": "^0.47.3",
@@ -26,7 +26,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@premast/create-premast-site": "file:/Users/raniaatef/Documents/premast /premast-packages/packages/create-premast-site",
+    "@premast/create-premast-site": "^1.8.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.1"
   }
