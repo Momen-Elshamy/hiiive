@@ -1,3 +1,4 @@
+
 .headerRoot {
   flex-shrink: 0;
   background: var(--theme-surface);
@@ -70,26 +71,99 @@
   opacity: 0.92;
 }
 
+/* ── Hamburger button (hidden on desktop) ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: 0;
+  padding: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--theme-text);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Animate to × when open */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile dropdown ── */
+.mobileMenu {
+  display: none;
+  flex-direction: column;
+  background: var(--theme-surface);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0.5rem 0 1rem;
+}
+
+.mobileMenu.open {
+  display: flex;
+}
+
+.mobileMenuLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #6f6f69;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.mobileMenuLink:hover {
+  color: var(--theme-text);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.mobileMenuCta {
+  margin: 0.5rem 1.5rem 0;
+  border: 1px solid var(--theme-text);
+  background: var(--theme-text);
+  color: #ffffff !important;
+  padding: 0.85rem 1.15rem;
+  text-align: center;
+  letter-spacing: 0.14em;
+}
+
+.mobileMenuCta:hover {
+  opacity: 0.92;
+  background: var(--theme-text) !important;
+}
+
+/* ── Responsive breakpoint ── */
 @media (max-width: 840px) {
   .headerInner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1rem 0.8rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    padding: 1rem 1.25rem;
   }
 
   .headerNav {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 0.9rem 1.2rem;
+    display: none;
   }
 
-  .headerNavLink {
-    font-size: 0.72rem;
-  }
-
-  .headerNavCta {
-    margin-left: 0;
-    padding: 0.85rem 1.15rem;
+  .hamburger {
+    display: flex;
   }
 }
