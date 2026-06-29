@@ -1,0 +1,28 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+# Runs when Conductor creates a workspace.
+# 1. Keep the repo root checked out at the latest base branch.
+# 2. Bidirectionally sync env files: symlink each workspace .env*.local to the
+#    repo root copy so editing it anywhere (root or any workspace) edits the
+#    same underlying file. Local-only — cloud workspaces have no root path.
+# 3. Install dependencies.
+setup = """
+git -C "$CONDUCTOR_ROOT_PATH" fetch --prune origin && git -C "$CONDUCTOR_ROOT_PATH" pull --ff-only || true
+if [ "$CONDUCTOR_IS_LOCAL" = "1" ]; then
+  for f in .env.local .env.development.local .env.production.local .env.test.local; do
+    if [ -f "$CONDUCTOR_ROOT_PATH/$f" ] && [ ! -L "$CONDUCTOR_WORKSPACE_PATH/$f" ]; then
+      ln -sf "$CONDUCTOR_ROOT_PATH/$f" "$CONDUCTOR_WORKSPACE_PATH/$f"
+    fi
+  done
+fi
+pnpm install
+"""
+
+# Long-running dev server started by the Run button. Each workspace gets its
+# own port from CONDUCTOR_PORT, so multiple workspaces can run side by side.
+run = "pnpm dev --port $CONDUCTOR_PORT"
+
+# Workspaces use separate ports and share only the dev MongoDB, so they can run
+# at the same time.
+run_mode = "concurrent"
