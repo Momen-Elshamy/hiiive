@@ -1,78 +1,10 @@
+// Server module: defines the Puck block config. The render returns the
+// interactive client <Header>. Keeping this file free of "use client" lets
+// Puck's RSC <Render> call render() on the server and drop the non-serializable
+// `puck` prop (renderDropZone, dragRef, …) before reaching the client Header.
+import Header, { defaultNavItems } from "./Header";
 
-"use client";
-import { useState } from "react";
-import styles from "./HeaderBlock.module.css";
-
-const defaultNavItems = [
-   { label: "Mission", href: "#mission" },
-   { label: "Services", href: "#model" },
-   { label: "Portfolio", href: "#portfolio" },
-   { label: "FAQ", href: "#faq" },
-   { label: "Build With Us", href: "#contact" },
-];
-
-export default function Header({ logoText, navItems }) {
-   const items = Array.isArray(navItems) && navItems.length > 0 ? navItems : defaultNavItems;
-   const [menuOpen, setMenuOpen] = useState(false);
-
-   const closeMenu = () => setMenuOpen(false);
-
-   return (
-      <>
-         <header className={styles.headerRoot}>
-            <div className={styles.headerInner}>
-               <a href="/" className={styles.headerLogo}>
-                  {logoText || "HIIIVE"}
-               </a>
-
-               {/* Desktop nav */}
-               <nav className={styles.headerNav} aria-label="Primary">
-                  {items.map((item, i) => (
-                     <a
-                        key={i}
-                        href={item.href || "/"}
-                        className={`${styles.headerNavLink} ${i === items.length - 1 ? styles.headerNavCta : ""}`}
-                     >
-                        {item.label || "Link"}
-                     </a>
-                  ))}
-               </nav>
-
-               {/* Hamburger button (mobile only) */}
-               <button
-                  className={`${styles.hamburger} ${menuOpen ? styles.open : ""}`}
-                  onClick={() => setMenuOpen((prev) => !prev)}
-                  aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  aria-expanded={menuOpen}
-                  aria-controls="mobile-menu"
-               >
-                  <span />
-                  <span />
-                  <span />
-               </button>
-            </div>
-         </header>
-
-         {/* Mobile dropdown */}
-         <nav
-            id="mobile-menu"
-            className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""}`}
-            aria-label="Mobile navigation"
-         >
-            {items.map((item, i) => (
-               <a
-                  key={i}
-                  href={item.href || "/"}
-                  onClick={closeMenu}
-                  className={`${styles.mobileMenuLink} ${i === items.length - 1 ? styles.mobileMenuCta : ""}`}
-               >
-                  {item.label || "Link"}
-               </a>
-            ))}
-         </nav>
-      </>
-   );
-}
+export default Header;
 
 export const HeaderBlock = {
    label: "Header",

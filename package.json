@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.5.1",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
@@ -11,22 +12,22 @@
     "add-plugin": "premast-add-plugin"
   },
   "dependencies": {
-    "@premast/site-core": "^1.8.1",
-    "@premast/site-plugin-seo": "^1.8.1",
-    "@premast/site-plugin-ui": "^1.8.1",
+    "@ant-design/icons": "^5.6.1",
     "@blocknote/core": "^0.47.3",
     "@blocknote/mantine": "^0.47.3",
     "@blocknote/react": "^0.47.3",
+    "@premast/site-core": "^1.9.0",
+    "@premast/site-plugin-seo": "^1.8.1",
+    "@premast/site-plugin-ui": "^1.8.1",
     "@puckeditor/core": "^0.21.1",
     "antd": "^6.3.4",
-    "@ant-design/icons": "^5.6.1",
     "mongoose": "^9.3.3",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@premast/create-premast-site": "^1.8.1",
+    "@premast/create-premast-site": "^1.9.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.1"
   }
