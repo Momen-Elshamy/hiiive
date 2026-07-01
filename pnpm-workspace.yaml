@@ -1,5 +1,12 @@
 packages:
   - "."
+# pnpm 11 replaced `onlyBuiltDependencies` with `allowBuilds`. These native
+# deps need their install/build scripts to run (sharp = image processing,
+# unrs-resolver = the oxc resolver used by Next/ESLint). Without this,
+# pnpm 11's strictDepBuilds fails CI installs with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
 onlyBuiltDependencies:
   - sharp
   - unrs-resolver
