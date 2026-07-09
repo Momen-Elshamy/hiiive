@@ -47,8 +47,7 @@ export default async function SiteLayout({ children }) {
     <div className={`${styles.shell} ${shellStyles.siteShell}`}>
       {headerData ? <Render config={siteConfig.puckConfig} data={headerData} /> : <Header />}
       <main className={`${styles.main} ${shellStyles.siteMain}`}>{children}</main>
-      {/* {footerData ? <Render config={siteConfig.puckConfig} data={footerData} /> : <Footer />} */}
-   <Footer />
+      {footerData ? <Render config={siteConfig.puckConfig} data={footerData} /> : <Footer />}
     </div>
   );
 }

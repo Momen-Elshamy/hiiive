@@ -19,7 +19,7 @@ function parsePuckData(content) {
 
 function extractSeoMetadata(puckData, fallbackTitle) {
   const root = puckData?.root?.props || {};
-  const meta = { title: root.metaTitle || fallbackTitle || "Premast Site" };
+  const meta = { title: root.metaTitle || fallbackTitle || "HIIIVE" };
   if (root.metaDescription) meta.description = root.metaDescription;
   if (root.noIndex === "true" || root.noIndex === true) {
     meta.robots = { index: false, follow: false };

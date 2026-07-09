@@ -19,7 +19,7 @@ function parsePuckData(content) {
 
 function extractSeoMetadata(puckData, fallbackTitle) {
   const root = puckData?.root?.props || {};
-  const meta = { title: root.metaTitle || fallbackTitle || "Premast Site" };
+  const meta = { title: root.metaTitle || fallbackTitle || "HIIIVE" };
   if (root.metaDescription) meta.description = root.metaDescription;
   if (root.noIndex === "true" || root.noIndex === true) {
     meta.robots = { index: false, follow: false };
@@ -44,7 +44,7 @@ function extractSeoMetadata(puckData, fallbackTitle) {
 
 export async function generateMetadata() {
   if (!isCmsDbEnabled()) {
-    return { title: "Premast Site", description: "Built with Premast CMS" };
+    return { title: "HIIIVE", description: "AI-first company builder · Berlin native incubator" };
   }
 
   try {
@@ -58,7 +58,7 @@ export async function generateMetadata() {
       return { title: page.title || "Home" };
     }
   } catch { /* DB offline */ }
-  return { title: "Premast Site", description: "Built with Premast CMS" };
+  return { title: "HIIIVE", description: "AI-first company builder · Berlin native incubator" };
 }
 
 export default async function Home() {
