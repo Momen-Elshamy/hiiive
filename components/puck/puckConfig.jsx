@@ -18,6 +18,7 @@ import {
    HomeFaqBlock,
    HomeBottomCtaBlock,
 } from "../pages/Home/homeBlocks";
+import { ImprintBlock } from "../pages/legal/ImprintBlock";
 
 /**
  * Shared Puck component config.
@@ -48,6 +49,7 @@ export const baseBlocks = {
    HomeContactBlock,
    HomeFaqBlock,
    HomeBottomCtaBlock,
+   ImprintBlock,
 };
 
 export const baseCategories = {
@@ -78,6 +80,11 @@ export const baseCategories = {
    template: {
       title: "Template",
       components: ["ArticleHeroBlock", "ArticleBodyBlock", "ArticleMetaBlock"],
+      defaultExpanded: true,
+   },
+   legal: {
+      title: "Legal",
+      components: ["ImprintBlock"],
       defaultExpanded: true,
    },
    other: {
