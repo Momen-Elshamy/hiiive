@@ -1,0 +1,180 @@
+/* Studio page blocks. Uses global tokens (--hv-*, --font-*) from globals.css. */
+
+.hero,
+.services {
+  background: var(--hv-paper);
+  color: var(--hv-ink);
+  font-family: var(--font-body);
+}
+
+.inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ---- Hero ---------------------------------------------------------------- */
+.hero {
+  padding: 88px 0 56px;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.kickerBar {
+  width: 22px;
+  height: 2px;
+  background: var(--hv-ink);
+}
+
+.kickerLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hv-ink-soft);
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 72px;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  color: var(--hv-ink);
+  max-width: 15ch;
+  margin: 0;
+}
+
+.heroSub {
+  margin: 26px 0 0;
+  max-width: 52ch;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--hv-ink-soft);
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px;
+}
+
+.btnPrimary,
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btnPrimary {
+  background: var(--hv-ink);
+  color: var(--hv-paper);
+}
+
+.btnPrimary svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--hv-ink);
+  border: 1px solid var(--hv-hairline);
+}
+
+.btnSecondary:hover {
+  border-color: var(--hv-ink);
+}
+
+/* ---- Services ------------------------------------------------------------ */
+.services {
+  padding: 24px 0 40px;
+}
+
+.service {
+  scroll-margin-top: 100px;
+  border-top: 1px solid var(--hv-hairline);
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) 1fr;
+  gap: 48px;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.serviceHead {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.serviceNum {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--hv-muted);
+}
+
+.serviceName {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--hv-ink);
+  margin: 0;
+}
+
+.serviceLead {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--hv-ink-soft);
+  max-width: 60ch;
+}
+
+.bullets {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.bullets li {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hv-ink);
+  padding: 7px 12px;
+  border: 1px solid var(--hv-hairline);
+  border-radius: 999px;
+}
+
+@media (max-width: 860px) {
+  .inner {
+    padding: 0 24px;
+  }
+  .heroTitle {
+    font-size: 48px;
+  }
+  .serviceGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

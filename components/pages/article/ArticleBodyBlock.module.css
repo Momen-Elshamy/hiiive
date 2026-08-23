@@ -1,29 +1,31 @@
+/* HIIIVE editorial body — paper background, Inter, comfortable reading width. */
 .articleBodyRoot {
-  border: 1px solid var(--theme-border-strong);
-  background: var(--theme-surface);
-  box-shadow: 4px 4px 0 var(--theme-shadow-offset);
+  background: var(--hv-paper);
+  font-family: var(--font-body);
 }
 
 .articleBodyContent {
-  padding: 1rem 0.75rem;
-  color: var(--theme-text-muted);
-  line-height: 1.8;
-  font-size: 0.85rem;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 8px 40px 72px;
+  color: var(--hv-ink-soft);
+  line-height: 1.7;
+  font-size: 17px;
 }
 
 .articleBodyContent h1,
 .articleBodyContent h2,
 .articleBodyContent h3 {
-  margin: 1.2em 0 0.4em;
-  color: var(--theme-text);
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
+  margin: 1.4em 0 0.5em;
+  color: var(--hv-ink);
+  font-family: var(--font-heading);
+  font-weight: 600;
   line-height: 1.2;
 }
 
-.articleBodyContent h1 { font-size: 1.4rem; }
-.articleBodyContent h2 { font-size: 1.1rem; }
-.articleBodyContent h3 { font-size: 0.95rem; }
+.articleBodyContent h1 { font-size: 1.7rem; }
+.articleBodyContent h2 { font-size: 1.35rem; }
+.articleBodyContent h3 { font-size: 1.1rem; }
 
 .articleBodyContent p {
   margin: 0 0 0.75em;
@@ -40,20 +42,20 @@
 }
 
 .articleBodyContent a {
-  color: var(--theme-accent);
+  color: var(--hv-ink);
   text-decoration: underline;
 }
 
 .articleBodyContent strong {
-  color: var(--theme-text);
+  color: var(--hv-ink);
   font-weight: 700;
 }
 
 .articleBodyContent blockquote {
   margin: 0.75em 0;
-  padding: 0.5em 0.75em;
-  border-left: 3px solid var(--theme-border-strong);
-  color: var(--theme-text);
+  padding: 0.5em 0.9em;
+  border-left: 3px solid var(--hv-accent);
+  color: var(--hv-ink);
   font-style: italic;
 }
 

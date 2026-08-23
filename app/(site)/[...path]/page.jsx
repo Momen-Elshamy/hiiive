@@ -1,6 +1,8 @@
 import { Render } from "@puckeditor/core/rsc";
 import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
+import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
@@ -17,32 +19,20 @@ function parsePuckData(content) {
   return null;
 }
 
-function extractSeoMetadata(puckData, fallbackTitle) {
+function extractSeoMetadata(puckData, fallbackTitle, { path = "", locale = DEFAULT_LOCALE } = {}) {
   const root = puckData?.root?.props || {};
-  const meta = { title: root.metaTitle || fallbackTitle || "HIIIVE" };
-  if (root.metaDescription) meta.description = root.metaDescription;
-  if (root.noIndex === "true" || root.noIndex === true) {
-    meta.robots = { index: false, follow: false };
-  }
-  if (root.canonicalUrl) meta.alternates = { canonical: root.canonicalUrl };
-
-  const openGraph = {};
-  if (root.metaTitle) openGraph.title = root.metaTitle;
-  if (root.metaDescription) openGraph.description = root.metaDescription;
-  if (root.ogImage) openGraph.images = [{ url: root.ogImage }];
-  if (root.ogType) openGraph.type = root.ogType;
-  if (Object.keys(openGraph).length > 0) meta.openGraph = openGraph;
-
-  if (root.twitterCard) {
-    meta.twitter = { card: root.twitterCard };
-    if (root.metaTitle) meta.twitter.title = root.metaTitle;
-    if (root.metaDescription) meta.twitter.description = root.metaDescription;
-    if (root.ogImage) meta.twitter.images = [root.ogImage];
-  }
-  return meta;
+  return buildPageMetadata({ root, path, locale, fallbackTitle });
 }
 
-/** Resolve a path to either a ContentItem or a standalone Page. */
+/** Split a leading locale segment (e.g. ["de","about"] -> {locale:"de", rest:["about"]}). */
+function splitLocale(pathSegments) {
+  if (pathSegments.length > 0 && isLocale(pathSegments[0])) {
+    return { localePrefix: pathSegments[0].toLowerCase(), rest: pathSegments.slice(1) };
+  }
+  return { localePrefix: null, rest: pathSegments };
+}
+
+/** Resolve a path to a ContentItem, a standalone Page, or the localized home. */
 async function resolveContent(pathSegments) {
   if (!isCmsDbEnabled()) return null;
 
@@ -51,17 +41,25 @@ async function resolveContent(pathSegments) {
   const models = await siteConfig.getModels();
   const { ContentType, ContentItem, Page } = models;
 
-  for (let i = pathSegments.length - 1; i >= 1; i--) {
-    const prefix = "/" + pathSegments.slice(0, i).join("/");
-    const slug = pathSegments[i];
+  const locale = await resolveLocale(models);
+  const { rest } = splitLocale(pathSegments);
+
+  // A bare locale prefix (e.g. /de) maps to the localized home page.
+  if (rest.length === 0) {
+    return findLocalized(Page, { slug: "home", published: true }, locale);
+  }
+
+  for (let i = rest.length - 1; i >= 1; i--) {
+    const prefix = "/" + rest.slice(0, i).join("/");
+    const slug = rest[i];
     const ct = await ContentType.findOne({ urlPrefix: prefix }).lean();
     if (ct) {
-      const item = await ContentItem.findOne({ contentType: ct._id, slug, published: true }).lean();
-      return item || null;
+      return findLocalized(ContentItem, { contentType: ct._id, slug, published: true }, locale);
     }
   }
-  if (pathSegments.length === 1) {
-    return Page.findOne({ slug: pathSegments[0], published: true }).lean();
+  if (rest.length >= 1) {
+    // Pages can use a nested slug matching the full path, e.g. "studio/digital-presence".
+    return findLocalized(Page, { slug: rest.join("/"), published: true }, locale);
   }
   return null;
 }
@@ -74,18 +72,20 @@ export async function generateMetadata({ params }) {
   try {
     const doc = await resolveContent(path);
     if (doc) {
+      const { localePrefix, rest } = splitLocale(path);
+      const urlInfo = { path: rest.join("/"), locale: localePrefix || DEFAULT_LOCALE };
       const puckData = parsePuckData(doc.content);
-      if (puckData) return extractSeoMetadata(puckData, doc.title);
+      if (puckData) return extractSeoMetadata(puckData, doc.title, urlInfo);
       return { title: doc.title };
     }
   } catch { /* DB offline */ }
   return {};
 }
 
-export default async function ContentCatchAllPage({ params }) {
+export default async function ContentCatchAllPage({ params, searchParams }) {
   const { path } = await params;
+  const { filter } = (await searchParams) ?? {};
 
-  // path is an array of URL segments, e.g. ["blog", "my-article"]
   if (!path || path.length === 0) return notFound();
   if (!isCmsDbEnabled()) return notFound();
 
@@ -95,26 +95,38 @@ export default async function ContentCatchAllPage({ params }) {
     const models = await siteConfig.getModels();
     const { ContentType, ContentItem, Page } = models;
 
-    // --- Try content type match first ---
-    // Build candidate prefixes from longest to shortest
-    // e.g. path=["products","featured","item-1"] tries:
-    //   /products/featured  (slug = "item-1")
-    //   /products           (slug = "featured")
-    for (let i = path.length - 1; i >= 1; i--) {
-      const prefix = "/" + path.slice(0, i).join("/");
-      const slug = path[i];
+    const locale = await resolveLocale(models);
+    const { localePrefix, rest } = splitLocale(path);
 
-      const contentType = await ContentType.findOne({
-        urlPrefix: prefix,
-      }).lean();
+    // Bare locale prefix (/de) -> localized home page.
+    if (localePrefix && rest.length === 0) {
+      const home = await findLocalized(Page, { slug: "home", published: true }, locale);
+      if (!home) return notFound();
+      const puckData = parsePuckData(home.content) ?? { root: {}, content: [] };
+      const finalData = await siteConfig.runBeforePageRender(puckData, home);
+      const jsonLd = puckData.root?.props?.structuredData;
+      return (
+        <>
+          {jsonLd && (
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
+          )}
+          <Render config={siteConfig.puckConfig} data={finalData} />
+        </>
+      );
+    }
 
+    // --- Try content type match first (on the locale-stripped path) ---
+    for (let i = rest.length - 1; i >= 1; i--) {
+      const prefix = "/" + rest.slice(0, i).join("/");
+      const slug = rest[i];
+
+      const contentType = await ContentType.findOne({ urlPrefix: prefix }).lean();
       if (contentType) {
-        const item = await ContentItem.findOne({
-          contentType: contentType._id,
-          slug,
-          published: true,
-        }).lean();
-
+        const item = await findLocalized(
+          ContentItem,
+          { contentType: contentType._id, slug, published: true },
+          locale,
+        );
         if (!item) return notFound();
 
         const puckData = parsePuckData(item.content) ?? { root: {}, content: [] };
@@ -131,15 +143,12 @@ export default async function ContentCatchAllPage({ params }) {
       }
     }
 
-    // --- Fallback: standalone Page by slug ---
-    // Only for single-segment paths like /about, /contact
-    if (path.length === 1) {
-      const page = await Page.findOne({
-        slug: path[0],
-        published: true,
-      }).lean();
-
+    // --- Fallback: standalone Page by slug (supports nested slugs like "studio/digital-presence") ---
+    if (rest.length >= 1) {
+      const page = await findLocalized(Page, { slug: rest.join("/"), published: true }, locale);
       if (page) {
+        // Expose the ?filter= query to beforePageRender hooks (work filters).
+        if (filter) page.__filter = String(filter);
         const puckData = parsePuckData(page.content) ?? { root: {}, content: [] };
         const finalData = await siteConfig.runBeforePageRender(puckData, page);
         const jsonLd = puckData.root?.props?.structuredData;

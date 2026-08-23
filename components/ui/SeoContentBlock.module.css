@@ -1,0 +1,105 @@
+/* SEO content section — HIIIVE editorial styling on paper. */
+
+.seoSection {
+  background: var(--hv-paper);
+  color: var(--hv-ink);
+  font-family: var(--font-body);
+  padding: 88px 0;
+  border-top: 1px solid var(--hv-hairline);
+}
+
+.inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.head {
+  margin-bottom: 32px;
+}
+
+.kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hv-ink-soft);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 40px;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  color: var(--hv-ink);
+  margin: 12px 0 0;
+}
+
+.body {
+  max-width: 780px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--hv-ink-soft);
+}
+
+.body h2,
+.body h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--hv-ink);
+  line-height: 1.25;
+  margin: 1.6em 0 0.5em;
+}
+
+.body h2 { font-size: 1.35rem; }
+.body h3 { font-size: 1.1rem; }
+
+.body h2:first-child,
+.body h3:first-child,
+.body p:first-child {
+  margin-top: 0;
+}
+
+.body p {
+  margin: 0 0 0.9em;
+}
+
+.body ul,
+.body ol {
+  margin: 0 0 0.9em;
+  padding-left: 1.4em;
+}
+
+.body li {
+  margin-bottom: 0.35em;
+}
+
+.body a {
+  color: var(--hv-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.body strong {
+  color: var(--hv-ink);
+  font-weight: 700;
+}
+
+.body blockquote {
+  margin: 1em 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--hv-accent);
+  color: var(--hv-ink);
+}
+
+@media (max-width: 900px) {
+  .inner {
+    padding: 0 24px;
+  }
+  .title {
+    font-size: 32px;
+  }
+}

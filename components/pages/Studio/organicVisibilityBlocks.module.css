@@ -1,0 +1,121 @@
+/* Studio / Organic Visibility landing page. Tokens from globals.css. */
+
+.inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* shared */
+.kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.kickerBar { width: 22px; height: 2px; background: var(--hv-ink); }
+.kickerBarAccent { background: var(--hv-accent); }
+.kickerLabel { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hv-ink-soft); }
+.kickerLabelRev { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hv-accent); }
+.sectionTitle { font-family: var(--font-display); font-weight: 500; text-transform: uppercase; font-size: 46px; line-height: 0.96; letter-spacing: -0.01em; color: var(--hv-ink); margin: 12px 0 0; }
+.btnPrimary, .btnGhost { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; line-height: 1; }
+.btnPrimary { background: var(--hv-ink); color: var(--hv-paper); }
+.btnGhost { background: transparent; color: var(--hv-ink); border: 1px solid var(--hv-hairline); }
+.btnGhost:hover { border-color: var(--hv-ink); }
+.btnPrimary svg, .btnGhost svg { width: 16px; height: 16px; }
+
+/* ---- 1. Hero + scorecard -------------------------------------------------- */
+.hero { background: var(--hv-paper); color: var(--hv-ink); font-family: var(--font-body); padding: 40px 0 64px; }
+.crumbs { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--hv-muted); margin-bottom: 40px; }
+.crumbSep { color: var(--hv-hairline); }
+.crumbCurrent { color: var(--hv-ink-soft); font-weight: 600; }
+.heroGrid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+.heroHeadline { font-family: var(--font-display); font-weight: 500; text-transform: uppercase; font-size: 68px; line-height: 0.92; letter-spacing: -0.01em; color: var(--hv-ink); margin: 0; }
+.heroSub { margin: 24px 0 0; max-width: 48ch; font-size: 17px; line-height: 1.55; color: var(--hv-ink-soft); }
+.ctaRow { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+
+.scorecard, .engines {
+  background: var(--hv-ink);
+  border: 1px solid var(--hv-hairline-rev);
+  border-radius: 14px;
+  padding: 24px;
+  font-family: var(--font-body);
+  box-shadow: 0 24px 60px -20px rgba(19, 19, 19, 0.4);
+}
+
+.cardHead { display: flex; align-items: center; justify-content: space-between; }
+.cardKicker { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hv-accent); }
+.cardDomain { font-size: 12px; color: var(--hv-muted-rev); }
+.score { font-family: var(--font-display); font-weight: 500; font-size: 64px; line-height: 1; color: var(--hv-ink-rev); margin-top: 20px; }
+.scoreLabel { font-size: 13px; color: var(--hv-muted-rev); margin-top: 8px; }
+
+.barRows { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+.barRowsLoose { gap: 18px; margin-top: 26px; }
+.barRowTop { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+.barLabel { font-size: 13px; font-weight: 500; color: var(--hv-ink-rev); }
+.barValue { font-size: 13px; font-weight: 700; color: var(--hv-accent); }
+.barValueMuted { font-size: 12px; color: var(--hv-muted-rev); }
+.barTrack { height: 5px; border-radius: 3px; background: #33373c; overflow: hidden; }
+.barFill { height: 100%; border-radius: 3px; background: var(--hv-accent); }
+
+.cardRule { height: 1px; background: var(--hv-hairline-rev); margin: 18px 0 14px; }
+.cardNote { font-size: 12px; line-height: 1.5; color: var(--hv-muted-rev); }
+
+/* ---- 2. Problem ----------------------------------------------------------- */
+.problem { background: var(--hv-paper); color: var(--hv-ink); font-family: var(--font-body); padding: 84px 0; }
+.problemHead { font-family: var(--font-heading); font-weight: 600; font-size: 32px; line-height: 1.2; color: var(--hv-ink); margin: 0; max-width: 34ch; }
+.problemSub { margin: 16px 0 0; font-size: 16px; color: var(--hv-ink-soft); max-width: 62ch; }
+.problemGrid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; margin-top: 44px; align-items: start; }
+
+.mockup { background: var(--hv-white); border: 1px solid var(--hv-hairline); border-radius: 12px; padding: 24px; }
+.mockupLabel { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hv-muted); }
+.mockupQ { margin: 14px 0 0; font-family: var(--font-heading); font-weight: 600; font-size: 19px; line-height: 1.35; color: var(--hv-ink); }
+.sourcesLabel { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hv-muted); margin: 22px 0 10px; }
+.sources { display: flex; flex-direction: column; gap: 8px; }
+.source { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 6px; background: #f4f4f1; }
+.sourceDot { width: 7px; height: 7px; border-radius: 50%; background: var(--hv-muted); flex-shrink: 0; }
+.sourceDomain { flex: 1; font-size: 13px; font-weight: 500; color: var(--hv-ink-soft); }
+.sourcePill { font-size: 11px; font-weight: 600; color: var(--hv-muted); }
+.sourceMiss { background: var(--hv-alert-tint, #f6eae8); }
+.sourceMiss .sourceDot { background: var(--hv-alert, #b4342a); }
+.sourceMiss .sourceDomain { color: var(--hv-alert, #b4342a); font-weight: 700; }
+.sourceMiss .sourcePill { color: var(--hv-alert, #b4342a); }
+
+.points { display: flex; flex-direction: column; }
+.point { display: flex; gap: 16px; padding: 18px 0; border-top: 1px solid var(--hv-hairline); }
+.point:first-child { border-top: 0; padding-top: 4px; }
+.pointNum { font-family: var(--font-display); font-size: 16px; color: var(--hv-muted); min-width: 26px; }
+.pointTitle { display: block; font-family: var(--font-heading); font-weight: 600; font-size: 17px; color: var(--hv-ink); }
+.pointDesc { margin: 5px 0 0; font-size: 14px; line-height: 1.5; color: var(--hv-ink-soft); max-width: 46ch; }
+
+/* ---- 3. System (dark) ------------------------------------------------------ */
+.system { background: var(--hv-ink); color: var(--hv-ink-rev); font-family: var(--font-body); padding: 88px 0; }
+.systemGrid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: start; }
+.systemTitle { font-family: var(--font-display); font-weight: 500; text-transform: uppercase; font-size: 46px; line-height: 0.96; color: var(--hv-ink-rev); margin: 0; }
+.systemLead { margin: 20px 0 0; font-size: 16px; line-height: 1.55; color: var(--hv-muted-rev); max-width: 48ch; }
+.parts { display: flex; flex-direction: column; margin-top: 30px; }
+.part { display: flex; gap: 16px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--hv-hairline-rev); }
+.partNum { font-family: var(--font-display); font-size: 16px; color: var(--hv-accent); min-width: 26px; }
+.partTitle { display: block; font-weight: 600; font-size: 16px; color: var(--hv-ink-rev); }
+.partDesc { display: block; font-size: 13px; color: var(--hv-muted-rev); margin-top: 3px; }
+.engines { background: var(--hv-cell-rev, #232628); box-shadow: none; }
+
+/* ---- 4. Phases ------------------------------------------------------------- */
+.phasesWrap { background: var(--hv-paper); color: var(--hv-ink); font-family: var(--font-body); padding: 88px 0; }
+.phasesHead { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
+.phasesIntro { font-size: 16px; line-height: 1.55; color: var(--hv-ink-soft); max-width: 52ch; justify-self: end; margin: 0; }
+.phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px; }
+.phase { background: var(--hv-white); border: 1px solid var(--hv-hairline); border-radius: 12px; padding: 22px; }
+.phaseTop { display: flex; align-items: center; justify-content: space-between; }
+.phaseNum { font-family: var(--font-display); font-size: 15px; color: var(--hv-muted); }
+.phasePill { font-size: 11px; font-weight: 600; color: var(--hv-ink-soft); border: 1px solid var(--hv-hairline); border-radius: 999px; padding: 4px 10px; }
+.phaseTitle { display: block; font-family: var(--font-heading); font-weight: 600; font-size: 19px; color: var(--hv-ink); margin-top: 14px; }
+.phaseList { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.phaseList li { display: flex; gap: 9px; font-size: 13px; line-height: 1.45; color: var(--hv-ink-soft); }
+.phaseCheck { flex-shrink: 0; color: var(--hv-ink); margin-top: 1px; }
+.phaseCheck svg { width: 13px; height: 13px; }
+.phasesNote { margin: 28px 0 0; font-size: 14px; color: var(--hv-muted); }
+.loopStrip { background: var(--hv-ink); color: var(--hv-accent); border-radius: 8px; padding: 16px; margin-top: 16px; text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+
+@media (max-width: 900px) {
+  .inner { padding: 0 24px; }
+  .heroGrid, .problemGrid, .systemGrid, .phasesHead { grid-template-columns: 1fr; }
+  .phases { grid-template-columns: 1fr; }
+  .heroHeadline { font-size: 44px; }
+  .phasesIntro { justify-self: start; }
+}
