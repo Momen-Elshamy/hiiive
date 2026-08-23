@@ -3,6 +3,8 @@ import { siteConfig } from "@/site.config";
 import Header from "@/components/layout/HeaderBlock";
 import Footer from "@/components/layout/FooterBlock";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
+import { resolveLocale, findLocalized } from "@/lib/i18n";
+import { siteJsonLd } from "@/lib/seo";
 import styles from "../layout.module.css";
 import shellStyles from "./site-shell.module.css";
 
@@ -32,9 +34,10 @@ export default async function SiteLayout({ children }) {
       await connectDB();
       const models = await siteConfig.getModels();
       const { Global } = models;
+      const locale = await resolveLocale(models);
       const [headerDoc, footerDoc] = await Promise.all([
-        Global.findOne({ key: "header", published: true }).lean(),
-        Global.findOne({ key: "footer", published: true }).lean(),
+        findLocalized(Global, { key: "header", published: true }, locale),
+        findLocalized(Global, { key: "footer", published: true }, locale),
       ]);
       headerData = parsePuckData(headerDoc?.content);
       footerData = parsePuckData(footerDoc?.content);
@@ -45,6 +48,10 @@ export default async function SiteLayout({ children }) {
 
   return (
     <div className={`${styles.shell} ${shellStyles.siteShell}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()) }}
+      />
       {headerData ? <Render config={siteConfig.puckConfig} data={headerData} /> : <Header />}
       <main className={`${styles.main} ${shellStyles.siteMain}`}>{children}</main>
       {footerData ? <Render config={siteConfig.puckConfig} data={footerData} /> : <Footer />}

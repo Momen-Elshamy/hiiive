@@ -16,18 +16,21 @@
     "@blocknote/core": "^0.47.3",
     "@blocknote/mantine": "^0.47.3",
     "@blocknote/react": "^0.47.3",
-    "@premast/site-core": "^1.9.0",
-    "@premast/site-plugin-seo": "^1.8.1",
-    "@premast/site-plugin-ui": "^1.8.1",
+    "@premast/site-core": "^1.10.0",
+    "@premast/site-plugin-i18n": "^1.10.0",
+    "@premast/site-plugin-seo": "^1.10.0",
+    "@premast/site-plugin-symbols": "1.10.0",
+    "@premast/site-plugin-ui": "^1.10.0",
     "@puckeditor/core": "^0.21.1",
     "antd": "^6.3.4",
     "mongoose": "^9.3.3",
+    "motion": "^13.1.0",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@premast/create-premast-site": "^1.9.0",
+    "@premast/create-premast-site": "^1.10.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.1"
   }

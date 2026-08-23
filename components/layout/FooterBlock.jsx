@@ -1,35 +1,82 @@
 import styles from "./FooterBlock.module.css";
 
-const defaultFooterNavItems = [
-   { label: "Mission", href: "#mission" },
-   { label: "Services", href: "#model" },
-   { label: "Portfolio", href: "#portfolio" },
-   { label: "FAQ", href: "#faq" },
-   { label: "Privacy", href: "/" },
+const defaultColumns = [
+   {
+      heading: "Studio",
+      links: [
+         { label: "AI software", href: "/studio#ai-software" },
+         { label: "MVP build", href: "/studio/mvp-build" },
+         { label: "Organic visibility", href: "/studio/organic-visibility" },
+         { label: "Digital presence", href: "/studio/digital-presence" },
+         { label: "AI consulting", href: "/studio#consulting" },
+      ],
+   },
+   {
+      heading: "Lab",
+      links: [
+         { label: "Spoky", href: "/#approach" },
+         { label: "Komplyo", href: "/#approach" },
+      ],
+   },
+   {
+      heading: "Company",
+      links: [
+         { label: "Work", href: "/work" },
+         { label: "Cost estimator", href: "/tools/mvp-cost-estimator" },
+         { label: "Contact", href: "mailto:hello@hiiive.ai" },
+         { label: "Imprint", href: "/imprint" },
+      ],
+   },
 ];
 
-export default function Footer({ brandName, tagLine, copyrightHolder, navItems }) {
-   const items = Array.isArray(navItems) && navItems.length > 0 ? navItems : defaultFooterNavItems;
+const defaultLegal = [
+   { label: "Imprint", href: "/imprint" },
+   { label: "LinkedIn", href: "https://www.linkedin.com/company/hiiive" },
+   { label: "X", href: "/" },
+];
+
+export default function Footer({ brandName, tagLine, copyright, columns, legal }) {
+   const cols = Array.isArray(columns) && columns.length > 0 ? columns : defaultColumns;
+   const legalLinks = Array.isArray(legal) && legal.length > 0 ? legal : defaultLegal;
 
    return (
       <footer className={styles.footerRoot}>
          <div className={styles.footerInner}>
-            <div className={styles.footerBrand}>
-               <p className={styles.footerLogo}>{brandName || "HIIIVE"}</p>
-               <p className={styles.footerTag}>{tagLine || "Berlin native AI-first company builder."}</p>
-               <p className={styles.footerCopy}>
-                  © {new Date().getFullYear()} {copyrightHolder || "HIIIVE. Berlin Native."}
-               </p>
-            </div>
-            {items.length > 0 ? (
-               <nav className={styles.footerNav} aria-label="Footer">
-                  {items.map((item, index) => (
-                  <a key={index} href={item.href || "/"} className={styles.footerNavLink}>
-                     {item.label || "Link"}
-                  </a>
+            <div className={styles.footerTop}>
+               <div className={styles.footerBrand}>
+                  <p className={styles.footerLogo}>{brandName || "HIIIVE"}</p>
+                  <p className={styles.footerTag}>
+                     {tagLine || "AI-native company builder. Studio for services, Lab for products."}
+                  </p>
+               </div>
+               <div className={styles.footerCols}>
+                  {cols.map((col, i) => (
+                     <div key={i} className={styles.footerCol}>
+                        <p className={styles.footerColHead}>{col.heading}</p>
+                        {(col.links || []).map((link, j) => (
+                           <a key={j} href={link.href || "/"} className={styles.footerColLink}>
+                              {link.label || "Link"}
+                           </a>
+                        ))}
+                     </div>
                   ))}
-               </nav>
-            ) : null}
+               </div>
+            </div>
+
+            <div className={styles.footerRule} />
+
+            <div className={styles.footerBottom}>
+               <p className={styles.footerCopy}>
+                  {copyright || `© ${new Date().getFullYear()} Hiiive.ai — All rights reserved.`}
+               </p>
+               <div className={styles.footerLegal}>
+                  {legalLinks.map((link, i) => (
+                     <a key={i} href={link.href || "/"} className={styles.footerLegalLink}>
+                        {link.label || "Link"}
+                     </a>
+                  ))}
+               </div>
+            </div>
          </div>
       </footer>
    );
@@ -39,30 +86,49 @@ export const FooterBlock = {
    label: "Footer",
    fields: {
       brandName: { type: "text" },
-      tagLine: { type: "text" },
-      copyrightHolder: { type: "text" },
-      navItems: {
+      tagLine: { type: "textarea" },
+      copyright: { type: "text" },
+      columns: {
          type: "array",
+         getItemSummary: (item) => item.heading || "Column",
+         arrayFields: {
+            heading: { type: "text" },
+            links: {
+               type: "array",
+               getItemSummary: (item) => item.label || "Link",
+               arrayFields: {
+                  label: { type: "text" },
+                  href: { type: "text" },
+               },
+               defaultItemProps: { label: "Link", href: "/" },
+            },
+         },
+         defaultItemProps: { heading: "Column", links: [{ label: "Link", href: "/" }] },
+      },
+      legal: {
+         type: "array",
+         getItemSummary: (item) => item.label || "Link",
          arrayFields: {
             label: { type: "text" },
             href: { type: "text" },
          },
          defaultItemProps: { label: "Link", href: "/" },
-         getItemSummary: (item) => item.label || "Link",
       },
    },
    defaultProps: {
       brandName: "HIIIVE",
-      tagLine: "Berlin native AI-first company builder.",
-      copyrightHolder: "HIIIVE. Berlin Native.",
-      navItems: defaultFooterNavItems,
+      tagLine: "AI-native company builder. Studio for services, Lab for products.",
+      copyright: "",
+      columns: defaultColumns,
+      legal: defaultLegal,
    },
-   render: ({ brandName, tagLine, copyrightHolder, navItems }) => (
+   render: ({ brandName, tagLine, copyright, columns, legal }) => (
       <Footer
          brandName={brandName}
          tagLine={tagLine}
-         copyrightHolder={copyrightHolder}
-         navItems={navItems}
+         copyright={copyright}
+         columns={columns}
+         legal={legal}
       />
    ),
 };

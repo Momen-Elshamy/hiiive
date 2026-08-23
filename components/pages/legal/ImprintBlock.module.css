@@ -1,7 +1,10 @@
+/* Imprint / Impressum — HIIIVE design system (paper, ink, Inter/Big Shoulders). */
+
 .imprint {
-  background: var(--theme-bg);
-  color: var(--theme-text);
-  padding: clamp(4rem, 10vw, 8rem) 1.5rem;
+  background: var(--hv-paper);
+  color: var(--hv-ink);
+  font-family: var(--font-body);
+  padding: 72px 24px 96px;
 }
 
 .inner {
@@ -10,28 +13,34 @@
 }
 
 .title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+  color: var(--hv-ink);
   margin: 0 0 1rem;
 }
 
 .intro {
-  color: var(--theme-text-muted);
+  color: var(--hv-ink-soft);
   font-size: 0.95rem;
   margin: 0 0 2.5rem;
 }
 
 .card {
-  background: var(--theme-surface);
-  border: 1px solid var(--theme-border);
+  background: var(--hv-white);
+  border: 1px solid var(--hv-hairline);
   border-radius: 12px;
   padding: clamp(1.5rem, 4vw, 2.25rem);
 }
 
 .company {
+  font-family: var(--font-heading);
   font-size: 1.125rem;
   font-weight: 600;
+  color: var(--hv-ink);
   margin: 0 0 0.5rem;
 }
 
@@ -40,14 +49,14 @@
   flex-direction: column;
   gap: 0.15rem;
   font-style: normal;
-  color: var(--theme-text-muted);
+  color: var(--hv-ink-soft);
   margin: 0 0 1.5rem;
 }
 
 .rows {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--theme-border);
+  border-top: 1px solid var(--hv-hairline);
 }
 
 .row {
@@ -55,18 +64,19 @@
   grid-template-columns: 180px 1fr;
   gap: 1rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--theme-border);
+  border-bottom: 1px solid var(--hv-hairline);
 }
 
 .rowLabel {
-  color: var(--theme-text-tertiary);
-  font-size: 0.8rem;
+  color: var(--hv-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .rowValue {
-  color: var(--theme-text);
+  color: var(--hv-ink);
   font-size: 0.95rem;
 }
 
@@ -75,13 +85,15 @@
 }
 
 .heading {
+  font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 600;
+  color: var(--hv-ink);
   margin: 0 0 0.6rem;
 }
 
 .text {
-  color: var(--theme-text-muted);
+  color: var(--hv-ink-soft);
   line-height: 1.7;
   margin: 0;
 }

@@ -9,10 +9,12 @@
 import { baseBlocks, baseCategories } from "@/components/puck/puckConfig";
 import { seoPlugin } from "@premast/site-plugin-seo";
 import { uiPlugin } from "@premast/site-plugin-ui";
+import { i18nPlugin } from "@premast/site-plugin-i18n";
+import { symbolsPlugin } from "@premast/site-plugin-symbols";
 import { SeoScoreField, SearchIndexingField } from "@premast/site-plugin-seo/editor";
 import { buildPuckConfig } from "@premast/site-core/puck";
 
-const plugins = [seoPlugin(), uiPlugin()];
+const plugins = [seoPlugin(), uiPlugin(), i18nPlugin({ locales: ["en", "de"], defaultLocale: "en" }), symbolsPlugin()];
 
 // Merge root fields from all plugins
 const rootFields = {};

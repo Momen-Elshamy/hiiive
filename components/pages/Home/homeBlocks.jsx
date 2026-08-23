@@ -1,56 +1,27 @@
-// Server-safe Puck blocks converted from the static HomePageFallback design.
-// No "use client" here — every section is static markup, so Puck's RSC <Render>
-// can call these render() functions on the server. They reuse the original
-// HomePageFallback.module.css so the rendered output is pixel-identical.
+// Server-safe Puck blocks mirroring the static HomePageFallback design.
+// No "use client" — every section is static markup, so Puck's RSC <Render>
+// can call these render() functions on the server. They reuse the same
+// HomePageFallback.module.css so CMS-edited pages match the fallback exactly.
 import styles from "./HomePageFallback.module.css";
+import { Reveal, Stagger, StaggerItem } from "./motion";
 
-/* ------------------------------------------------------------------ */
-/* Shared icon set for the Portfolio block                             */
-/* ------------------------------------------------------------------ */
-const portfolioIcons = {
-  network: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="4.5" r="1.7" />
-      <circle cx="19" cy="8.3" r="1.7" />
-      <circle cx="19" cy="15.7" r="1.7" />
-      <circle cx="12" cy="19.5" r="1.7" />
-      <circle cx="5" cy="15.7" r="1.7" />
-      <circle cx="5" cy="8.3" r="1.7" />
-      <circle cx="12" cy="12" r="1.7" />
-      <path d="M12 6.2v4.1M13.5 13l4.1 2.1M10.5 13l-4.1 2.1M10.5 11L6.4 8.9M13.5 11l4.1-2.1M12 13.7v4.1" />
+/* ---------- shared bits ---------------------------------------------------- */
+function ArrowRight() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
     </svg>
-  ),
-  cognitive: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3.5a7 7 0 0 0-7 7c0 2.7 1.5 4.3 2.7 5.5.9.9 1.3 1.5 1.3 2.5v1h6v-1c0-1 .4-1.6 1.3-2.5 1.2-1.2 2.7-2.8 2.7-5.5a7 7 0 0 0-7-7Z" />
-      <path d="M10 20.5h4M11 8.5h2v4h-2zM8.2 10.5H10M14 10.5h1.8" />
-    </svg>
-  ),
-  finance: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 19.5h16M6.5 16V11M10.5 16V8M14.5 16v-3M18.5 16V6" />
-      <path d="m6 9.5 3.7-3.1 3.1 2.2 5.2-4.6" />
-    </svg>
-  ),
-  security: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3.5 18.5 6v5.7c0 4.3-2.8 7-6.5 8.8-3.7-1.8-6.5-4.5-6.5-8.8V6z" />
-    </svg>
-  ),
-  bio: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M8 4.5c2.2 0 2.8 2.5 4 3.7 1.2 1.2 1.8 3.1 1.8 3.8 0 .7-.6 2.6-1.8 3.8-1.2 1.2-1.8 3.7-4 3.7" />
-      <path d="M16 4.5c-2.2 0-2.8 2.5-4 3.7-1.2 1.2-1.8 3.1-1.8 3.8 0 .7.6 2.6 1.8 3.8 1.2 1.2 1.8 3.7 4 3.7" />
-      <path d="M8.7 7.2h6.6M8.7 16.8h6.6M9.5 12h5" />
-    </svg>
-  ),
-  energy: (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M13.2 3.5 6.8 12h4l-1 8.5 7.4-10h-4.1l1.1-7Z" />
-    </svg>
-  ),
+  );
+}
+
+const clientIcons = {
+  hexagon: <path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7L12 2.5z" />,
+  circleDot: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" /></>,
+  triangle: <path d="M12 3.5 21.5 20H2.5L12 3.5z" />,
+  box: <><path d="M20.5 7.3 12 12l-8.5-4.7M12 12v9.5" /><path d="M3.5 7.3 12 2.5l8.5 4.8v9.4L12 21.5 3.5 16.7V7.3z" /></>,
+  none: null,
 };
-const iconOptions = Object.keys(portfolioIcons).map((k) => ({ label: k, value: k }));
+const iconOptions = Object.keys(clientIcons).map((k) => ({ label: k, value: k }));
 
 /* ================================================================== */
 /* 1. Hero                                                             */
@@ -58,433 +29,467 @@ const iconOptions = Object.keys(portfolioIcons).map((k) => ({ label: k, value: k
 export const HomeHeroBlock = {
   label: "Home · Hero",
   fields: {
-    title: { type: "text" },
-    subtitle: { type: "text" },
+    kicker: { type: "text" },
+    headline: { type: "textarea" },
+    subtitle: { type: "textarea" },
     primaryLabel: { type: "text" },
     primaryHref: { type: "text" },
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
+    meta: { type: "text" },
+    imageUrl: { type: "text" },
   },
   defaultProps: {
-    title: "HIIIVE",
-    subtitle: "AI-first company builder · Berlin native incubator",
-    primaryLabel: "Build With Us",
+    kicker: "AI-native company builder",
+    headline: "The AI software\nyour business\nshould already run on.",
+    subtitle:
+      "Hiiive Studio is the tech partner for teams going AI-native — software, MVPs, visibility and funnels. Hiiive Lab turns what we learn into products of our own.",
+    primaryLabel: "Book a call",
     primaryHref: "#contact",
-    secondaryLabel: "Our Vision",
-    secondaryHref: "#mission",
+    secondaryLabel: "See what we build",
+    secondaryHref: "/work",
+    meta: "First working version in weeks — not quarters.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1732209556962-df3c1334bc47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
   },
-  render: ({ title, subtitle, primaryLabel, primaryHref, secondaryLabel, secondaryHref }) => (
+  render: ({ kicker, headline, subtitle, primaryLabel, primaryHref, secondaryLabel, secondaryHref, meta, imageUrl }) => (
     <section className={styles.hero}>
-      <div className={styles.heroInner}>
-        <p className={styles.heroTitle}>{title}</p>
-        <p className={styles.heroSubtitle}>{subtitle}</p>
-        <div className={styles.heroActions}>
-          <a href={primaryHref || "#contact"} className={styles.primaryButton}>
-            {primaryLabel}
-          </a>
-          <a href={secondaryHref || "#mission"} className={styles.secondaryButton}>
-            {secondaryLabel}
-          </a>
-        </div>
-      </div>
-    </section>
-  ),
-};
-
-/* ================================================================== */
-/* 2. About / Mission                                                 */
-/* ================================================================== */
-export const HomeAboutBlock = {
-  label: "Home · About",
-  fields: {
-    label: { type: "text" },
-    headingLine1: { type: "text" },
-    headingLine2: { type: "text" },
-    headingLine3: { type: "text" },
-    paragraph1: { type: "textarea" },
-    paragraph2: { type: "textarea" },
-  },
-  defaultProps: {
-    label: "Origin // Berlin",
-    headingLine1: "We engineer the",
-    headingLine2: "future of",
-    headingLine3: "intelligence.",
-    paragraph1:
-      "HIIIVE is a Berlin-native incubator focused exclusively on AI-first companies. We do not just provide capital; we provide the neural architecture, the elite engineering talent, and the strategic foresight required to dominate the next industrial revolution.",
-    paragraph2:
-      "Born in the tech heart of Europe, we bridge the gap between academic breakthrough and market-ready infrastructure. Our mission is to accelerate the transition to an autonomous economy by building companies that think.",
-  },
-  render: ({ label, headingLine1, headingLine2, headingLine3, paragraph1, paragraph2 }) => (
-    <section id="mission" className={styles.about}>
-      <div className={styles.sectionInner}>
-        <div className={styles.aboutLabel}>
-          <span>{label}</span>
-        </div>
-        <div className={styles.aboutGrid}>
-          <h2 className={styles.aboutHeading}>
-            {headingLine1 ? <span>{headingLine1}</span> : null}
-            {headingLine2 ? <span>{headingLine2}</span> : null}
-            {headingLine3 ? <span>{headingLine3}</span> : null}
-          </h2>
-          <div className={styles.aboutCopy}>
-            {paragraph1 ? <p>{paragraph1}</p> : null}
-            {paragraph2 ? <p>{paragraph2}</p> : null}
-          </div>
-        </div>
-      </div>
-    </section>
-  ),
-};
-
-/* ================================================================== */
-/* 3. Model                                                           */
-/* ================================================================== */
-export const HomeModelBlock = {
-  label: "Home · Model",
-  fields: {
-    title: { type: "text" },
-    meta: { type: "text" },
-    cards: {
-      type: "array",
-      getItemSummary: (item) => item.title || "Card",
-      arrayFields: {
-        index: { type: "text" },
-        title: { type: "text" },
-        body: { type: "textarea" },
-        points: {
-          type: "array",
-          getItemSummary: (item) => item.text || "Point",
-          arrayFields: { text: { type: "text" } },
-          defaultItemProps: { text: "Point" },
-        },
-      },
-      defaultItemProps: {
-        index: "00 / Section",
-        title: "Title",
-        body: "Body",
-        points: [{ text: "Point" }],
-      },
-    },
-  },
-  defaultProps: {
-    title: "Our model",
-    meta: "End-to-end execution",
-    cards: [
-      {
-        index: "01 / Venture Studio",
-        title: "In-house Products",
-        body:
-          "We identify systemic inefficiencies in global markets and deploy proprietary AI agents to solve them. Our internal lab functions as an elite R&D center, engineering the foundations of the next intelligence layer from the ground up.",
-        points: [
-          { text: "Proprietary AI R&D" },
-          { text: "Venture incubation" },
-          { text: "Product development" },
-        ],
-      },
-      {
-        index: "02 / Enterprise Advisory",
-        title: "AI Native Services",
-        body:
-          "We architect bespoke neural networks and integrate autonomous workflow systems into operating conglomerates. We ensure legacy systems can compete in an AI-first economy by transforming them into intelligence-driven organizations.",
-        points: [
-          { text: "Neural architecture design" },
-          { text: "System integration" },
-          { text: "Enterprise transformation" },
-        ],
-      },
-    ],
-  },
-  render: ({ title, meta, cards }) => (
-    <section id="model" className={styles.modelSection}>
-      <div className={styles.sectionInner}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.darkTitle}>{title}</h2>
-          <span className={styles.sectionMeta}>{meta}</span>
-        </div>
-        <div className={styles.modelGrid}>
-          {(cards || []).map((card, i) => (
-            <article key={i} className={styles.modelCard}>
-              <p className={styles.cardIndex}>{card.index}</p>
-              <h3 className={styles.cardTitle}>{card.title}</h3>
-              <p className={styles.cardBody}>{card.body}</p>
-              <ul className={styles.cardList}>
-                {(card.points || []).map((point, j) => (
-                  <li key={j}>{point.text}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  ),
-};
-
-/* ================================================================== */
-/* 4. Metrics                                                         */
-/* ================================================================== */
-export const HomeMetricsBlock = {
-  label: "Home · Metrics",
-  fields: {
-    metrics: {
-      type: "array",
-      getItemSummary: (item) => item.label || "Metric",
-      arrayFields: {
-        value: { type: "text" },
-        label: { type: "text" },
-      },
-      defaultItemProps: { value: "0", label: "Metric" },
-    },
-  },
-  defaultProps: {
-    metrics: [
-      { value: "12+", label: "Ventures built" },
-      { value: "45M+", label: "Capital raised" },
-      { value: "80+", label: "AI models deployed" },
-      { value: "15", label: "Enterprise partners" },
-    ],
-  },
-  render: ({ metrics }) => (
-    <section className={styles.metricsSection}>
-      <div className={styles.sectionInner}>
-        <div className={styles.metricsGrid}>
-          {(metrics || []).map((metric, i) => (
-            <div key={i} className={styles.metricItem}>
-              <p className={styles.metricValue}>{metric.value}</p>
-              <p className={styles.metricLabel}>{metric.label}</p>
+      <div className={`${styles.inner} ${styles.heroInner}`}>
+        <div className={styles.heroTop}>
+          <div className={`${styles.headlineCol} ${styles.heroReveal1}`}>
+            <div className={styles.kicker}>
+              <span className={styles.kickerDot} />
+              <span className={styles.kickerLabel}>{kicker}</span>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  ),
-};
-
-/* ================================================================== */
-/* 5. Portfolio                                                       */
-/* ================================================================== */
-export const HomePortfolioBlock = {
-  label: "Home · Portfolio",
-  fields: {
-    title: { type: "text" },
-    meta: { type: "text" },
-    items: {
-      type: "array",
-      getItemSummary: (item) => item.title || "Venture",
-      arrayFields: {
-        icon: { type: "select", options: iconOptions },
-        category: { type: "text" },
-        title: { type: "text" },
-        body: { type: "textarea" },
-      },
-      defaultItemProps: { icon: "network", category: "Category", title: "Venture", body: "Body" },
-    },
-  },
-  defaultProps: {
-    title: "Portfolio",
-    meta: "Selected ventures // 2024",
-    items: [
-      { icon: "network", category: "Network", title: "NeuralFlow", body: "Distributed compute infrastructure for decentralized LLM training." },
-      { icon: "cognitive", category: "Cognitive", title: "Cognitive Systems", body: "Autonomous decision engines for algorithmic global logistics." },
-      { icon: "finance", category: "Finance", title: "Aether Markets", body: "AI-driven liquidity protocols for synthetic asset trading." },
-      { icon: "security", category: "Security", title: "Sentinel AI", body: "Real-time threat detection for sovereign digital borders." },
-      { icon: "bio", category: "Bio", title: "Helix Lab", body: "Generative protein folding models for accelerated drug discovery." },
-      { icon: "energy", category: "Energy", title: "Grid Logic", body: "Smart grid orchestration using predictive AI for renewable balancing." },
-    ],
-  },
-  render: ({ title, meta, items }) => (
-    <section id="portfolio" className={styles.portfolioSection}>
-      <div className={styles.sectionInner}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.lightTitle}>{title}</h2>
-          <span className={styles.sectionMetaLight}>{meta}</span>
-        </div>
-        <div className={styles.portfolioGrid}>
-          {(items || []).map((item, i) => (
-            <article key={i} className={styles.portfolioItem}>
-              <div className={styles.portfolioTop}>
-                <span className={styles.portfolioIcon}>{portfolioIcons[item.icon] || portfolioIcons.network}</span>
-                <p className={styles.portfolioCategory}>{item.category}</p>
-              </div>
-              <h3 className={styles.portfolioTitle}>{item.title}</h3>
-              <p className={styles.portfolioBody}>{item.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  ),
-};
-
-/* ================================================================== */
-/* 6. Contact                                                         */
-/* ================================================================== */
-export const HomeContactBlock = {
-  label: "Home · Contact",
-  fields: {
-    title: { type: "text" },
-    body: { type: "textarea" },
-    list: {
-      type: "array",
-      getItemSummary: (item) => item.strong || "Item",
-      arrayFields: {
-        strong: { type: "text" },
-        span: { type: "text" },
-      },
-      defaultItemProps: { strong: "Title", span: "Description" },
-    },
-    nameLabel: { type: "text" },
-    namePlaceholder: { type: "text" },
-    emailLabel: { type: "text" },
-    emailPlaceholder: { type: "text" },
-    visionLabel: { type: "text" },
-    visionPlaceholder: { type: "text" },
-    buttonLabel: { type: "text" },
-  },
-  defaultProps: {
-    title: "Build the intelligence layer of your enterprise.",
-    body:
-      "We partner with visionary leaders to architect and deploy custom AI solutions. Our process is rapid, deep-tech focused, and results-oriented.",
-    list: [
-      { strong: "Rapid prototyping", span: "From concept to MVP in under 8 weeks." },
-      { strong: "Production-ready", span: "Scalable neural infrastructure built for scale." },
-    ],
-    nameLabel: "Full Name",
-    namePlaceholder: "Type here...",
-    emailLabel: "Company Email",
-    emailPlaceholder: "email@enterprise.com",
-    visionLabel: "Project Vision",
-    visionPlaceholder: "Briefly describe your AI goals...",
-    buttonLabel: "Initiate Project",
-  },
-  render: ({ title, body, list, nameLabel, namePlaceholder, emailLabel, emailPlaceholder, visionLabel, visionPlaceholder, buttonLabel }) => (
-    <section id="contact" className={styles.contactSection}>
-      <div className={styles.sectionInner}>
-        <div className={styles.contactGrid}>
-          <div className={styles.contactIntro}>
-            <h2 className={styles.contactTitle}>{title}</h2>
-            <p className={styles.contactBody}>{body}</p>
-            <ul className={styles.contactList}>
-              {(list || []).map((item, i) => (
-                <li key={i}>
-                  <strong>{item.strong}</strong>
-                  <span>{item.span}</span>
-                </li>
+            <h1 className={styles.heroHeadline}>
+              {(headline || "").split("\n").map((line, i, arr) => (
+                <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
               ))}
-            </ul>
+            </h1>
           </div>
-          <form className={styles.contactForm}>
-            <label className={styles.field}>
-              <span>{nameLabel}</span>
-              <input type="text" placeholder={namePlaceholder} />
-            </label>
-            <label className={styles.field}>
-              <span>{emailLabel}</span>
-              <input type="email" placeholder={emailPlaceholder} />
-            </label>
-            <label className={styles.field}>
-              <span>{visionLabel}</span>
-              <textarea placeholder={visionPlaceholder} rows="5" />
-            </label>
-            <button type="button" className={styles.formButton}>
-              {buttonLabel}
-            </button>
-          </form>
+          <div className={`${styles.heroRight} ${styles.heroReveal2}`}>
+            <p className={styles.heroSub}>{subtitle}</p>
+            <div className={styles.heroCtaRow}>
+              <a href={primaryHref || "#contact"} className={styles.btnPrimary}>
+                {primaryLabel} <ArrowRight />
+              </a>
+              <a href={secondaryHref || "/work"} className={styles.btnSecondary}>{secondaryLabel}</a>
+            </div>
+            <p className={styles.heroMeta}>{meta}</p>
+          </div>
         </div>
+        {imageUrl ? <img className={`${styles.heroImage} ${styles.heroReveal3}`} src={imageUrl} alt="" loading="lazy" /> : null}
       </div>
     </section>
   ),
 };
 
 /* ================================================================== */
-/* 7. FAQ                                                             */
+/* 2. Clients                                                          */
 /* ================================================================== */
-export const HomeFaqBlock = {
-  label: "Home · FAQ",
+export const HomeClientsBlock = {
+  label: "Home · Clients",
   fields: {
-    title: { type: "text" },
-    meta: { type: "text" },
-    items: {
+    kicker: { type: "text" },
+    note: { type: "text" },
+    logos: {
       type: "array",
-      getItemSummary: (item) => item.question || "Question",
+      getItemSummary: (item) => item.name || "Logo",
       arrayFields: {
-        question: { type: "text" },
-        answer: { type: "textarea" },
+        name: { type: "text" },
+        icon: { type: "select", options: iconOptions },
+        // Optional image logo (e.g. /logos/acme.svg). When set, it replaces
+        // the icon+text rendering. `name` doubles as the alt text.
+        image: { type: "text" },
       },
-      defaultItemProps: { question: "Question", answer: "Answer" },
+      defaultItemProps: { name: "CLIENT", icon: "none", image: "" },
     },
   },
   defaultProps: {
-    title: "Inquiries",
-    meta: "Common questions // FAQ",
-    items: [
-      {
-        question: "What is HIIIVE’s incubation model?",
-        answer:
-          "We partner early, define a high-conviction problem, and build the technical, operational, and capital foundation required to launch AI-native companies.",
-      },
-      {
-        question: "How do you select your enterprise partners?",
-        answer:
-          "We look for teams with deep operational access, a real deployment surface, and the willingness to rebuild workflows around intelligence rather than automation theater.",
-      },
-      {
-        question: "Are you strictly Berlin-based?",
-        answer:
-          "Berlin is our operating base, but we work across markets when the opportunity and execution conditions are strong.",
-      },
-      {
-        question: "How can engineers join HIIIVE?",
-        answer:
-          "We recruit builders who can operate across product, systems, and applied AI. The strongest candidates show ownership, range, and shipping discipline.",
-      },
+    kicker: "Trusted by operators in logistics, retail, fintech and health",
+    note: "Client names shown with permission",
+    logos: [
+      { name: "NORTHWIND", icon: "hexagon" },
+      { name: "MERIDIAN", icon: "circleDot" },
+      { name: "ATLAS FOODS", icon: "none" },
+      { name: "CIVIC BANK", icon: "triangle" },
+      { name: "HELIA", icon: "none" },
+      { name: "ORBIT", icon: "box" },
     ],
   },
-  render: ({ title, meta, items }) => (
-    <section id="faq" className={styles.faqSection}>
-      <div className={styles.sectionInnerNarrow}>
-        <div className={styles.faqHeader}>
-          <h2 className={styles.lightTitle}>{title}</h2>
-          <p className={styles.faqMeta}>{meta}</p>
-        </div>
-        <div className={styles.faqList}>
-          {(items || []).map((item, i) => (
-            <details key={i} className={styles.faqItem}>
-              <summary>{item.question}</summary>
-              <p>{item.answer}</p>
-            </details>
+  render: ({ kicker, note, logos }) => (
+    <section className={styles.clients}>
+      <div className={styles.inner}>
+        <Reveal className={styles.clientsHead}>
+          <div className={styles.kicker}>
+            <span className={styles.kickerBar} />
+            <span className={styles.kickerLabel}>{kicker}</span>
+          </div>
+          <span className={styles.clientsNote}>{note}</span>
+        </Reveal>
+        <div className={styles.rule} />
+        <Stagger className={styles.logos}>
+          {(logos || []).map((c, i) => (
+            <StaggerItem as="span" key={i} className={styles.logo}>
+              {c.image ? (
+                <img className={styles.logoImg} src={c.image} alt={c.name || ""} loading="lazy" />
+              ) : (
+                <>
+                  {clientIcons[c.icon] ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                      {clientIcons[c.icon]}
+                    </svg>
+                  ) : null}
+                  {c.name}
+                </>
+              )}
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   ),
 };
 
 /* ================================================================== */
-/* 8. Bottom CTA                                                      */
+/* 3. Stats                                                            */
 /* ================================================================== */
-export const HomeBottomCtaBlock = {
-  label: "Home · Bottom CTA",
+export const HomeStatsBlock = {
+  label: "Home · Stats",
   fields: {
+    kicker: { type: "text" },
+    note: { type: "text" },
+    stats: {
+      type: "array",
+      getItemSummary: (item) => item.label || "Stat",
+      arrayFields: {
+        label: { type: "text" },
+        value: { type: "text" },
+        desc: { type: "text" },
+      },
+      defaultItemProps: { label: "Label", value: "0", desc: "Description" },
+    },
+  },
+  defaultProps: {
+    kicker: "By the numbers",
+    note: "Measured across client engagements · updated Jan 2026",
+    stats: [
+      { label: "Internal tools shipped", value: "12+", desc: "In production and still running." },
+      { label: "Industries served", value: "4", desc: "Logistics, retail, fintech, health." },
+      { label: "Time to first release", value: "6 wks", desc: "Median across our MVP builds." },
+      { label: "Products in Lab", value: "2", desc: "One already in private beta." },
+    ],
+  },
+  render: ({ kicker, note, stats }) => (
+    <section className={styles.stats}>
+      <div className={styles.inner}>
+        <Reveal className={styles.statsHead}>
+          <div className={styles.kicker}>
+            <span className={styles.kickerBar} />
+            <span className={styles.kickerLabel}>{kicker}</span>
+          </div>
+          <span className={styles.statsNote}>{note}</span>
+        </Reveal>
+        <div className={`${styles.rule} ${styles.ruleInk}`} />
+        <Stagger className={styles.statsRow}>
+          {(stats || []).map((s, i) => (
+            <StaggerItem key={i} className={styles.stat}>
+              <span className={styles.statLabel}>{s.label}</span>
+              <span className={styles.statValue}>{s.value}</span>
+              <span className={styles.statDesc}>{s.desc}</span>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  ),
+};
+
+/* ================================================================== */
+/* 4. Pillars (Studio + Lab)                                          */
+/* ================================================================== */
+export const HomePillarsBlock = {
+  label: "Home · Pillars",
+  fields: {
+    kicker: { type: "text" },
     title: { type: "text" },
-    body: { type: "textarea" },
+    note: { type: "textarea" },
+    studioTag: { type: "text" },
+    studioTitle: { type: "text" },
+    studioLead: { type: "textarea" },
+    services: {
+      type: "array",
+      getItemSummary: (item) => item.name || "Service",
+      arrayFields: {
+        num: { type: "text" },
+        name: { type: "text" },
+        desc: { type: "textarea" },
+      },
+      defaultItemProps: { num: "01", name: "Service", desc: "Description" },
+    },
+    studioLinkLabel: { type: "text" },
+    studioLinkHref: { type: "text" },
+    labTag: { type: "text" },
+    labTitle: { type: "text" },
+    labLead: { type: "textarea" },
+    products: {
+      type: "array",
+      getItemSummary: (item) => item.name || "Product",
+      arrayFields: {
+        name: { type: "text" },
+        desc: { type: "text" },
+        status: { type: "text" },
+      },
+      defaultItemProps: { name: "PRODUCT", desc: "Description", status: "Concept" },
+    },
+    labLinkLabel: { type: "text" },
+    labLinkHref: { type: "text" },
+  },
+  defaultProps: {
+    kicker: "What HIIIVE is",
+    title: "One company, two halves.",
+    note: "Studio pays attention to your workflow. Lab pays attention to the patterns underneath it. Each one makes the other sharper.",
+    studioTag: "Hiiive Studio — services",
+    studioTitle: "Tech services, built the AI-native way.",
+    studioLead: "From the software your team runs on to the funnel that fills it. One partner, working the way AI-native teams actually work — fast, measured, and owned by you.",
+    services: [
+      { num: "01", name: "AI software & internal tools", desc: "Custom systems and agents that take real work off your team." },
+      { num: "02", name: "MVP design & build", desc: "From idea to a product in users' hands — weeks, not quarters." },
+      { num: "03", name: "Organic visibility (SEO)", desc: "AI-native search: built to be found by people and by models." },
+      { num: "04", name: "Digital presence & funnels", desc: "Sites, funnels and conversion structure that turn traffic into pipeline." },
+      { num: "05", name: "AI transformation & consulting", desc: "Audit, roadmap and enablement — so the change actually sticks." },
+    ],
+    studioLinkLabel: "Explore Studio",
+    studioLinkHref: "#work",
+    labTag: "Hiiive Lab — products",
+    labTitle: "We build our own software too.",
+    labLead: "Lab is where recurring problems become products. It is also the proof: we ship and maintain real software, not decks about it.",
+    products: [
+      { name: "SPOKY", desc: "First Lab product — validating with real users", status: "In validation" },
+      { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
+    ],
+    labLinkLabel: "See the Lab",
+    labLinkHref: "#work",
+  },
+  render: (p) => (
+    <section id="approach" className={styles.pillars}>
+      <div className={styles.inner}>
+        <Reveal className={styles.pillarsHead}>
+          <div className={styles.pillarsHeadL}>
+            <span className={styles.kickerLabel}>{p.kicker}</span>
+            <h2 className={styles.sectionTitle}>{p.title}</h2>
+          </div>
+          <p className={styles.pillarsNote}>{p.note}</p>
+        </Reveal>
+        <Stagger className={styles.pillarRow}>
+          <StaggerItem className={styles.studioCard}>
+            <div className={styles.kicker}>
+              <span className={styles.kickerBar} />
+              <span className={styles.cardTag}>{p.studioTag}</span>
+            </div>
+            <h3 className={styles.cardTitle}>{p.studioTitle}</h3>
+            <p className={styles.cardLead}>{p.studioLead}</p>
+            <div className={styles.serviceList}>
+              {(p.services || []).map((s, i) => (
+                <div key={i} className={styles.serviceItem}>
+                  <span className={styles.serviceNum}>{s.num}</span>
+                  <div className={styles.serviceBody}>
+                    <span className={styles.serviceName}>{s.name}</span>
+                    <span className={styles.serviceDesc}>{s.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <a href={p.studioLinkHref || "#work"} className={styles.arrowLink}>{p.studioLinkLabel} <ArrowRight /></a>
+          </StaggerItem>
+          <StaggerItem className={styles.labCard}>
+            <div className={styles.labTop}>
+              <div className={styles.kicker}>
+                <span className={styles.kickerBar} />
+                <span className={styles.cardTag}>{p.labTag}</span>
+              </div>
+              <h3 className={styles.cardTitle}>{p.labTitle}</h3>
+              <p className={styles.cardLead}>{p.labLead}</p>
+              <div className={styles.productList}>
+                {(p.products || []).map((pr, i) => (
+                  <div key={i} className={styles.productItem}>
+                    <div className={styles.productBody}>
+                      <span className={styles.productName}>{pr.name}</span>
+                      <span className={styles.productDesc}>{pr.desc}</span>
+                    </div>
+                    <span className={styles.pill}>{pr.status}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <a href={p.labLinkHref || "#work"} className={`${styles.arrowLink} ${styles.labLink}`}>{p.labLinkLabel} <ArrowRight /></a>
+          </StaggerItem>
+        </Stagger>
+      </div>
+    </section>
+  ),
+};
+
+/* ================================================================== */
+/* 5. Process                                                         */
+/* ================================================================== */
+export const HomeProcessBlock = {
+  label: "Home · Process",
+  fields: {
+    kicker: { type: "text" },
+    title: { type: "text" },
+    note: { type: "textarea" },
+    steps: {
+      type: "array",
+      getItemSummary: (item) => item.title || "Step",
+      arrayFields: {
+        num: { type: "text" },
+        title: { type: "text" },
+        desc: { type: "textarea" },
+      },
+      defaultItemProps: { num: "01", title: "Step", desc: "Description" },
+    },
+  },
+  defaultProps: {
+    kicker: "How we work",
+    title: "Short loops. Real software. No theatre.",
+    note: "Every engagement runs the same four beats, whether it is an MVP, a rebuild of your funnel, or an AI transformation.",
+    steps: [
+      { num: "01", title: "Map", desc: "Two weeks inside your workflow. We find where hours, leads and revenue leak — and what AI can actually fix." },
+      { num: "02", title: "Prototype", desc: "A working thin slice in front of real users within weeks. Decisions get made on software, not slides." },
+      { num: "03", title: "Ship", desc: "Production build, wired into your stack and measured against one number you agreed up front." },
+      { num: "04", title: "Hand over", desc: "Docs, training and a roadmap your team can run. We stay if you want us, not because you are stuck." },
+    ],
+  },
+  render: ({ kicker, title, note, steps }) => (
+    <section className={styles.process}>
+      <div className={styles.inner}>
+        <Reveal className={styles.processHead}>
+          <div className={styles.processHeadL}>
+            <span className={styles.kickerLabel}>{kicker}</span>
+            <h2 className={styles.sectionTitle}>{title}</h2>
+          </div>
+          <p className={styles.processNote}>{note}</p>
+        </Reveal>
+        <Stagger className={styles.steps}>
+          {(steps || []).map((s, i) => (
+            <StaggerItem key={i} className={styles.step}>
+              <div className={`${styles.stepRule} ${i === 0 ? styles.stepRuleActive : ""}`} />
+              <div className={styles.stepTop}>
+                <span className={styles.stepNum}>{s.num}</span>
+                <span className={styles.stepTitle}>{s.title}</span>
+                <span className={styles.stepDesc}>{s.desc}</span>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  ),
+};
+
+/* ================================================================== */
+/* 6. Selected work                                                   */
+/* ================================================================== */
+export const HomeWorkBlock = {
+  label: "Home · Work",
+  fields: {
+    kicker: { type: "text" },
+    title: { type: "text" },
+    linkLabel: { type: "text" },
+    linkHref: { type: "text" },
+    cases: {
+      type: "array",
+      getItemSummary: (item) => item.category || "Case",
+      arrayFields: {
+        category: { type: "text" },
+        discipline: { type: "text" },
+        stat: { type: "text" },
+        line: { type: "textarea" },
+        image: { type: "text" },
+      },
+      defaultItemProps: { category: "Category", discipline: "Discipline", stat: "0", line: "Result", image: "" },
+    },
+  },
+  defaultProps: {
+    kicker: "Selected work",
+    title: "What it looks like in practice.",
+    linkLabel: "All case studies",
+    linkHref: "#work",
+    cases: [
+      { category: "Logistics operator", discipline: "AI software", stat: "−64%", line: "manual ticket handling after an internal agent took over triage.", image: "https://images.unsplash.com/photo-1653347094887-e1d2edbfad5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" },
+      { category: "B2B SaaS", discipline: "MVP build", stat: "7 wks", line: "from first workshop to a paid pilot in customers' hands.", image: "https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" },
+      { category: "Regional retailer", discipline: "Visibility", stat: "3.2×", line: "organic sessions in five months with AI-native SEO.", image: "https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" },
+    ],
+  },
+  render: ({ kicker, title, linkLabel, linkHref, cases }) => (
+    <section id="work" className={styles.work}>
+      <div className={styles.inner}>
+        <Reveal className={styles.workHead}>
+          <div className={styles.workHeadL}>
+            <span className={styles.kickerLabel}>{kicker}</span>
+            <h2 className={styles.sectionTitle}>{title}</h2>
+          </div>
+          <a href={linkHref || "#work"} className={styles.arrowLink}>{linkLabel} <ArrowRight /></a>
+        </Reveal>
+        <Stagger className={styles.caseRow}>
+          {(cases || []).map((c, i) => (
+            <StaggerItem as="article" key={i} className={styles.caseCard}>
+              {c.image ? <img className={styles.caseImage} src={c.image} alt="" loading="lazy" /> : <div className={styles.caseImage} />}
+              <div className={styles.caseBody}>
+                <div className={styles.caseTags}>
+                  <span className={styles.caseCategory}>{c.category}</span>
+                  <span className={styles.caseDot}>·</span>
+                  <span className={styles.caseDiscipline}>{c.discipline}</span>
+                </div>
+                <span className={styles.caseStat}>{c.stat}</span>
+                <span className={styles.caseLine}>{c.line}</span>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  ),
+};
+
+/* ================================================================== */
+/* 7. CTA band                                                        */
+/* ================================================================== */
+export const HomeCtaBlock = {
+  label: "Home · CTA Band",
+  fields: {
+    kicker: { type: "text" },
+    title: { type: "textarea" },
+    subtitle: { type: "textarea" },
     buttonLabel: { type: "text" },
     buttonHref: { type: "text" },
+    altText: { type: "text" },
   },
   defaultProps: {
-    title: "Ready to scale intelligence?",
-    body: "We are looking for elite engineers and visionary partners to join our ecosystem in Berlin.",
-    buttonLabel: "Build With Us",
-    buttonHref: "#contact",
+    kicker: "Next step",
+    title: "Let's look at the work\nyou shouldn't be doing.",
+    subtitle: "A 30-minute call. We map one workflow, tell you if AI is the answer, and what it would take. No deck.",
+    buttonLabel: "Book a call",
+    buttonHref: "https://calendly.com/hiiive/dvision-potenzial",
+    altText: "or email hello@hiiive.ai",
   },
-  render: ({ title, body, buttonLabel, buttonHref }) => (
-    <section className={styles.bottomCta}>
-      <div className={styles.bottomCtaInner}>
-        <h2 className={styles.bottomCtaTitle}>{title}</h2>
-        <p className={styles.bottomCtaBody}>{body}</p>
-        <a href={buttonHref || "#contact"} className={styles.bottomCtaButton}>
-          {buttonLabel}
-        </a>
+  render: ({ kicker, title, subtitle, buttonLabel, buttonHref, altText }) => (
+    <section id="contact" className={styles.ctaBand}>
+      <div className={`${styles.inner} ${styles.ctaInner}`}>
+        <Reveal className={styles.ctaL}>
+          <span className={styles.ctaKicker}>{kicker}</span>
+          <h2 className={styles.ctaTitle}>
+            {(title || "").split("\n").map((line, i, arr) => (
+              <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+            ))}
+          </h2>
+          <p className={styles.ctaSub}>{subtitle}</p>
+        </Reveal>
+        <Reveal className={styles.ctaR} delay={0.12}>
+          <a href={buttonHref || "https://calendly.com/hiiive/dvision-potenzial"} className={styles.ctaBtn}>{buttonLabel} <ArrowRight /></a>
+          <span className={styles.ctaAlt}>{altText}</span>
+        </Reveal>
       </div>
     </section>
   ),
@@ -492,11 +497,10 @@ export const HomeBottomCtaBlock = {
 
 export const homeBlocks = {
   HomeHeroBlock,
-  HomeAboutBlock,
-  HomeModelBlock,
-  HomeMetricsBlock,
-  HomePortfolioBlock,
-  HomeContactBlock,
-  HomeFaqBlock,
-  HomeBottomCtaBlock,
+  HomeClientsBlock,
+  HomeStatsBlock,
+  HomePillarsBlock,
+  HomeProcessBlock,
+  HomeWorkBlock,
+  HomeCtaBlock,
 };

@@ -4,6 +4,26 @@
   padding: 0;
 }
 
+/* HIIIVE homepage design tokens — global so the static fallback and the
+   CMS/Puck-rendered home blocks both resolve them (see HomePageFallback.module.css). */
+:root {
+  --hv-paper: #ededed;
+  --hv-white: #ffffff;
+  --hv-ink: #1b1d1e;
+  --hv-ink-soft: #4a4e55;
+  --hv-muted: #9499a4;
+  --hv-hairline: #d6d7da;
+  --hv-accent: #f7f42c;
+  --hv-ink-rev: #ededed;
+  --hv-muted-rev: #9598a1;
+  --hv-soft-rev: #a0a3ac;
+  --hv-hairline-rev: #272a33;
+  --hv-pill-border: #33363f;
+  --font-display: "Big Shoulders", "Big Shoulders Display", system-ui, sans-serif;
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
 body {
   background: var(--theme-bg);
   color: var(--theme-text);

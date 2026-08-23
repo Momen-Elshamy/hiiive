@@ -1,0 +1,431 @@
+/* Case Study blocks — detail hero + listing extras. Tokens from globals.css. */
+
+.inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ---- Detail hero --------------------------------------------------------- */
+.csHero {
+  background: var(--hv-paper);
+  color: var(--hv-ink);
+  font-family: var(--font-body);
+  padding: 40px 0 64px;
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--hv-muted);
+  margin-bottom: 40px;
+}
+
+.crumbs a {
+  color: var(--hv-muted);
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: var(--hv-ink-soft);
+}
+
+.crumbSep {
+  color: var(--hv-hairline);
+}
+
+.crumbCurrent {
+  color: var(--hv-ink-soft);
+  font-weight: 600;
+}
+
+.csTag {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hv-muted);
+}
+
+.csTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 60px;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  color: var(--hv-ink);
+  max-width: 20ch;
+  margin: 18px 0 0;
+}
+
+.csStatRow {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 2px solid var(--hv-ink);
+  max-width: 560px;
+}
+
+.csStat {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--hv-ink);
+}
+
+.csStatLabel {
+  font-size: 14px;
+  color: var(--hv-ink-soft);
+}
+
+.csSummary {
+  margin: 26px 0 0;
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--hv-ink-soft);
+}
+
+/* ---- Listing extras ------------------------------------------------------- */
+.cardLink {
+  text-decoration: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px -18px rgba(19, 19, 19, 0.28);
+}
+
+.cardMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hv-ink);
+}
+
+.cardMore svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.15s ease;
+}
+
+.cardLink:hover .cardMore svg {
+  transform: translateX(3px);
+}
+
+/* ---- Work header (Portfolio) ---------------------------------------------- */
+.workHeader {
+  background: var(--hv-paper);
+  color: var(--hv-ink);
+  font-family: var(--font-body);
+  padding: 56px 0 40px;
+}
+
+.kickerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.kickerBar {
+  width: 22px;
+  height: 2px;
+  background: var(--hv-ink);
+}
+
+.kickerLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hv-ink-soft);
+}
+
+.workHeadRow {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 420px);
+  gap: 48px;
+  align-items: end;
+}
+
+.workTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 64px;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  color: var(--hv-ink);
+  margin: 0;
+}
+
+.workIntro {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--hv-ink-soft);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 34px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hv-ink-soft);
+  border: 1px solid var(--hv-hairline);
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: var(--hv-white);
+}
+
+.filterActive {
+  background: var(--hv-ink);
+  border-color: var(--hv-ink);
+  color: var(--hv-paper);
+}
+
+.filterCount {
+  font-size: 11px;
+  color: var(--hv-muted);
+}
+
+.filterActive .filterCount {
+  color: var(--hv-accent);
+}
+
+/* ---- Featured card --------------------------------------------------------- */
+.featuredWrap {
+  background: var(--hv-paper);
+  font-family: var(--font-body);
+  padding: 16px 0 8px;
+}
+
+.featured {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  background: var(--hv-white);
+  border: 1px solid var(--hv-hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.featured:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px -20px rgba(19, 19, 19, 0.3);
+}
+
+.featuredImg {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+  background: #dcdfe8;
+  display: block;
+}
+
+.featuredBody {
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+}
+
+.featuredTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 38px;
+  line-height: 0.98;
+  color: var(--hv-ink);
+  margin: 14px 0 0;
+}
+
+.featuredText {
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--hv-ink-soft);
+  max-width: 52ch;
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 26px 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--hv-hairline);
+}
+
+.metricValue {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--hv-ink);
+}
+
+.metricLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--hv-muted);
+  margin-top: 5px;
+}
+
+.featuredBody .cardMore {
+  margin-top: auto;
+}
+
+/* ---- Grid ------------------------------------------------------------------ */
+.gridWrap {
+  background: var(--hv-paper);
+  font-family: var(--font-body);
+  padding: 24px 0 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.gridCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--hv-white);
+  border: 1px solid var(--hv-hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gridCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px -18px rgba(19, 19, 19, 0.28);
+}
+
+.gridImg {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  background: #dcdfe8;
+  display: block;
+}
+
+.gridBody {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.gridTag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hv-muted);
+}
+
+.gridStat {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--hv-ink);
+  margin-top: 10px;
+}
+
+/* Listing grid sits below a section heading — needs breathing room. */
+.listGridSpace {
+  margin-top: 40px;
+}
+
+/* Big display stat used by the listing cards (home-style). */
+.listStat {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--hv-ink);
+  margin-top: 14px;
+}
+
+.gridLine {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--hv-ink-soft);
+}
+
+.gridBody .cardMore {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 24px;
+}
+
+.loadMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border: 1px solid var(--hv-hairline);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hv-ink);
+}
+
+.loadMore svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 900px) {
+  .inner {
+    padding: 0 24px;
+  }
+  .csTitle {
+    font-size: 40px;
+  }
+  .workTitle {
+    font-size: 42px;
+  }
+  .workHeadRow,
+  .featured {
+    grid-template-columns: 1fr;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .featuredImg {
+    min-height: 240px;
+  }
+}

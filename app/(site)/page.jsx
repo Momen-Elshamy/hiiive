@@ -2,6 +2,8 @@ import { Render } from "@puckeditor/core/rsc";
 import { siteConfig } from "@/site.config";
 import HomePageFallback from "@/components/pages/Home/HomePageFallback";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
+import { resolveLocale, findLocalized } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,29 +19,9 @@ function parsePuckData(content) {
   return null;
 }
 
-function extractSeoMetadata(puckData, fallbackTitle) {
+function extractSeoMetadata(puckData, fallbackTitle, locale) {
   const root = puckData?.root?.props || {};
-  const meta = { title: root.metaTitle || fallbackTitle || "HIIIVE" };
-  if (root.metaDescription) meta.description = root.metaDescription;
-  if (root.noIndex === "true" || root.noIndex === true) {
-    meta.robots = { index: false, follow: false };
-  }
-  if (root.canonicalUrl) meta.alternates = { canonical: root.canonicalUrl };
-
-  const openGraph = {};
-  if (root.metaTitle) openGraph.title = root.metaTitle;
-  if (root.metaDescription) openGraph.description = root.metaDescription;
-  if (root.ogImage) openGraph.images = [{ url: root.ogImage }];
-  if (root.ogType) openGraph.type = root.ogType;
-  if (Object.keys(openGraph).length > 0) meta.openGraph = openGraph;
-
-  if (root.twitterCard) {
-    meta.twitter = { card: root.twitterCard };
-    if (root.metaTitle) meta.twitter.title = root.metaTitle;
-    if (root.metaDescription) meta.twitter.description = root.metaDescription;
-    if (root.ogImage) meta.twitter.images = [root.ogImage];
-  }
-  return meta;
+  return buildPageMetadata({ root, path: "", locale, fallbackTitle });
 }
 
 export async function generateMetadata() {
@@ -51,10 +33,11 @@ export async function generateMetadata() {
     const connectDB = await siteConfig.getConnectDB();
     await connectDB();
     const models = await siteConfig.getModels();
-    const page = await models.Page.findOne({ slug: "home", published: true }).lean();
+    const locale = await resolveLocale(models);
+    const page = await findLocalized(models.Page, { slug: "home", published: true }, locale);
     if (page) {
       const puckData = parsePuckData(page.content);
-      if (puckData) return extractSeoMetadata(puckData, page.title);
+      if (puckData) return extractSeoMetadata(puckData, page.title, locale);
       return { title: page.title || "Home" };
     }
   } catch { /* DB offline */ }
@@ -68,7 +51,8 @@ export default async function Home() {
       const connectDB = await siteConfig.getConnectDB();
       await connectDB();
       const models = await siteConfig.getModels();
-      page = await models.Page.findOne({ slug: "home", published: true }).lean();
+      const locale = await resolveLocale(models);
+      page = await findLocalized(models.Page, { slug: "home", published: true }, locale);
     } catch {
       /* Offline DB — show fallback */
     }
