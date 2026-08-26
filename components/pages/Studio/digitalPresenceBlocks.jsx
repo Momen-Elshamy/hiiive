@@ -57,7 +57,7 @@ export const DpHeroBlock = {
     kicker: "Service 04 — Digital presence & funnels",
     headline: "Your traffic is\nleaking. We own\nthe fix.",
     subtitle: "We take ownership of how your brand shows up online — measuring how people behave on your site, then shipping the fixes that turn traffic into pipeline.",
-    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/get-to-know",
     secondaryLabel: "Watch the 2-min explainer", secondaryHref: "#",
     monitorUrl: "LIVE · yourbrand.com", sessionLabel: "SESSION #4,203",
     events: [
@@ -470,7 +470,7 @@ export const DpPackagesBlock = {
         ctaLabel: { type: "text" }, ctaHref: { type: "text" },
         featured: { type: "select", options: [{ label: "no", value: "no" }, { label: "yes", value: "yes" }] },
       },
-      defaultItemProps: { name: "Plan", badge: "", price: "€0", period: "/ month", desc: "", featuresIntro: "", features: [], ctaLabel: "Get started", ctaHref: "https://calendly.com/hiiive/dvision-potenzial", featured: "no" },
+      defaultItemProps: { name: "Plan", badge: "", price: "€0", period: "/ month", desc: "", featuresIntro: "", features: [], ctaLabel: "Get started", ctaHref: "https://calendly.com/hiiive/get-to-know", featured: "no" },
     },
   },
   defaultProps: {
@@ -479,10 +479,10 @@ export const DpPackagesBlock = {
     plans: [
       { name: "Grow", badge: "", price: "€1,000", period: "/ month", desc: "For brands starting to take conversion seriously.", featuresIntro: "",
         features: [{ text: "2 shipped improvements per month" }, { text: "Full tracking setup — Hotjar, Clarity, PostHog & GA4" }, { text: "Weekly monitoring for friction and quick wins" }, { text: "Monthly insights report + live KPI dashboard" }, { text: "Monthly review call" }],
-        ctaLabel: "Start with Grow", ctaHref: "https://calendly.com/hiiive/dvision-potenzial", featured: "no" },
+        ctaLabel: "Start with Grow", ctaHref: "https://calendly.com/hiiive/get-to-know", featured: "no" },
       { name: "Scale", badge: "Most popular", price: "€2,500", period: "/ month", desc: "For brands with the volume to make a 1% lift real money.", featuresIntro: "Everything in Grow, plus:",
         features: [{ text: "6 shipped improvements per month" }, { text: "A/B testing & experiment program" }, { text: "Landing pages & new journey pages built" }, { text: "Quarterly strategy roadmap" }, { text: "Priority Slack access to the team" }],
-        ctaLabel: "Talk about Scale", ctaHref: "https://calendly.com/hiiive/dvision-potenzial", featured: "yes" },
+        ctaLabel: "Talk about Scale", ctaHref: "https://calendly.com/hiiive/get-to-know", featured: "yes" },
     ],
   },
   render: (p) => (

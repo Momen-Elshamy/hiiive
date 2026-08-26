@@ -32,7 +32,7 @@ const HERO_D = {
   kicker: "Service 01 — MVP build",
   headline: "From idea to\na working MVP\nin 3 weeks.",
   subtitle: "Custom AI-powered MVP development for non-technical founders, startups and growing teams. One partner from strategy to launch — no hiring, no agency overhead.",
-  primaryLabel: "Book a scoping call", primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+  primaryLabel: "Book a scoping call", primaryHref: "https://calendly.com/hiiive/get-to-know",
   secondaryLabel: "Try the cost estimator", secondaryHref: "/tools/mvp-cost-estimator",
   showcaseImage: "/img/mvp-showcase.png",
 };

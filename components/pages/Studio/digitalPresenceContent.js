@@ -7,7 +7,7 @@ export const dp = {
     kicker: "Service 04 — Digital presence & funnels",
     headline: "Your traffic is\nleaking. We own\nthe fix.",
     subtitle: "We take ownership of how your brand shows up online — measuring how people behave on your site, then shipping the fixes that turn traffic into pipeline.",
-    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/get-to-know",
     secondaryLabel: "Watch the 2-min explainer", secondaryHref: "#",
     monitorUrl: "LIVE · yourbrand.com", sessionLabel: "SESSION #4,203",
     events: [
@@ -118,10 +118,10 @@ export const dp = {
     plans: [
       { name: "Grow", badge: "", price: "€1,000", period: "/ month", desc: "For brands starting to take conversion seriously.", featuresIntro: "",
         features: [{ text: "2 shipped improvements per month" }, { text: "Full tracking setup — Hotjar, Clarity, PostHog & GA4" }, { text: "Weekly monitoring for friction and quick wins" }, { text: "Monthly insights report + live KPI dashboard" }, { text: "Monthly review call" }],
-        ctaLabel: "Start with Grow", ctaHref: "https://calendly.com/hiiive/dvision-potenzial", featured: "no" },
+        ctaLabel: "Start with Grow", ctaHref: "https://calendly.com/hiiive/get-to-know", featured: "no" },
       { name: "Scale", badge: "Most popular", price: "€2,500", period: "/ month", desc: "For brands with the volume to make a 1% lift real money.", featuresIntro: "Everything in Grow, plus:",
         features: [{ text: "6 shipped improvements per month" }, { text: "A/B testing & experiment program" }, { text: "Landing pages & new journey pages built" }, { text: "Quarterly strategy roadmap" }, { text: "Priority Slack access to the team" }],
-        ctaLabel: "Talk about Scale", ctaHref: "https://calendly.com/hiiive/dvision-potenzial", featured: "yes" },
+        ctaLabel: "Talk about Scale", ctaHref: "https://calendly.com/hiiive/get-to-know", featured: "yes" },
     ],
   },
 
@@ -139,7 +139,7 @@ export const dp = {
     kicker: "Next step",
     title: "Let's look at the work\nyou shouldn't be doing.",
     subtitle: "A 30-minute call. We map one workflow, tell you if AI is the answer, and what it would take. No deck.",
-    buttonLabel: "Book a call", buttonHref: "https://calendly.com/hiiive/dvision-potenzial",
+    buttonLabel: "Book a call", buttonHref: "https://calendly.com/hiiive/get-to-know",
     altText: "or email hello@hiiive.ai",
   },
 };

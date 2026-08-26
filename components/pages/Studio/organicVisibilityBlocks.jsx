@@ -31,7 +31,7 @@ const HERO_D = {
     kicker: "Service 03 — Organic visibility",
     headline: "Be the answer,\nnot the tenth\nblue link.",
     subtitle: "Buyers now ask assistants before they ask Google. We make sure the answer they get is built from your site, your data and your language — and that it sends them to you.",
-    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+    primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/get-to-know",
     secondaryLabel: "Watch the 2-min explainer", secondaryHref: "#",
     cardKicker: "Visibility snapshot", cardDomain: "yourbrand.com",
     score: "18%", scoreLabel: "share of answer across 240 buying questions",

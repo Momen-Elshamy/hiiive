@@ -50,7 +50,7 @@ export const HeaderBlock = {
       logoText: "HIIIVE",
       contactEmail: "hello@hiiive.ai",
       ctaLabel: "Book a call",
-      ctaHref: "https://calendly.com/hiiive/dvision-potenzial",
+      ctaHref: "https://calendly.com/hiiive/get-to-know",
       navItems: defaultNavItems,
    },
    render: ({ logoText, navItems, contactEmail, ctaLabel, ctaHref }) => (

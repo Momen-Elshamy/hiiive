@@ -61,7 +61,7 @@ export const ESTIMATOR_DEFAULTS = {
     { label: "QA, launch & handover", percent: 15 },
   ],
   ctaLabel: "Book a call to validate this",
-  ctaHref: "https://calendly.com/hiiive/dvision-potenzial",
+  ctaHref: "https://calendly.com/hiiive/get-to-know",
   emailLabel: "Email me the full breakdown",
   emailTo: "hello@hiiive.ai",
   emailSubject: "My MVP estimate",
