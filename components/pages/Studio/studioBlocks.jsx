@@ -31,7 +31,7 @@ export const StudioHeroBlock = {
     subtitle:
       "From the software your team runs on to the funnel that fills it. One partner, working the way AI-native teams actually work — fast, measured, and owned by you.",
     primaryLabel: "Book a call",
-    primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+    primaryHref: "https://calendly.com/hiiive/get-to-know",
     secondaryLabel: "See our work",
     secondaryHref: "/#work",
   },
@@ -49,7 +49,7 @@ export const StudioHeroBlock = {
         </h1>
         <p className={styles.heroSub}>{subtitle}</p>
         <div className={styles.ctaRow}>
-          <a href={primaryHref || "https://calendly.com/hiiive/dvision-potenzial"} className={styles.btnPrimary}>
+          <a href={primaryHref || "https://calendly.com/hiiive/get-to-know"} className={styles.btnPrimary}>
             {primaryLabel} <ArrowRight />
           </a>
           {secondaryLabel ? (

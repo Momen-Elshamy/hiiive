@@ -302,7 +302,7 @@ export default function HomePageFallback() {
             </p>
           </Reveal>
           <Reveal className={styles.ctaR} delay={0.12}>
-            <a href="https://calendly.com/hiiive/dvision-potenzial" className={styles.ctaBtn}>Book a call <ArrowRight /></a>
+            <a href="https://calendly.com/hiiive/get-to-know" className={styles.ctaBtn}>Book a call <ArrowRight /></a>
             <span className={styles.ctaAlt}>or email hello@hiiive.ai</span>
           </Reveal>
         </div>

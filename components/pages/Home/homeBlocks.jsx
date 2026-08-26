@@ -471,7 +471,7 @@ export const HomeCtaBlock = {
     title: "Let's look at the work\nyou shouldn't be doing.",
     subtitle: "A 30-minute call. We map one workflow, tell you if AI is the answer, and what it would take. No deck.",
     buttonLabel: "Book a call",
-    buttonHref: "https://calendly.com/hiiive/dvision-potenzial",
+    buttonHref: "https://calendly.com/hiiive/get-to-know",
     altText: "or email hello@hiiive.ai",
   },
   render: ({ kicker, title, subtitle, buttonLabel, buttonHref, altText }) => (
@@ -487,7 +487,7 @@ export const HomeCtaBlock = {
           <p className={styles.ctaSub}>{subtitle}</p>
         </Reveal>
         <Reveal className={styles.ctaR} delay={0.12}>
-          <a href={buttonHref || "https://calendly.com/hiiive/dvision-potenzial"} className={styles.ctaBtn}>{buttonLabel} <ArrowRight /></a>
+          <a href={buttonHref || "https://calendly.com/hiiive/get-to-know"} className={styles.ctaBtn}>{buttonLabel} <ArrowRight /></a>
           <span className={styles.ctaAlt}>{altText}</span>
         </Reveal>
       </div>

@@ -48,7 +48,7 @@ const HERO_D = {
   line1: "Engineering",
   line2: "the future of",
   line3: "intelligence.",
-  primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/dvision-potenzial",
+  primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/get-to-know",
   secondaryLabel: "See the work", secondaryHref: "/work",
   imageUrl: "/img/about-hero.jpg",
 };
