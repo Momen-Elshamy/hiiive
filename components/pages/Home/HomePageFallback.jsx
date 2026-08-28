@@ -1,5 +1,7 @@
 import styles from "./HomePageFallback.module.css";
 import { Reveal, Stagger, StaggerItem } from "./motion";
+import HeroVideo from "./HeroVideo";
+import Flywheel from "./Flywheel";
 
 /* ---------- inline icons ---------------------------------------------------- */
 function ArrowRight() {
@@ -50,11 +52,11 @@ const products = [
   { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
 ];
 
-const steps = [
-  { num: "01", title: "Map", desc: "Two weeks inside your workflow. We find where hours, leads and revenue leak — and what AI can actually fix." },
-  { num: "02", title: "Prototype", desc: "A working thin slice in front of real users within weeks. Decisions get made on software, not slides." },
-  { num: "03", title: "Ship", desc: "Production build, wired into your stack and measured against one number you agreed up front." },
-  { num: "04", title: "Hand over", desc: "Docs, training and a roadmap your team can run. We stay if you want us, not because you are stuck." },
+const flywheelSteps = [
+  { num: "01", title: "Lab", desc: "We build our own products — Spoky, Komplyo. Our money, our risk." },
+  { num: "02", title: "Lessons", desc: "Running them live leaves playbooks and scars. Only what survives gets kept." },
+  { num: "03", title: "Studio", desc: "Forward-deployed engineers bring that tested knowledge into your company." },
+  { num: "04", title: "Feedback", desc: "Real-world results flow back and sharpen the next round of products." },
 ];
 
 const cases = [
@@ -75,14 +77,14 @@ const cases = [
   },
 ];
 
-const heroImage =
-  "https://images.unsplash.com/photo-1735942059430-731ee39914b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600";
+const heroCapabilities = ["Software", "MVPs", "Visibility", "Funnels"];
 
 export default function HomePageFallback() {
   return (
     <div className={styles.page}>
       {/* 1. Hero */}
       <section className={styles.hero}>
+        <HeroVideo src="/video/hero-waves.e2058d8a.mp4" poster="/img/hero-waves-poster.jpg" />
         <div className={`${styles.inner} ${styles.heroInner}`}>
           <div className={styles.heroTop}>
             <div className={`${styles.headlineCol} ${styles.heroReveal1}`}>
@@ -91,9 +93,7 @@ export default function HomePageFallback() {
                 <span className={styles.kickerLabel}>AI-native company builder</span>
               </div>
               <h1 className={styles.heroHeadline}>
-                The AI software<br />
-                your business<br />
-                should already run on.
+                The AI software your business should already run on.
               </h1>
             </div>
             <div className={`${styles.heroRight} ${styles.heroReveal2}`}>
@@ -110,7 +110,13 @@ export default function HomePageFallback() {
               <p className={styles.heroMeta}>First working version in weeks — not quarters.</p>
             </div>
           </div>
-          <img className={`${styles.heroImage} ${styles.heroReveal3}`} src={heroImage} alt="" loading="lazy" />
+          <div className={`${styles.heroBottom} ${styles.heroReveal3}`}>
+            <ul className={styles.heroCaps}>
+              {heroCapabilities.map((c) => (
+                <li key={c} className={styles.heroCap}>{c}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -231,33 +237,13 @@ export default function HomePageFallback() {
         </div>
       </section>
 
-      {/* 5. Process */}
-      <section className={styles.process}>
-        <div className={styles.inner}>
-          <Reveal className={styles.processHead}>
-            <div className={styles.processHeadL}>
-              <span className={styles.kickerLabel}>How we work</span>
-              <h2 className={styles.sectionTitle}>Short loops. Real software. No theatre.</h2>
-            </div>
-            <p className={styles.processNote}>
-              Every engagement runs the same four beats, whether it is an MVP, a rebuild of your
-              funnel, or an AI transformation.
-            </p>
-          </Reveal>
-          <Stagger className={styles.steps}>
-            {steps.map((s, i) => (
-              <StaggerItem key={s.num} className={styles.step}>
-                <div className={`${styles.stepRule} ${i === 0 ? styles.stepRuleActive : ""}`} />
-                <div className={styles.stepTop}>
-                  <span className={styles.stepNum}>{s.num}</span>
-                  <span className={styles.stepTitle}>{s.title}</span>
-                  <span className={styles.stepDesc}>{s.desc}</span>
-                </div>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
+      {/* 5. Flywheel */}
+      <Flywheel
+        kicker="Our flywheel"
+        title="We learn on our own products. You get what works."
+        subtitle="Every playbook the Studio brings into your company was tested on our own products first — our money, our risk, our scars. By the time it reaches you, it isn't theory anymore."
+        steps={flywheelSteps}
+      />
 
       {/* 6. Selected work */}
       <section id="work" className={styles.work}>

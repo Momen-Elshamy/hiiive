@@ -34,6 +34,17 @@ const nextConfig = {
     "@premast/site-plugin-i18n",
     "@premast/site-plugin-symbols",
   ],
+  // Files under /video carry a content hash in their filename (see
+  // hero-waves.<hash>.mp4), so a new clip ships as a new URL and `immutable`
+  // can never pin a stale one. Keep that convention when adding videos here.
+  async headers() {
+    return [
+      {
+        source: "/video/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ];
+  },
   // Note: build and dev use --webpack flag for resolve.alias support.
   // Turbopack does not support absolute-path aliases needed for pnpm.
   webpack(config) {
