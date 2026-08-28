@@ -4,6 +4,8 @@
 // HomePageFallback.module.css so CMS-edited pages match the fallback exactly.
 import styles from "./HomePageFallback.module.css";
 import { Reveal, Stagger, StaggerItem } from "./motion";
+import HeroVideo from "./HeroVideo";
+import Flywheel from "./Flywheel";
 
 /* ---------- shared bits ---------------------------------------------------- */
 function ArrowRight() {
@@ -37,11 +39,13 @@ export const HomeHeroBlock = {
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
     meta: { type: "text" },
+    capabilities: { type: "text" },
     imageUrl: { type: "text" },
+    videoUrl: { type: "text" },
   },
   defaultProps: {
     kicker: "AI-native company builder",
-    headline: "The AI software\nyour business\nshould already run on.",
+    headline: "The AI software your business should already run on.",
     subtitle:
       "Hiiive Studio is the tech partner for teams going AI-native — software, MVPs, visibility and funnels. Hiiive Lab turns what we learn into products of our own.",
     primaryLabel: "Book a call",
@@ -49,11 +53,16 @@ export const HomeHeroBlock = {
     secondaryLabel: "See what we build",
     secondaryHref: "/work",
     meta: "First working version in weeks — not quarters.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1732209556962-df3c1334bc47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+    capabilities: "Software, MVPs, Visibility, Funnels",
+    imageUrl: "/img/hero-waves-poster.jpg",
+    videoUrl: "/video/hero-waves.e2058d8a.mp4",
   },
-  render: ({ kicker, headline, subtitle, primaryLabel, primaryHref, secondaryLabel, secondaryHref, meta, imageUrl }) => (
-    <section className={styles.hero}>
+  render: ({ kicker, headline, subtitle, primaryLabel, primaryHref, secondaryLabel, secondaryHref, meta, capabilities, imageUrl, videoUrl }) => (
+    <section
+      className={styles.hero}
+      style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
+    >
+      <HeroVideo src={videoUrl} poster={imageUrl} />
       <div className={`${styles.inner} ${styles.heroInner}`}>
         <div className={styles.heroTop}>
           <div className={`${styles.headlineCol} ${styles.heroReveal1}`}>
@@ -78,7 +87,17 @@ export const HomeHeroBlock = {
             <p className={styles.heroMeta}>{meta}</p>
           </div>
         </div>
-        {imageUrl ? <img className={`${styles.heroImage} ${styles.heroReveal3}`} src={imageUrl} alt="" loading="lazy" /> : null}
+        <div className={`${styles.heroBottom} ${styles.heroReveal3}`}>
+          <ul className={styles.heroCaps}>
+            {(capabilities || "")
+              .split(",")
+              .map((c) => c.trim())
+              .filter(Boolean)
+              .map((c) => (
+                <li key={c} className={styles.heroCap}>{c}</li>
+              ))}
+          </ul>
+        </div>
       </div>
     </section>
   ),
@@ -334,11 +353,11 @@ export const HomePillarsBlock = {
 /* 5. Process                                                         */
 /* ================================================================== */
 export const HomeProcessBlock = {
-  label: "Home · Process",
+  label: "Home · Flywheel",
   fields: {
     kicker: { type: "text" },
     title: { type: "text" },
-    note: { type: "textarea" },
+    subtitle: { type: "textarea" },
     steps: {
       type: "array",
       getItemSummary: (item) => item.title || "Step",
@@ -351,40 +370,19 @@ export const HomeProcessBlock = {
     },
   },
   defaultProps: {
-    kicker: "How we work",
-    title: "Short loops. Real software. No theatre.",
-    note: "Every engagement runs the same four beats, whether it is an MVP, a rebuild of your funnel, or an AI transformation.",
+    kicker: "Our flywheel",
+    title: "We learn on our own products. You get what works.",
+    subtitle:
+      "Every playbook the Studio brings into your company was tested on our own products first — our money, our risk, our scars. By the time it reaches you, it isn't theory anymore.",
     steps: [
-      { num: "01", title: "Map", desc: "Two weeks inside your workflow. We find where hours, leads and revenue leak — and what AI can actually fix." },
-      { num: "02", title: "Prototype", desc: "A working thin slice in front of real users within weeks. Decisions get made on software, not slides." },
-      { num: "03", title: "Ship", desc: "Production build, wired into your stack and measured against one number you agreed up front." },
-      { num: "04", title: "Hand over", desc: "Docs, training and a roadmap your team can run. We stay if you want us, not because you are stuck." },
+      { num: "01", title: "Lab", desc: "We build our own products — Spoky, Komplyo. Our money, our risk." },
+      { num: "02", title: "Lessons", desc: "Running them live leaves playbooks and scars. Only what survives gets kept." },
+      { num: "03", title: "Studio", desc: "Forward-deployed engineers bring that tested knowledge into your company." },
+      { num: "04", title: "Feedback", desc: "Real-world results flow back and sharpen the next round of products." },
     ],
   },
-  render: ({ kicker, title, note, steps }) => (
-    <section className={styles.process}>
-      <div className={styles.inner}>
-        <Reveal className={styles.processHead}>
-          <div className={styles.processHeadL}>
-            <span className={styles.kickerLabel}>{kicker}</span>
-            <h2 className={styles.sectionTitle}>{title}</h2>
-          </div>
-          <p className={styles.processNote}>{note}</p>
-        </Reveal>
-        <Stagger className={styles.steps}>
-          {(steps || []).map((s, i) => (
-            <StaggerItem key={i} className={styles.step}>
-              <div className={`${styles.stepRule} ${i === 0 ? styles.stepRuleActive : ""}`} />
-              <div className={styles.stepTop}>
-                <span className={styles.stepNum}>{s.num}</span>
-                <span className={styles.stepTitle}>{s.title}</span>
-                <span className={styles.stepDesc}>{s.desc}</span>
-              </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
-      </div>
-    </section>
+  render: ({ kicker, title, subtitle, steps }) => (
+    <Flywheel kicker={kicker} title={title} subtitle={subtitle} steps={steps || []} />
   ),
 };
 

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./HeaderBlock.module.css";
 import LangSwitcher from "./LangSwitcher";
 import { NavIcon } from "./navIcons";
@@ -67,11 +68,27 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    const [menuOpen, setMenuOpen] = useState(false);
    const closeMenu = () => setMenuOpen(false);
 
+   // The home page opens on the dark hero, so the nav sits transparently on top
+   // of it and only fades to the light paper bar once the user scrolls past it.
+   const pathname = usePathname();
+   const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
+   const [scrolled, setScrolled] = useState(false);
+
+   useEffect(() => {
+      if (!isHome) return undefined;
+      const onScroll = () => setScrolled(window.scrollY > 24);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
+   }, [isHome]);
+
+   const onDark = isHome && !scrolled && !menuOpen;
+
    const hasDropdown = (item) => Array.isArray(item.dropdown) && item.dropdown.length > 0;
 
    return (
-      <>
-         <header className={styles.headerRoot}>
+      <div className={isHome ? styles.headerOverlay : undefined}>
+         <header className={`${styles.headerRoot} ${onDark ? styles.onDark : ""}`}>
             <div className={styles.headerInner}>
                <div className={styles.headerLeft}>
                   <a href="/" className={styles.headerLogo}>
@@ -144,6 +161,6 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
                {cta}
             </a>
          </nav>
-      </>
+      </div>
    );
 }

@@ -4,6 +4,70 @@
   flex-shrink: 0;
   background: #ededed;
   font-family: "Inter", system-ui, sans-serif;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Home page: the nav is lifted out of flow so it floats over the dark hero.
+   The wrapper carries the mobile menu along with it. */
+.headerOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+/* Transparent-on-hero palette. Dropped as soon as the page scrolls, which
+   fades the bar back to the light paper header. */
+.onDark {
+  background: transparent;
+}
+
+.headerOverlay .headerRoot:not(.onDark) {
+  box-shadow: 0 1px 0 #d6d7da;
+}
+
+.onDark .headerLogo {
+  color: #ededed;
+}
+
+.onDark .headerNavLink {
+  color: rgba(237, 237, 237, 0.8);
+}
+
+.onDark .headerNavLink:hover {
+  color: #ededed;
+}
+
+.onDark .headerEmail {
+  color: #a0a3ac;
+}
+
+.onDark .headerEmail:hover,
+.onDark .langLink:hover,
+.onDark .langActive {
+  color: #ededed;
+}
+
+.onDark .langLink {
+  color: #a0a3ac;
+}
+
+.onDark .langSep {
+  color: rgba(237, 237, 237, 0.35);
+}
+
+.onDark .headerCta {
+  background: #f7f42c;
+  color: #1b1d1e;
+}
+
+.onDark .headerCta:hover {
+  color: #1b1d1e;
+}
+
+.onDark .hamburger span {
+  background: #ededed;
 }
 
 .headerInner {

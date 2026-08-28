@@ -34,6 +34,11 @@
   .heroReveal3 {
     animation: none;
   }
+  .fwStep {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* Each section carries the body font + paper base so CMS blocks (which lack the
@@ -42,7 +47,7 @@
 .clients,
 .stats,
 .pillars,
-.process,
+.flywheel,
 .work {
   font-family: var(--font-body);
   color: var(--hv-ink);
@@ -151,16 +156,61 @@
 }
 
 /* ==========================================================================
-   1. Hero
+   1. Hero — dark full-bleed topography (Pencil: Homepage → Hero)
    ========================================================================== */
 .hero {
-  padding-top: 70px;
+  position: relative;
+  isolation: isolate;
+  min-height: 720px; /* full design frame — the transparent nav floats over it */
+  padding: 0;
+  color: var(--hv-ink-rev);
+  background-color: var(--hv-ink);
+  background-image: url("/img/hero-waves-poster.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* Decorative clip, layered between the poster background and the scrim. */
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.heroVideoReady {
+  opacity: 1;
+}
+
+/* Scrim so the headline stays readable over the glowing wave. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(27, 29, 30, 0.95) 0%,
+    rgba(27, 29, 30, 0.6) 55%,
+    rgba(27, 29, 30, 0.15) 100%
+  );
 }
 
 .heroInner {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 56px;
+  min-height: inherit;
+  padding-top: 160px; /* clears the transparent nav floating over the hero */
+  padding-bottom: 56px;
 }
 
 .heroTop {
@@ -179,13 +229,38 @@
   flex-shrink: 0;
 }
 
+/* Kicker + buttons flip to the reversed palette inside the dark hero. */
+.hero .kickerDot {
+  background: var(--hv-accent);
+}
+
+.hero .kickerLabel {
+  color: var(--hv-accent);
+}
+
+.hero .btnPrimary {
+  background: var(--hv-accent);
+  border-color: var(--hv-accent);
+  color: var(--hv-ink);
+}
+
+.hero .btnSecondary {
+  color: var(--hv-ink-rev);
+  border-color: rgba(237, 237, 237, 0.4);
+}
+
+.hero .btnSecondary:hover {
+  background: var(--hv-ink-rev);
+  color: var(--hv-ink);
+}
+
 .heroHeadline {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 96px;
-  line-height: 0.92;
+  font-size: 64px;
+  line-height: 1.15;
   letter-spacing: 0;
-  color: var(--hv-ink);
+  color: var(--hv-ink-rev);
   text-transform: uppercase;
 }
 
@@ -199,8 +274,8 @@
 
 .heroSub {
   font-size: 17px;
-  line-height: 1.59;
-  color: var(--hv-ink-soft);
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
 }
 
 .heroCtaRow {
@@ -212,16 +287,42 @@
 
 .heroMeta {
   font-size: 13px;
-  color: var(--hv-muted);
+  color: var(--hv-soft-rev);
 }
 
-.heroImage {
-  width: 100%;
-  height: 420px;
-  border-radius: 12px;
-  object-fit: cover;
-  background: var(--hv-hairline);
-  display: block;
+/* Bottom rail: capability list -------------------------------------------- */
+.heroBottom {
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.heroCaps {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.heroCap {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--hv-soft-rev);
+}
+
+.heroCap + .heroCap::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-right: 14px;
+  border-radius: 2px;
+  background: var(--hv-accent);
+  vertical-align: middle;
 }
 
 /* ==========================================================================
@@ -577,85 +678,160 @@
 }
 
 /* ==========================================================================
-   5. Process
+   5. Flywheel (scroll-driven canvas)
    ========================================================================== */
-.process {
-  padding: 80px 0;
+/* The section is taller than the viewport and its body sticks, so the whole
+   lap plays out under the reader's own scroll and releases when it is done. */
+.flywheel {
+  position: relative;
+  height: 320vh;
+  padding: 0;
 }
 
-.processHead {
+.flywheelSticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 60px;
-  margin-bottom: 44px;
+  align-items: center;
+  overflow: hidden;
 }
 
-.processHeadL {
+.flywheelInner {
+  display: flex;
+  align-items: center;
+  gap: 72px;
+  width: 100%;
+}
+
+.fwText {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  width: 760px;
-  max-width: 100%;
-}
-
-.processNote {
-  width: 420px;
+  gap: 26px;
+  width: 560px;
   max-width: 100%;
   flex-shrink: 0;
+}
+
+.fwTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 44px;
+  line-height: 0.92;
+  color: var(--hv-ink);
+  text-transform: uppercase;
+}
+
+.fwSub {
   font-size: 15px;
   line-height: 1.6;
   color: var(--hv-ink-soft);
 }
 
-.steps {
-  display: flex;
-  flex-direction: row;
-}
-
-.step {
-  flex: 1 1 0;
+.fwSteps {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-right: 32px;
+  gap: 18px;
+  list-style: none;
 }
 
-.stepRule {
-  width: 100%;
-  height: 2px;
+/* Steps arrive one at a time as the lap passes them; the space is reserved up
+   front so nothing reflows while the section is pinned. */
+.fwStep {
+  display: flex;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.fwStepOn {
+  opacity: 1;
+  transform: none;
+}
+
+/* The bar and the type both key off .fwStepOn, which the canvas sets as the
+   travelling head passes each station. */
+.fwBar {
+  width: 3px;
+  border-radius: 1.5px;
   background: var(--hv-hairline);
+  flex-shrink: 0;
+  transition: background 0.35s ease;
 }
 
-.stepRuleActive {
-  background: var(--hv-ink);
+.fwStepOn .fwBar {
+  background: var(--hv-accent);
 }
 
-.stepTop {
+.fwStepBody {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 20px;
+  gap: 5px;
+  min-width: 0;
 }
 
-.stepNum {
+.fwStepTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fwStepNum {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 1.4px;
-  color: var(--hv-ink);
+  letter-spacing: 1px;
+  color: var(--hv-muted);
+  transition: color 0.35s ease;
 }
 
-.stepTitle {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--hv-ink);
-}
-
-.stepDesc {
+.fwStepTitle {
   font-size: 14px;
-  line-height: 1.57;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--hv-muted);
+  transition: color 0.35s ease;
+}
+
+.fwStepDesc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--hv-muted);
+  transition: color 0.35s ease;
+}
+
+.fwStepOn .fwStepNum,
+.fwStepOn .fwStepTitle {
+  color: var(--hv-ink);
+}
+
+.fwStepOn .fwStepDesc {
   color: var(--hv-ink-soft);
+}
+
+.fwNote {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--hv-muted);
+}
+
+.fwPanel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: min(620px, calc(100vh - 180px));
+  border-radius: 12px;
+  background: var(--hv-ink);
+  overflow: hidden;
+}
+
+.fwCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* ==========================================================================
@@ -841,7 +1017,7 @@
    ========================================================================== */
 @media (max-width: 1100px) {
   .heroHeadline {
-    font-size: 76px;
+    font-size: 56px;
   }
   .sectionTitle,
   .ctaTitle {
@@ -857,6 +1033,14 @@
     padding-left: 24px;
     padding-right: 24px;
   }
+  .hero {
+    min-height: 0;
+  }
+  .heroInner {
+    padding-top: 130px;
+    padding-bottom: 40px;
+    gap: 40px;
+  }
   .heroTop {
     flex-direction: column;
     align-items: flex-start;
@@ -866,36 +1050,49 @@
     width: 100%;
   }
   .pillarsHead,
-  .processHead,
   .workHead {
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
   }
   .pillarsHeadL,
-  .processHeadL,
   .workHeadL {
     width: 100%;
   }
-  .pillarsNote,
-  .processNote {
+  .pillarsNote {
     width: 100%;
   }
+  .flywheel {
+    height: auto;
+    padding: 72px 0;
+  }
+  .flywheelSticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .flywheelInner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+  }
+  .fwStep {
+    opacity: 1;
+    transform: none;
+  }
+  .fwText {
+    width: 100%;
+  }
+  .fwPanel {
+    height: 440px;
+  }
+
   .pillarRow {
     flex-direction: column;
   }
   .studioCard,
   .labCard {
     width: 100%;
-  }
-  .steps {
-    flex-wrap: wrap;
-  }
-  .step {
-    flex: 1 1 45%;
-    min-width: 220px;
-    padding-right: 0;
-    padding-bottom: 12px;
   }
   .caseRow {
     flex-direction: column;
@@ -915,7 +1112,7 @@
 
 @media (max-width: 720px) {
   .heroHeadline {
-    font-size: 54px;
+    font-size: 40px;
   }
   .sectionTitle,
   .ctaTitle {
@@ -948,7 +1145,7 @@
   .logos {
     gap: 16px 28px;
   }
-  .step {
-    flex: 1 1 100%;
+  .fwPanel {
+    height: 360px;
   }
 }
