@@ -1,5 +1,6 @@
 import { Render } from "@puckeditor/core/rsc";
 import { siteConfig } from "@/site.config";
+import { PremastSiteSettings } from "@premast/site-core/site-settings";
 import Header from "@/components/layout/HeaderBlock";
 import Footer from "@/components/layout/FooterBlock";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
@@ -52,6 +53,9 @@ export default async function SiteLayout({ children }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()) }}
       />
+      {/* Admin → Settings → Integrations (GA, GTM, PostHog, Snitcher custom HTML…).
+          Without this seam nothing saved in those settings ever reaches the page. */}
+      {isCmsDbEnabled() ? <PremastSiteSettings siteConfig={siteConfig} /> : null}
       {headerData ? <Render config={siteConfig.puckConfig} data={headerData} /> : <Header />}
       <main className={`${styles.main} ${shellStyles.siteMain}`}>{children}</main>
       {footerData ? <Render config={siteConfig.puckConfig} data={footerData} /> : <Footer />}
