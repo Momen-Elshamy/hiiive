@@ -8,10 +8,8 @@
 // `premast_locale` cookie so switching back to the unprefixed default locale
 // serves that locale (the server resolver reads header -> cookie).
 import { usePathname } from "next/navigation";
+import { LOCALES, DEFAULT_LOCALE } from "@/lib/locales";
 import styles from "./HeaderBlock.module.css";
-
-const LOCALES = ["en", "de"];
-const DEFAULT_LOCALE = "en";
 
 function splitLocale(pathname) {
   const segs = (pathname || "/").split("/").filter(Boolean);
