@@ -44,10 +44,10 @@ export const HomeHeroBlock = {
     videoUrl: { type: "text" },
   },
   defaultProps: {
-    kicker: "AI-native company builder",
-    headline: "The AI software your business should already run on.",
+    kicker: "Agentic product company",
+    headline: "The agentic systems your business should already run on.",
     subtitle:
-      "Hiiive Studio is the tech partner for teams going AI-native — software, MVPs, visibility and funnels. Hiiive Lab turns what we learn into products of our own.",
+      "We put forward-deployed engineers inside your company, build the agentic system on your real operations — and keep building it as a product long after the engagement ends.",
     primaryLabel: "Book a call",
     primaryHref: "#contact",
     secondaryLabel: "See what we build",
@@ -266,11 +266,11 @@ export const HomePillarsBlock = {
   },
   defaultProps: {
     kicker: "What HIIIVE is",
-    title: "One company, two halves.",
-    note: "Studio pays attention to your workflow. Lab pays attention to the patterns underneath it. Each one makes the other sharper.",
+    title: "We build with you. Then we keep building.",
+    note: "Studio embeds in one company's real operation. Lab turns what gets built there into a product the next company can run on.",
     studioTag: "Hiiive Studio — services",
-    studioTitle: "Tech services, built the AI-native way.",
-    studioLead: "From the software your team runs on to the funnel that fills it. One partner, working the way AI-native teams actually work — fast, measured, and owned by you.",
+    studioTitle: "Forward-deployed engineering.",
+    studioLead: "Our engineers work inside your team, on your real operations — from the agentic systems your people run on to the funnel that fills them. In production, not in a deck.",
     services: [
       { num: "01", name: "AI software & internal tools", desc: "Custom systems and agents that take real work off your team." },
       { num: "02", name: "MVP design & build", desc: "From idea to a product in users' hands — weeks, not quarters." },
@@ -281,10 +281,11 @@ export const HomePillarsBlock = {
     studioLinkLabel: "Explore Studio",
     studioLinkHref: "#work",
     labTag: "Hiiive Lab — products",
-    labTitle: "We build our own software too.",
-    labLead: "Lab is where recurring problems become products. It is also the proof: we ship and maintain real software, not decks about it.",
+    labTitle: "Every engagement leaves a product.",
+    labLead: "Lab is where the systems we build with partners become products in their own right — hardened, extended, and run for the next company with the same problem.",
     products: [
-      { name: "SPOKY", desc: "First Lab product — validating with real users", status: "In validation" },
+      { name: "SPOKY", desc: "Validating with real users", status: "In validation" },
+      { name: "CONTENT OS", desc: "Agentic content operations, in daily use", status: "In production" },
       { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
     ],
     labLinkLabel: "See the Lab",
@@ -371,14 +372,14 @@ export const HomeProcessBlock = {
   },
   defaultProps: {
     kicker: "Our flywheel",
-    title: "We learn on our own products. You get what works.",
+    title: "We build with one company. The product serves the industry.",
     subtitle:
-      "Every playbook the Studio brings into your company was tested on our own products first — our money, our risk, our scars. By the time it reaches you, it isn't theory anymore.",
+      "One partner's real problem funds the R&D, and the result outlives the engagement as a product. You get a system running in production; we get a product worth maintaining — which is why it keeps getting better.",
     steps: [
-      { num: "01", title: "Lab", desc: "We build our own products — Spoky, Komplyo. Our money, our risk." },
-      { num: "02", title: "Lessons", desc: "Running them live leaves playbooks and scars. Only what survives gets kept." },
-      { num: "03", title: "Studio", desc: "Forward-deployed engineers bring that tested knowledge into your company." },
-      { num: "04", title: "Feedback", desc: "Real-world results flow back and sharpen the next round of products." },
+      { num: "01", title: "Deploy", desc: "Our engineers embed in your team and work on your real operations, not a sandbox." },
+      { num: "02", title: "Co-develop", desc: "We build the agentic system where the work actually happens, in production." },
+      { num: "03", title: "Productize", desc: "What proves itself becomes a product. We keep building, hardening, maintaining." },
+      { num: "04", title: "Scale", desc: "The next company in your industry starts where you finished." },
     ],
   },
   render: ({ kicker, title, subtitle, steps }) => (

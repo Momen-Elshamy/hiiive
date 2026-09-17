@@ -2,7 +2,7 @@
 // "Our flywheel" section (Pencil: Homepage → Process/gCXNa).
 //
 // Scroll position drives one full lap of the belt: the head travels from the
-// Lab pad up the left flank to your company and back down the right, and each
+// deploy pad up the left flank to your company and back down the right, and each
 // quarter-lap lights the matching step in the text column. The graphic is a
 // single 2D canvas — no image, no library, ~6KB of drawing code — and the rAF
 // loop only runs while the panel is on screen and the progress is still moving.
@@ -25,9 +25,9 @@ const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
    Isometric scene. Authored in ground space (gx, gy on the plane, gz up) and
    projected 2:1, so grid, track, beam and cube all share one perspective.
 
-   Reading: the loop on the ground is the flywheel — Lab, lessons, studio,
-   feedback. Every lap feeds the column of light at the hub, which rises into
-   the cube overhead: your company, receiving what the Lab already paid for.
+   Reading: the loop on the ground is the flywheel — deploy, co-develop,
+   productize, scale. Every lap feeds the column of light at the hub, which
+   rises into the cube overhead: your company, where the work actually runs.
    --------------------------------------------------------------------------- */
 const ISO_X = Math.cos(Math.PI / 6);
 const ISO_Y = Math.sin(Math.PI / 6);
@@ -185,6 +185,19 @@ function drawCube(ctx, P, c, z, lit) {
   ctx.globalAlpha = 1;
 }
 
+/** Draw canvas text shrunk to fit `maxWidth`, down to `min` px. Locale copy
+    varies a lot in length (DE "PRODUKTISIERUNG" vs EN "PRODUCTIZE"), and the
+    label gutter is narrow on small panels. */
+function fitText(ctx, text, x, y, maxWidth, size, weight, min = 7.5) {
+  let px = size;
+  ctx.font = `${weight} ${px}px Inter, system-ui, sans-serif`;
+  while (px > min && ctx.measureText(text).width > maxWidth) {
+    px -= 0.5;
+    ctx.font = `${weight} ${px}px Inter, system-ui, sans-serif`;
+  }
+  ctx.fillText(text, x, y);
+}
+
 function drawScene(ctx, w, h, progress, steps, activeAt, now, reduced) {
   ctx.clearRect(0, 0, w, h);
 
@@ -317,17 +330,17 @@ function drawScene(ctx, w, h, progress, steps, activeAt, now, reduced) {
     ctx.globalAlpha = 1;
 
     const label = `${steps[i]?.num || ""} ${(steps[i]?.title || "").toUpperCase()}`.trim();
-    ctx.font = "600 10px Inter, system-ui, sans-serif";
+    const tx = lx + (right ? 17 : -17);
+    const room = Math.max(40, (right ? w - tx : tx) - 6);
     ctx.fillStyle = on ? ACCENT : LABEL;
     ctx.globalAlpha = on ? 1 : 0.6;
     ctx.textBaseline = "middle";
     ctx.textAlign = right ? "left" : "right";
-    ctx.fillText(label, lx + (right ? 17 : -17), ly - 1);
+    fitText(ctx, label, tx, ly - 1, room, 10, "600");
     if (i === 0) {
-      ctx.font = "italic 11px Inter, system-ui, sans-serif";
       ctx.fillStyle = LABEL;
       ctx.globalAlpha = 0.6;
-      ctx.fillText("our products, our risk", lx + (right ? 17 : -17), ly + 13);
+      fitText(ctx, "our engineers, your operation", tx, ly + 13, room, 11, "italic");
     }
     ctx.globalAlpha = 1;
   }
