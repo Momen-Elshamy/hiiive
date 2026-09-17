@@ -268,7 +268,7 @@ export const HomePillarsBlock = {
     kicker: "What HIIIVE is",
     title: "We build with you. Then we keep building.",
     note: "Studio embeds in one company's real operation. Lab turns what gets built there into a product the next company can run on.",
-    studioTag: "Hiiive Studio — services",
+    studioTag: "Hiiive Studio — AI services",
     studioTitle: "Forward-deployed engineering.",
     studioLead: "Our engineers work inside your team, on your real operations — from the agentic systems your people run on to the funnel that fills them. In production, not in a deck.",
     services: [
@@ -280,7 +280,7 @@ export const HomePillarsBlock = {
     ],
     studioLinkLabel: "Explore Studio",
     studioLinkHref: "#work",
-    labTag: "Hiiive Lab — products",
+    labTag: "Hiiive Lab — AI products",
     labTitle: "Every engagement leaves a product.",
     labLead: "Lab is where the systems we build with partners become products in their own right — hardened, extended, and run for the next company with the same problem.",
     products: [

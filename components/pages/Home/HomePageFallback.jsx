@@ -189,7 +189,7 @@ export default function HomePageFallback() {
             <StaggerItem className={styles.studioCard}>
               <div className={styles.kicker}>
                 <span className={styles.kickerBar} />
-                <span className={styles.cardTag}>Hiiive Studio — services</span>
+                <span className={styles.cardTag}>Hiiive Studio — AI services</span>
               </div>
               <h3 className={styles.cardTitle}>Forward-deployed engineering.</h3>
               <p className={styles.cardLead}>
@@ -215,7 +215,7 @@ export default function HomePageFallback() {
               <div className={styles.labTop}>
                 <div className={styles.kicker}>
                   <span className={styles.kickerBar} />
-                  <span className={styles.cardTag}>Hiiive Lab — products</span>
+                  <span className={styles.cardTag}>Hiiive Lab — AI products</span>
                 </div>
                 <h3 className={styles.cardTitle}>Every engagement leaves a product.</h3>
                 <p className={styles.cardLead}>
