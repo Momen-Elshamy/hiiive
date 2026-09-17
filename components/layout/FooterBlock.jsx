@@ -46,7 +46,7 @@ export default function Footer({ brandName, tagLine, copyright, columns, legal }
                <div className={styles.footerBrand}>
                   <p className={styles.footerLogo}>{brandName || "HIIIVE"}</p>
                   <p className={styles.footerTag}>
-                     {tagLine || "AI-native company builder. Studio for services, Lab for products."}
+                     {tagLine || "Agentic product company. We build with you, then we keep building."}
                   </p>
                </div>
                <div className={styles.footerCols}>
@@ -117,7 +117,7 @@ export const FooterBlock = {
    },
    defaultProps: {
       brandName: "HIIIVE",
-      tagLine: "AI-native company builder. Studio for services, Lab for products.",
+      tagLine: "Agentic product company. We build with you, then we keep building.",
       copyright: "",
       columns: defaultColumns,
       legal: defaultLegal,
