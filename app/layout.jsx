@@ -13,6 +13,9 @@ export default function RootLayout({ children }) {
    return (
       <html lang="en" suppressHydrationWarning>
          <head>
+            {/* AI-readable summary of the site. Kept in <head> as a raw link so
+                per-page `alternates` metadata can't overwrite it. */}
+            <link rel="llms-txt" type="text/markdown" href="/llms.txt" title="llms.txt" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             <link

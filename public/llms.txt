@@ -1,39 +1,44 @@
 # HIIIVE
 
-> HIIIVE (hiiive.ai) is an AI-native company builder from Berlin, founded 2024. Two engines: the Studio sells services — AI software, MVP builds, organic visibility (AI-native SEO), digital presence — delivered by forward-deployed engineers who work inside client companies. The Lab ships HIIIVE's own products (Spoky, in validation; Komplyo, in build). Every playbook the Studio sells was tested on the Lab's own products first.
+> HIIIVE (hiiive.ai) is an agentic product company from Berlin, founded 2024. Two engines: the Studio puts forward-deployed engineers inside client companies and builds agentic systems on their real operations — AI software and internal tools, MVP builds, organic visibility (AI-native SEO), digital presence and funnels, AI transformation. The Lab turns what gets built there into HIIIVE's own products (Content OS in production, Spoky in validation, Komplyo in build). Every engagement leaves a product we keep building.
 
 Key facts:
-- AI-native company builder, Berlin-Spandau, Germany. Founded 2024.
-- Model: Studio (client services) × Lab (own products) — one flywheel.
-- Forward-deployed engineers: they embed in the client's company, work with domain experts on real processes, results in weeks not quarters.
-- MVP Build: Strategy Sprint €500 flat (5 days), fixed-price MVP build from €7,500 (~3 weeks).
-- Organic visibility: AI-native SEO measured as "share of answer" across AI assistants; Visibility Sprint from €14K, Growth Retainer from €6K/month.
+- Agentic product company, Berlin, Germany. Founded 2024.
+- Model: Studio (client services) × Lab (own products) — one flywheel: deploy → co-develop → productize → scale.
+- Forward-deployed engineers embed in the client's team and build where the work happens, in production. First working version in weeks, not quarters.
+- Track record: 12+ internal tools shipped and still running, 4 industries (logistics, retail, fintech, health), 6-week median time to first release.
+- MVP Build: Strategy Sprint €500 flat (5 days), then a fixed-price MVP build from €7,500 (~3 weeks).
+- Organic visibility: AI-native SEO measured as "share of answer" across AI assistants; Visibility Sprint from €14K (6 weeks), Growth Retainer from €6K/month.
+- Digital presence & funnels: Grow from €1,000/month, Scale from €2,500/month.
 - Contact: hello@hiiive.ai · book a call: https://calendly.com/hiiive/get-to-know
 - Languages: English (default, at /) and German (at /de/...).
 
 ## Studio — services
 
+- [Studio overview](https://hiiive.ai/studio): Forward-deployed engineering — five services, one team, working inside your company.
+- [AI software & internal tools](https://hiiive.ai/studio#ai-software): Custom systems and agents that take real work off the team.
 - [MVP Build](https://hiiive.ai/studio/mvp-build): From idea to a working MVP in 3 weeks. Strategy Sprint (5 days, €500) then a fixed-price build.
 - [Organic Visibility](https://hiiive.ai/studio/organic-visibility): Be the answer, not the tenth blue link — AI-native SEO measured as share of answer across assistants.
-- [Digital Presence & Funnels](https://hiiive.ai/studio/digital-presence): Ownership of how the brand shows up online — measurement, fixes, funnels.
+- [Digital Presence & Funnels](https://hiiive.ai/studio/digital-presence): Sites, funnels and conversion structure that turn traffic into pipeline.
+- [AI transformation & consulting](https://hiiive.ai/studio#consulting): Audit, roadmap and enablement — so the change actually sticks.
 - [MVP Cost Estimator](https://hiiive.ai/tools/mvp-cost-estimator): Free interactive estimate of MVP cost and timeline, no email required.
-- [Studio overview](https://hiiive.ai/studio)
 
 ## Lab — products
 
-- Spoky — in validation.
-- Komplyo — in build.
+- Content OS — agentic content operations, in daily use. In production.
+- Spoky — validating with real users. In validation.
+- Komplyo — compliance workflows, automated. In build.
 
 ## Case studies
 
 - [All case studies](https://hiiive.ai/work): Every project shipped to production and still running.
-- [Mindverse — organic growth engine](https://hiiive.ai/work/mindverse-organic-engine): SEO & digital presence for Germany's GDPR-compliant AI ecosystem.
+- [Mindverse — organic growth engine](https://hiiive.ai/work/mindverse-organic-engine): AI-native content system, technical SEO and conversion structure for Germany's GDPR-compliant AI ecosystem.
 - [Wavelr — verified-PV marketplace](https://hiiive.ai/work/wavelr-pv-marketplace): MVP & SEO — marketplace for verified photovoltaic assets, concept to live in 8 weeks.
-- [ahead — FIBO event game](https://hiiive.ai/work/ahead-fibo-game): Offline-first big-screen game with mobile control panel, built in 2 weeks.
+- [ahead — FIBO event game](https://hiiive.ai/work/ahead-fibo-game): Offline-first big-screen game with a mobile control panel, built in 2 weeks.
 
 ## Company
 
-- [About](https://hiiive.ai/about): AI-native company builder — the Studio × Lab flywheel, principles, team, the Berlin-Spandau office.
+- [About](https://hiiive.ai/about): The Studio × Lab flywheel, principles, team, the Berlin office.
 - [Imprint](https://hiiive.ai/imprint): Legal imprint (Impressum).
 - [LinkedIn](https://www.linkedin.com/company/hiiive)
 
