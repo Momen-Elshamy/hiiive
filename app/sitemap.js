@@ -10,6 +10,16 @@ function urlFor(slug, locale) {
   return `${SITE_URL}${prefix}${slug ? `/${slug}` : prefix ? "" : "/"}`;
 }
 
+function isNoIndex(content) {
+  try {
+    const data = typeof content === "string" ? JSON.parse(content) : content;
+    const v = data?.root?.props?.noIndex;
+    return v === true || v === "true";
+  } catch {
+    return false;
+  }
+}
+
 export default async function sitemap() {
   const connectDB = await siteConfig.getConnectDB();
   await connectDB();
@@ -25,8 +35,9 @@ export default async function sitemap() {
   };
 
   // Standalone pages. The "home" slug is the site root, not /home.
-  const pages = await Page.find({ published: true }, { slug: 1, locale: 1, updatedAt: 1 }).lean();
+  const pages = await Page.find({ published: true }, { slug: 1, locale: 1, updatedAt: 1, content: 1 }).lean();
   for (const page of pages) {
+    if (isNoIndex(page.content)) continue;
     const slug = page.slug === "home" ? "" : page.slug;
     push(urlFor(slug, page.locale), {
       lastModified: page.updatedAt,
@@ -40,7 +51,7 @@ export default async function sitemap() {
 
   const items = await ContentItem.find(
     { published: true },
-    { slug: 1, locale: 1, contentType: 1, updatedAt: 1 },
+    { slug: 1, locale: 1, contentType: 1, updatedAt: 1, content: 1 },
   ).lean();
 
   // llms.txt is a real crawlable resource, not a page — list it so AI-readiness
@@ -48,6 +59,7 @@ export default async function sitemap() {
   push(`${SITE_URL}/llms.txt`, { changeFrequency: "monthly", priority: 0.3 });
 
   for (const item of items) {
+    if (isNoIndex(item.content)) continue;
     const prefix = ctMap[item.contentType.toString()];
     if (!prefix) continue;
     const slug = `${prefix.replace(/^\//, "")}/${item.slug}`;
