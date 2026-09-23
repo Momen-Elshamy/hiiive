@@ -43,6 +43,10 @@ export default async function sitemap() {
     { slug: 1, locale: 1, contentType: 1, updatedAt: 1 },
   ).lean();
 
+  // llms.txt is a real crawlable resource, not a page — list it so AI-readiness
+  // checkers and crawlers find it without having to guess the path.
+  push(`${SITE_URL}/llms.txt`, { changeFrequency: "monthly", priority: 0.3 });
+
   for (const item of items) {
     const prefix = ctMap[item.contentType.toString()];
     if (!prefix) continue;
