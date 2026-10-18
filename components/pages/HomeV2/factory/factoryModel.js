@@ -684,8 +684,6 @@ export function createFactory() {
     disposables.forEach((thing) => thing.dispose?.());
   }
 
-  // Centre of the AI lab's top plate: where the home story's pattern plays out.
-  const labTop = new THREE.Vector3(0, labCap.top, 0);
-
-  return { group, update, checkpoints, labTop, dispose };
+  // `ground` is the plain floor; the home story swaps in its own (the pattern).
+  return { group, ground, update, checkpoints, dispose };
 }

@@ -13,19 +13,21 @@ import { createStoryLayer, STORY_FOV, STORY_BLOOM } from "./storyLayer";
 import { SCREENS, FACTORY_FOV, VIEW_DIR, OVERVIEW, framing, stationPower, clamp01, ramp, lerp } from "./homeTimeline";
 
 /*
- * The home story's one scene: the software factory, with scenes 1–2 playing
- * out on top of its AI lab.
+ * The home story's one scene: the software factory, standing on the pattern
+ * from scenes 1–2 as its floor.
  *
- * The camera starts inside the pattern (the story layer, shrunk onto the lab's
- * top plate) and then pulls out. Its distance grows exponentially, like a
- * powers-of-ten zoom, while the look-at point follows the distance, so the
- * pattern stays centred until the camera is far enough to show where it is.
- * The factory is hidden while the pattern fills the screen, appears as an
- * unlit silhouette during the pull-out, and its stations then power on one by
- * one.
+ * The camera starts in the pattern (the story layer, laid out under the whole
+ * factory with the spark landing in front of the AI lab) and then pulls out.
+ * Its distance grows exponentially while the look-at point follows the
+ * distance, so the spark stays centred until the camera is far enough out.
+ * Meanwhile the factory rises out of the bead floor as an unlit silhouette;
+ * once the whole line is in view its stations power on one by one.
  */
 
-const STORY_SCALE = 0.13; // story units → world: fits the 22 × 14 field on the 4 × 2 lab plate
+// Story units → world: the 22 × 14 field covers the factory's footprint, and
+// the spark lands inside the loop track, in front of the AI lab.
+const FLOOR = { scale: 0.9, position: new THREE.Vector3(0.7, 0.03, 1.45) };
+const RISE = 1.9; // how far below the floor the factory starts (taller than the lab)
 const FACTORY_BLOOM = { strength: 0.3, radius: 0.3, threshold: 1.0 };
 const LIGHT_TARGET = OVERVIEW.target;
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
@@ -87,17 +89,22 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
   const factory = createFactory();
   factory.group.visible = false;
   scene.add(factory.group);
+  // The factory's dark ground stays put (and hides the factory while it is
+  // still below the floor); it is out of the way while the pattern plays.
+  const ground = factory.ground;
+  ground.visible = false;
+  scene.add(ground);
 
-  // Scenes 1–2, shrunk onto the AI lab's plate (just above it, clear of the print).
+  // Scenes 1–2, laid out as the factory's floor (just above the ground).
   const story = createStoryLayer({ small, spark });
-  story.group.scale.setScalar(STORY_SCALE);
-  story.group.position.copy(factory.labTop).add(new THREE.Vector3(0, 0.012, 0));
+  story.group.scale.setScalar(FLOOR.scale);
+  story.group.position.copy(FLOOR.position);
   scene.add(story.group);
   story.group.updateMatrixWorld(true);
 
-  // A small warm lamp that follows the spark, so the plate around the
-  // pattern is lit by it as the camera pulls out.
-  const sparkLamp = new THREE.PointLight("#fff1c2", 0, 1.6, 2);
+  // A warm lamp that follows the spark, so the factory rising around it
+  // catches its light.
+  const sparkLamp = new THREE.PointLight("#fff1c2", 0, 5, 2);
   scene.add(sparkLamp);
 
   const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
@@ -184,14 +191,18 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     scene.fog.near = dist + 4;
     scene.fog.far = dist + 26;
 
-    // Scenes 1–2: they fade out once the lab around them is clearly in view.
+    // Scenes 1–2: the field settles into the factory floor; the spark goes
+    // into the factory as it rises.
     const proj = (height * dpr) / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
-    const fade = 1 - ramp(zoom, [0.45, 0.85]);
-    const flash = story.update(storyProgress, clock, { camera, proj, fade });
+    const sparkLeft = 1 - ramp(zoom, [0.3, 0.7]);
+    const flash = story.update(storyProgress, clock, { camera, proj, spark: sparkLeft, floor: zoom });
 
-    // Factory: hidden inside the pattern, a silhouette during the pull-out,
-    // then the stations power on in line order with the room light coming up.
+    // Factory: hidden while the pattern plays, then it rises out of the floor
+    // as a silhouette during the pull-out; once it is all in view the stations
+    // power on in line order with the room light coming up.
     factory.group.visible = zoomRaw > 0;
+    ground.visible = zoomRaw > 0;
+    factory.group.position.y = -RISE * (1 - smoother(ramp(zoomRaw, [0.02, 0.62])));
     let total = 0;
     for (let i = 0; i < STATION_COUNT; i++) {
       power[i] = stationPower(s, i);
@@ -205,7 +216,7 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     scene.environmentIntensity = LIGHT.env * level;
     back.intensity = LIGHT.back * silhouette;
     story.sparkWorld(sparkLamp.position);
-    sparkLamp.intensity = 0.25 * ramp(zoomRaw, [0, 0.15]) * fade;
+    sparkLamp.intensity = 2.5 * ramp(zoomRaw, [0, 0.15]) * sparkLeft;
     factory.update(clock, power);
 
     // Post: the story's bloom inside the pattern, the product shot's outside.

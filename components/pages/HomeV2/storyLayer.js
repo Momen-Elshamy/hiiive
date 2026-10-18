@@ -12,8 +12,9 @@ import { STORY, ramp, ease, lerp } from "./homeTimeline";
  * fades away while the field particles settle.
  *
  * Everything is built in "story units" (the field is 22 × 14). The home scene
- * shrinks the layer onto the AI lab's top plate and renders it through its own
- * camera; `uScale` keeps point sizes and light falloff in story units.
+ * lays the layer out as the factory's floor and renders it through its own
+ * camera; `uScale` keeps point sizes and light falloff in story units. In
+ * floor mode (`uFloor`) the field lies flat and fades out in a soft oval.
  */
 
 export const FIELD = { width: 22, depth: 14 };
@@ -62,6 +63,7 @@ const fieldVertexShader = /* glsl */ `
   uniform float uSize;
   uniform float uProj;
   uniform float uScale;
+  uniform float uFloor;
   uniform vec3 uDrop;
   uniform float uDropI;
   uniform vec3 uFillPos;
@@ -103,7 +105,7 @@ const fieldVertexShader = /* glsl */ `
     float morph = (1.0 - smoothstep(front - 2.2, front, d)) * step(0.0001, uWave);
     float behind = (d - front) / 1.1; // pow() is undefined for negative bases
     float ring = exp(-behind * behind) * sin((d - front) * 3.2 - t * 2.0) * 0.35;
-    float swell = sin(d * 1.6 - t * 1.4) * 0.05 * exp(-d * 0.08);
+    float swell = sin(d * 1.6 - t * 1.4) * 0.05 * exp(-d * 0.08) * (1.0 - uFloor);
     p = mix(p, vec3(g.x, ring + swell, g.z), morph);
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
@@ -128,8 +130,11 @@ const fieldVertexShader = /* glsl */ `
     vColor = aColor;
     vBright = aRand.w;
     vMorph = morph;
-    // Fade the field out at the sides and, harder, towards the horizon.
+    // Fade the field out at the sides and, harder, towards the horizon. As the
+    // factory floor, seen from above, it fades out in a soft oval instead.
     float edge = 1.0 - smoothstep(6.0, 11.0, length(vec2(g.x * 0.75, g.z * (g.z < 0.0 ? 1.55 : 1.0))));
+    float floorEdge = 1.0 - smoothstep(5.5, 9.0, length(vec2(g.x * 0.75, g.z * 1.2)));
+    edge = mix(edge, floorEdge, uFloor);
     vFade = mix(1.0, edge, max(settle, morph));
   }
 `;
@@ -140,7 +145,6 @@ const fieldFragmentShader = /* glsl */ `
   uniform float uFillI;
   uniform vec3 uBase;
   uniform vec3 uAmbient;
-  uniform float uFade;
 
   varying vec3 vColor;
   varying float vBright;
@@ -175,8 +179,8 @@ const fieldFragmentShader = /* glsl */ `
     bead *= 1.0 - smoothstep(0.75, 1.0, r) * 0.6;
 
     vec3 col = mix(dotCol, bead, vMorph);
-    float alpha = mix(glow, 1.0 - smoothstep(0.92, 1.0, r), vMorph) * vFade * uFade;
-    gl_FragColor = vec4(col * uFade, alpha);
+    float alpha = mix(glow, 1.0 - smoothstep(0.92, 1.0, r), vMorph) * vFade;
+    gl_FragColor = vec4(col, alpha);
   }
 `;
 
@@ -382,7 +386,7 @@ export function createStoryLayer({ small = false, spark = "yellow" } = {}) {
     uFillI: { value: 0 },
     uBase: { value: new THREE.Color(COLORS.bead) },
     uAmbient: { value: new THREE.Color(COLORS.ambient) },
-    uFade: { value: 1 },
+    uFloor: { value: 0 },
   };
 
   const fieldGeometry = buildField(cols, rows);
@@ -426,10 +430,11 @@ export function createStoryLayer({ small = false, spark = "yellow" } = {}) {
 
   /**
    * Animates scenes 1–2 at `progress`. `proj` converts sizes to pixels for the
-   * current camera; `fade` dims the whole layer (the zoom-out). Returns the
-   * impact flash (0–1) so the caller can push its bloom.
+   * current camera; `spark` fades the spark out; `floor` (0–1) turns the field
+   * into the factory floor. Returns the impact flash (0–1) so the caller can
+   * push its bloom.
    */
-  function update(progress, time, { camera, proj, fade = 1 }) {
+  function update(progress, time, { camera, proj, spark = 1, floor = 0 }) {
     const settle = ease(ramp(progress, STORY.settle));
     const fall = ramp(progress, STORY.drop);
     const wave = ramp(progress, STORY.wave);
@@ -441,25 +446,25 @@ export function createStoryLayer({ small = false, spark = "yellow" } = {}) {
     const dropY = impacted ? lerp(0.25, 0.9, ease(afterImpact)) : lerp(5.2, 0.25, fall * fall);
     drop.position.set(0, dropY, 0);
     drop.quaternion.copy(camera.quaternion);
-    drop.visible = fall > 0 && fade > 0.001;
+    drop.visible = fall > 0 && spark > 0.001;
     drop.scale.set(1, impacted ? 1 : 0.7 + fall * 0.6, 1);
-    dropMaterial.uniforms.uOpacity.value = Math.min(1, fall * 6) * fade;
+    dropMaterial.uniforms.uOpacity.value = Math.min(1, fall * 6) * spark;
     dropMaterial.uniforms.uTail.value = impacted ? 1 - ramp(progress, [impact, impact + 0.03]) : 1;
 
     const flash = impacted ? Math.exp(-ramp(progress, [impact, STORY.wave[1]]) * 10) : 0;
     group.updateMatrixWorld();
     group.localToWorld(uniforms.uDrop.value.copy(drop.position));
     group.localToWorld(uniforms.uFillPos.value.copy(fillLocal));
-    uniforms.uDropI.value = fall > 0 ? 0.45 + fall * 0.35 + flash * 3 : 0;
+    // As the floor, it keeps a softer glow where the spark came down.
+    uniforms.uDropI.value = fall > 0 ? (0.45 + fall * 0.35 + flash * 3) * lerp(1, 0.55, floor) : 0;
     uniforms.uFillI.value = wave;
     uniforms.uWave.value = wave;
-    uniforms.uFade.value = fade;
+    uniforms.uFloor.value = floor;
     shared.uSettle.value = settle;
     shared.uTime.value = time;
     shared.uProj.value = proj;
     shared.uScale.value = group.scale.x;
     haze.visible = settle < 1;
-    field.visible = fade > 0.001;
     return flash;
   }
 
