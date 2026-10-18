@@ -3,7 +3,7 @@
 
 .story {
   position: relative;
-  height: 520vh;
+  height: 620vh; /* 420vh of story + one pinned screen + a 100vh tail for the factory crossfade */
   background: var(--hv-night);
   color: var(--hv-ink-rev);
   font-family: var(--font-body);
@@ -220,7 +220,7 @@
 
 @media (max-width: 767px) {
   .story {
-    height: 440vh;
+    height: 540vh;
   }
 
   .hero {

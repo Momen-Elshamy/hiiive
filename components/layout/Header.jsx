@@ -74,7 +74,7 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
    // The new home story (prototype at /home-v2) stays dark from top to bottom,
    // so its nav stays dark too: transparent at the top, dark glass once scrolled.
-   const isNight = /^\/(?:(?:en|de)\/)?home-v2\/?$/.test(pathname || "");
+   const isNight = /^\/(?:(?:en|de)\/)?home-v2(?:\/.*)?$/.test(pathname || "");
    const overlay = isHome || isNight;
    const [scrolled, setScrolled] = useState(false);
 

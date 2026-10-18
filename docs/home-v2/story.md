@@ -1,6 +1,6 @@
 # Home v2 — Story & copy
 
-Status: **draft 2**, scenes 1–2 built at `/home-v2` · Branch: `feat/home-v2-story`
+Status: **draft 4**, scenes 1–3 + CTA built at `/home-v2` · Branch: `feat/home-v2-story`
 
 ## The idea in one line
 
@@ -13,16 +13,20 @@ Hiiive is an AI lab and tech house: smart people and smart systems inventing AI 
 |---|---|---|
 | 1 | Hero | Hiiive is the lab where AI gets to work on your hardest problems. |
 | 2 | The spark | We find the pattern in the noise. |
-| 3 | The gate | We solve the problem *with* one company, inside its real work. |
-| 4 | The core | What works becomes a product. |
-| 5 | Many | The product serves the market, and every solution makes us sharper. |
+| 3 | The software factory | Problems go in, working software comes out, station by station. |
+| — | CTA | Bring us your hardest problem. |
 
-One camera, one continuous scroll. Each scene turns into the next one; nothing cuts.
+Scenes 1–2 are one particle system on one camera; the factory crossfades in over the last frame of scene 2.
 
 ## Look
 
 - **Palette:** brand charcoal with one glowing line of HIIIVE yellow (`--hv-accent`, `#f7f42c`), like the brand renders. The aurora keeps cool steel/teal curtains but burns yellow along its lower edge; the spark is yellow and casts warm white light on charcoal beads.
 - **Header (night variant):** transparent over the story, dark glass once you scroll, CTA with a glowing yellow edge. The email link is hidden here. Only active on `/home-v2` for now.
+
+## Rules from review
+
+- **No hexagons, honeycombs, hives or bees.** The name HIIIVE has nothing to do with bees, so the visuals never play on it.
+- **Hiiive is a software factory.** From the Phrasso reference (ref 01) the point is the factory machine itself and its render quality, not only the `+` checkpoints. A first take on scenes 3–5 (gate, hex core, Germany map) was cut for missing both.
 
 ---
 
@@ -44,41 +48,27 @@ One camera, one continuous scroll. Each scene turns into the next one; nothing c
 - **Headline:** We find the pattern in the noise.
 - **Body:** A senior crew of engineers and AI specialists. We spot the work companies keep doing by hand, and build the AI that does it for them.
 
-## Scene 3 — The gate
+## Scene 3 — The software factory
 
-**Visual:** the camera flies between two walls of light (ref 05) into the lab. The ripple-aligned particles stream through with it.
+**Visual:** an isometric factory in the Phrasso style (ref 01): matte off-white modules with a painted yellow band under each top plate, a glass intake tube, a glass build line, a quality gate and four output lanes of LED chips, on a dark floor. It fades in over the last frame of scene 2. Scroll moves the camera from station to station, then pulls back to the whole line.
 
-- **Kicker:** 02 · Co-developed
-- **Headline:** We solve it with one company first.
-- **Body:** Our engineers sit inside your team and build on your real operations: your data, your people, your edge cases. In production, not in a sandbox.
-
-## Scene 4 — The core
-
-**Visual:** the particles settle into a hexagonal core built from stacked layers (refs 06, 07, 08). Service labels orbit it (ref 08). `+` hotspots sit on each layer (ref 01).
-
-- **Kicker:** 03 · Productized
-- **Headline:** What works becomes a product.
-- **Body:** The system we build with you gets hardened into a solution, ready for the next company with the same problem.
-- **Layer hotspots:**
-  - **Data:** your systems, documents and history, connected.
-  - **Agents:** AI that takes real work off your team.
-  - **Product:** the interface your people actually use.
-- **Orbit labels:** AI agents · Internal tools · MVPs · Visibility · Funnels
-
-## Scene 5 — Many
-
-**Visual:** light trails sweep out of the core (ref 04) across a dot map of Germany. Cities light up one by one. On every full orbit the core gains one more layer.
-
-- **Kicker:** 04 · Made for many
-- **Headline:** Built with one. Made for many.
-- **Body:** Every solution goes to market across Germany, and every one makes us sharper. The next problem gets solved faster, and bigger.
-- **Numbers on the map:** 12+ tools in production · 6 wks to first release · 4 industries
+- **Kicker:** 02 · The software factory
+- **Headline:** Problems go in. Working software comes out.
+- **Stations** (a stepper on the left; the active one opens, and a `+` checkpoint on each station jumps to it):
+  1. **Intake:** Real problems in. We start inside your team, with the work that slows it down.
+  2. **AI lab:** We design the models and agents that can take that work on.
+  3. **Build line:** Engineers and AI turn it into real software and internal tools, fast.
+  4. **Quality gate:** Only what works in production ships. The rest goes back in.
+  5. **Shipped:** SaaS products, AI agents, custom software and AI-powered SEO & GEO.
 
 ## CTA
 
-- **Headline:** Bring us the problem.
-- **Body:** Tell us what slows your team down. We'll tell you if we can build it, and how fast.
-- **Button:** Book a call
+Over the final overview of the factory.
+
+- **Kicker:** Your turn
+- **Headline:** Bring us your hardest problem.
+- **Body:** Tell us what slows your team down. We'll show you what AI can do about it, and how fast.
+- **Buttons:** Book a call · See what we build
 
 ---
 
@@ -113,16 +103,14 @@ All images are in `refs/`.
 
 ## How we build it
 
-- **three.js:** scenes 1, 2, 4, 5 (particles, ripple, hex core, light trails). One scroll progress value drives the whole scene.
-- **Google Flow video:** scene 3 (the gate), or a backup for any scene that is too heavy in real time.
-- **Google Flow images:** posters, mobile fallbacks, textures, case photos.
-- **Mobile:** fewer particles, or a pre-rendered fallback.
-- **CMS:** the story is one Puck block so the copy stays editable in en + de.
+- **three.js, real time:** scenes 1–2 are one particle system (`components/pages/HomeV2/storyScene.js`, scroll ranges in `storyTimeline.js`). The factory is modelled in code (`factory/factoryModel.js`), lit like a product shot (`factory/factoryView.js`: area lights, crisp shadows, AO, bloom on the light slits only, grain and vignette) and toured on scroll (`factory/factoryTour.js`).
+- **Review a frame (dev only):** `/home-v2?p=0.6` pins scenes 1–2, `/home-v2?f=0.53` pins the factory tour; `/home-v2/factory` is the factory look-dev page.
+- **Mobile:** fewer particles, no AO, its own camera framing with the scene in the top half and the copy at the bottom; only the active station's text shows.
+- **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.
+- **CMS (to do):** turn the story into Puck blocks so the copy is editable in en + de.
 
 ## Open questions
 
-1. Scenes 3–5 tell the co-develop → product path. Keep it as one chapter, or widen it to cover agents, SaaS, custom software and AI-powered services too?
-2. Scene 5 headline still says *Built with one. Made for many.* Keep it there?
-3. Are the numbers still true: 12+ tools, 6 wks, 4 industries?
-4. Market: say "Germany" or "DACH"?
-5. Products to show: SPOKY, Content OS, Komplyo — still the right three?
+1. Are the numbers still true for the sections after the story (12+ systems, 6 wks, 4 industries)?
+2. Products to show after the story: SPOKY, Content OS, Komplyo — still the right three?
+3. German copy for every scene (English only so far).

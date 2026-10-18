@@ -50,7 +50,9 @@ export default function HomeStory() {
     const readScroll = () => {
       if (Number.isFinite(pinned)) return;
       const rect = section.getBoundingClientRect();
-      const travel = rect.height - window.innerHeight;
+      // The last screen of the section is a tail: the stage stays pinned on the
+      // final frame while the factory (next section) fades in over it.
+      const travel = rect.height - window.innerHeight * 2;
       target = travel > 0 ? Math.min(1, Math.max(0, -rect.top / travel)) : 0;
     };
 

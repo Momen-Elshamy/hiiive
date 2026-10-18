@@ -1,0 +1,337 @@
+/* Scene 3 — the software factory. A tall section that starts where the scene
+   1–2 story reaches its last frame (negative margin over the story's 100vh
+   tail plus its pinned screen), so it fades in on top of a still frame. */
+
+.factory {
+  position: relative;
+  height: 800vh;
+  margin-top: -200vh;
+  color: var(--hv-ink-rev);
+  font-family: var(--font-body);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--hv-night);
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Keeps the copy column readable when a module passes behind it. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hv-night) 82%, transparent) 0%, color-mix(in srgb, var(--hv-night) 45%, transparent) 30%, transparent 48%);
+  pointer-events: none;
+}
+
+/* Copy column: chapter, then the five stations as a stepper ------------------ */
+.panel,
+.cta {
+  position: absolute;
+  top: 16vh;
+  left: max(40px, calc((100vw - 1280px) / 2));
+  max-width: 420px;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--hv-soft-rev);
+}
+
+.kickerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--hv-accent);
+}
+
+.title {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(32px, 3.4vw, 52px);
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.steps {
+  margin-top: 32px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--hv-hairline-rev);
+}
+
+.step {
+  position: relative;
+  padding: 10px 0 10px 20px;
+}
+
+/* The active station gets a yellow tick on the rail. */
+.step::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 12px;
+  width: 2px;
+  height: 18px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.stepActive::before {
+  background: var(--hv-accent);
+}
+
+.stepButton {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stepNumber {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepActive .stepNumber {
+  color: var(--hv-accent);
+}
+
+.stepActive .stepTitle,
+.stepButton:hover .stepTitle {
+  color: var(--hv-ink-rev);
+}
+
+.stepBody {
+  max-height: 0;
+  overflow: hidden;
+  margin-left: 30px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease;
+}
+
+.stepActive .stepBody {
+  max-height: 120px;
+  margin-top: 6px;
+  opacity: 1;
+}
+
+/* Closing CTA, over the overview ---------------------------------------------- */
+.ctaBody {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+}
+
+.ctaRow {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btnPrimary,
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 14px 24px;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.btnPrimary {
+  background: var(--hv-ink-rev);
+  color: var(--hv-ink);
+}
+
+.btnPrimary:hover {
+  opacity: 0.88;
+}
+
+.btnSecondary {
+  border: 1px solid var(--hv-pill-border);
+  color: var(--hv-ink-rev);
+}
+
+.btnSecondary:hover {
+  border-color: var(--hv-ink-rev);
+}
+
+/* + checkpoints pinned to the stations ---------------------------------------- */
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  will-change: transform;
+}
+
+.checkpoint {
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+
+.plus {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--hv-ink-rev);
+  color: var(--hv-ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--hv-night) 55%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.pinActive .plus {
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--hv-accent) 35%, transparent),
+    0 0 24px 4px color-mix(in srgb, var(--hv-accent) 25%, transparent);
+}
+
+.checkpoint:hover .plus,
+.plus:focus-visible {
+  transform: rotate(45deg);
+  outline: none;
+}
+
+.card {
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--hv-hairline-rev);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--hv-ink) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translate(-6px, -50%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.checkpoint:hover .card,
+.checkpoint:focus-within .card {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.cardStep {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-accent);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-ink-rev);
+}
+
+.cardBody {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--hv-soft-rev);
+}
+
+@media (max-width: 767px) {
+  .factory {
+    height: 700vh;
+  }
+
+  .panel,
+  .cta {
+    top: auto;
+    bottom: 8vh;
+    left: 20px;
+    right: 20px;
+  }
+
+  .shade {
+    display: none;
+  }
+
+  /* Dark fade behind the copy so it reads over the scene. */
+  .panel::before,
+  .cta::before {
+    content: "";
+    position: absolute;
+    inset: -56px -20px -8vh;
+    background: linear-gradient(to top, var(--hv-night) 55%, transparent);
+    z-index: -1;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  /* Phones show only the station being toured. */
+  .steps {
+    margin-top: 18px;
+  }
+
+  .step:not(.stepActive) {
+    display: none;
+  }
+
+  .card {
+    display: none;
+  }
+}
