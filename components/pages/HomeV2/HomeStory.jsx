@@ -2,10 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./HomeStory.module.css";
-import { STORY, COPY, OVERLAYS, ramp, fade } from "./storyTimeline";
-import { germanyCities } from "./storyGermany";
-
-const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
+import { STORY, ramp } from "./storyTimeline";
 
 const copy = {
   hero: {
@@ -13,94 +10,26 @@ const copy = {
     headline: "The lab where AI gets to work",
     accent: "on your hardest problems.",
     sub: "Smart people and smart systems, inventing AI products, agents and software, and putting them to work for real companies.",
-    primary: { label: "Book a call", href: BOOK_A_CALL },
+    primary: { label: "Book a call", href: "#contact" },
     secondary: { label: "See what we build", href: "/work" },
     capabilities: ["AI agents", "SaaS products", "Custom software", "AI-powered SEO & GEO"],
   },
-  chapters: [
-    {
-      key: "spark",
-      kicker: "01 · The spark",
-      title: "We find the pattern in the noise.",
-      body: "A senior crew of engineers and AI specialists. We spot the work companies keep doing by hand, and build the AI that does it for them.",
-    },
-    {
-      key: "gate",
-      kicker: "02 · Inside real work",
-      title: "We build where the work happens.",
-      body: "Our engineers sit inside your team, on your real data and processes. Agents, internal tools and custom software, live in production, not in a sandbox.",
-    },
-    {
-      key: "core",
-      kicker: "03 · The core",
-      title: "Every build makes the lab smarter.",
-      body: "What proves itself becomes a reusable core of data, models and agents, with products on top. Ready for the next company, and the next service.",
-    },
-    {
-      key: "many",
-      kicker: "04 · Made for many",
-      title: "Built with one. Made for many.",
-      body: "From Berlin across Germany, our SaaS products and AI-powered services carry what we learn to every company that needs it.",
-    },
-  ],
-  stats: [
-    { value: "12+", label: "AI systems in production" },
-    { value: "6 wks", label: "to a first release" },
-    { value: "4", label: "industries" },
-  ],
-  cta: {
-    kicker: "Your turn",
-    title: "Bring us your hardest problem.",
-    body: "Tell us what slows your team down. We'll show you what AI can do about it, and how fast.",
-    primary: { label: "Book a call", href: BOOK_A_CALL },
-    secondary: { label: "See what we build", href: "/work" },
+  spark: {
+    kicker: "01 · The spark",
+    title: "We find the pattern in the noise.",
+    body: "A senior crew of engineers and AI specialists. We spot the work companies keep doing by hand, and build the AI that does it for them.",
   },
-  orbit: ["AI agents", "SaaS products", "Custom software", "SEO & GEO", "Internal tools"],
-  // Bottom to top, matching the core's plates.
-  layers: [
-    { title: "Data", body: "Your systems, documents and history, connected." },
-    { title: "Models & agents", body: "AI that reasons, decides and takes real work off your team." },
-    { title: "Products & services", body: "SaaS, internal tools and AI-powered services like SEO and GEO." },
-  ],
-  berlin: "Berlin · HIIIVE",
 };
 
-const cityNames = germanyCities().map((city) => city.name);
 const NO_POINTER = { x: 0, y: 0 };
-
-function Kicker({ children }) {
-  return (
-    <div className={styles.kicker}>
-      <span className={styles.kickerDot} />
-      {children}
-    </div>
-  );
-}
-
-function show(el, opacity, transform) {
-  if (!el) return;
-  el.style.opacity = String(opacity);
-  el.style.visibility = opacity > 0.01 ? "visible" : "hidden";
-  if (transform) el.style.transform = transform;
-}
-
-function place(els, anchors) {
-  anchors.forEach((anchor, i) => show(els[i], anchor.a, `translate3d(${anchor.x}px, ${anchor.y}px, 0)`));
-}
 
 export default function HomeStory() {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const heroRef = useRef(null);
+  const sparkRef = useRef(null);
   const hintRef = useRef(null);
-  const chapterRefs = useRef([]);
-  const statsRef = useRef(null);
-  const ctaRef = useRef(null);
-  const orbitRefs = useRef([]);
-  const hotspotRefs = useRef([]);
-  const cityRefs = useRef([]);
-  const berlinRef = useRef(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -133,24 +62,15 @@ export default function HomeStory() {
     // Copy is driven straight from the frame loop so it stays locked to the scene.
     const applyCopy = (p) => {
       const heroOut = ramp(p, STORY.heroOut);
-      show(heroRef.current, 1 - heroOut, `translate3d(0, ${-heroOut * 40}px, 0)`);
+      heroRef.current.style.opacity = String(1 - heroOut);
+      heroRef.current.style.transform = `translate3d(0, ${-heroOut * 40}px, 0)`;
+      heroRef.current.style.visibility = heroOut >= 1 ? "hidden" : "visible";
 
-      copy.chapters.forEach((chapter, i) => {
-        const o = fade(p, COPY[chapter.key]);
-        show(chapterRefs.current[i], o, `translate3d(0, ${(1 - o) * 24}px, 0)`);
-      });
-      show(statsRef.current, fade(p, OVERLAYS.stats));
-      const cta = fade(p, COPY.cta);
-      show(ctaRef.current, cta, `translate3d(0, ${(1 - cta) * 24}px, 0)`);
+      const sparkIn = ramp(p, STORY.sparkIn);
+      sparkRef.current.style.opacity = String(sparkIn);
+      sparkRef.current.style.transform = `translate3d(0, ${(1 - sparkIn) * 24}px, 0)`;
 
-      hintRef.current.style.opacity = String(1 - ramp(p, [0, 0.02]));
-    };
-
-    const applyAnchors = (anchors) => {
-      place(orbitRefs.current, anchors.orbit);
-      place(hotspotRefs.current, anchors.hotspots);
-      place(cityRefs.current, anchors.cities);
-      place([berlinRef.current], [anchors.berlin]);
+      hintRef.current.style.opacity = String(1 - ramp(p, [0, 0.04]));
     };
 
     const tick = (now) => {
@@ -159,7 +79,7 @@ export default function HomeStory() {
       pointer.x += (pointer.tx - pointer.x) * 0.05;
       pointer.y += (pointer.ty - pointer.y) * 0.05;
       applyCopy(current);
-      if (scene && visible) applyAnchors(scene.render(current, now / 1000, reducedMotion ? NO_POINTER : pointer));
+      if (scene && visible) scene.render(current, now / 1000, reducedMotion ? NO_POINTER : pointer);
     };
 
     // three.js only loads on the client, in its own chunk.
@@ -200,36 +120,11 @@ export default function HomeStory() {
       <div ref={stageRef} className={styles.stage}>
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
 
-        {/* Labels pinned to points in the 3D scene, positioned every frame. */}
-        {copy.orbit.map((label, i) => (
-          <div key={label} ref={(el) => (orbitRefs.current[i] = el)} className={styles.anchor} aria-hidden="true">
-            <span className={styles.orbitLabel}>{label}</span>
-          </div>
-        ))}
-        {copy.layers.map((layer, i) => (
-          <div key={layer.title} ref={(el) => (hotspotRefs.current[i] = el)} className={`${styles.anchor} ${styles.hotspotAnchor}`}>
-            <div className={styles.hotspot}>
-              <button type="button" className={styles.hotspotButton} aria-label={`${layer.title}: ${layer.body}`}>
-                +
-              </button>
-              <div className={styles.hotspotCard} aria-hidden="true">
-                <span className={styles.hotspotTitle}>{layer.title}</span>
-                <span className={styles.hotspotBody}>{layer.body}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-        {cityNames.map((name, i) => (
-          <div key={name} ref={(el) => (cityRefs.current[i] = el)} className={`${styles.anchor} ${styles.cityAnchor}`} aria-hidden="true">
-            <span className={styles.cityLabel}>{name}</span>
-          </div>
-        ))}
-        <div ref={berlinRef} className={styles.anchor} aria-hidden="true">
-          <span className={styles.berlinLabel}>{copy.berlin}</span>
-        </div>
-
         <div ref={heroRef} className={styles.hero}>
-          <Kicker>{copy.hero.kicker}</Kicker>
+          <div className={styles.kicker}>
+            <span className={styles.kickerDot} />
+            {copy.hero.kicker}
+          </div>
           <h1 className={styles.headline}>
             {copy.hero.headline} <span className={styles.headlineAccent}>{copy.hero.accent}</span>
           </h1>
@@ -245,32 +140,13 @@ export default function HomeStory() {
           </ul>
         </div>
 
-        {copy.chapters.map((chapter, i) => (
-          <div key={chapter.key} ref={(el) => (chapterRefs.current[i] = el)} className={styles.chapter}>
-            <Kicker>{chapter.kicker}</Kicker>
-            <h2 className={styles.chapterTitle}>{chapter.title}</h2>
-            <p className={styles.chapterBody}>{chapter.body}</p>
-            {chapter.key === "many" ? (
-              <dl ref={statsRef} className={styles.stats}>
-                {copy.stats.map((stat) => (
-                  <div key={stat.label} className={styles.stat}>
-                    <dt className={styles.statValue}>{stat.value}</dt>
-                    <dd className={styles.statLabel}>{stat.label}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
+        <div ref={sparkRef} className={styles.chapter}>
+          <div className={styles.kicker}>
+            <span className={styles.kickerDot} />
+            {copy.spark.kicker}
           </div>
-        ))}
-
-        <div ref={ctaRef} className={`${styles.chapter} ${styles.ctaBlock}`}>
-          <Kicker>{copy.cta.kicker}</Kicker>
-          <h2 className={styles.chapterTitle}>{copy.cta.title}</h2>
-          <p className={styles.chapterBody}>{copy.cta.body}</p>
-          <div className={styles.ctaRow}>
-            <a href={copy.cta.primary.href} className={styles.btnPrimary}>{copy.cta.primary.label}</a>
-            <a href={copy.cta.secondary.href} className={styles.btnSecondary}>{copy.cta.secondary.label}</a>
-          </div>
+          <h2 className={styles.chapterTitle}>{copy.spark.title}</h2>
+          <p className={styles.chapterBody}>{copy.spark.body}</p>
         </div>
 
         <div ref={hintRef} className={styles.hint} aria-hidden="true">

@@ -1,6 +1,6 @@
 # Home v2 — Story & copy
 
-Status: **draft 3**, all five scenes built at `/home-v2` · Branch: `feat/home-v2-story`
+Status: **draft 2**, scenes 1–2 built at `/home-v2` · Branch: `feat/home-v2-story`
 
 ## The idea in one line
 
@@ -13,9 +13,9 @@ Hiiive is an AI lab and tech house: smart people and smart systems inventing AI 
 |---|---|---|
 | 1 | Hero | Hiiive is the lab where AI gets to work on your hardest problems. |
 | 2 | The spark | We find the pattern in the noise. |
-| 3 | The gate | We build inside real work: agents, internal tools, custom software. |
-| 4 | The core | Every build makes the lab smarter: a reusable core with products on top. |
-| 5 | Many | Built with one, made for many: from Berlin across Germany. |
+| 3 | The gate | We solve the problem *with* one company, inside its real work. |
+| 4 | The core | What works becomes a product. |
+| 5 | Many | The product serves the market, and every solution makes us sharper. |
 
 One camera, one continuous scroll. Each scene turns into the next one; nothing cuts.
 
@@ -46,42 +46,39 @@ One camera, one continuous scroll. Each scene turns into the next one; nothing c
 
 ## Scene 3 — The gate
 
-**Visual:** the bead field folds up on two hinges into the walls of a gate of light (ref 05). The spark flies ahead down the middle and leaves a thin yellow line on the floor; the camera follows it through.
+**Visual:** the camera flies between two walls of light (ref 05) into the lab. The ripple-aligned particles stream through with it.
 
-- **Kicker:** 02 · Inside real work
-- **Headline:** We build where the work happens.
-- **Body:** Our engineers sit inside your team, on your real data and processes. Agents, internal tools and custom software, live in production, not in a sandbox.
+- **Kicker:** 02 · Co-developed
+- **Headline:** We solve it with one company first.
+- **Body:** Our engineers sit inside your team and build on your real operations: your data, your people, your edge cases. In production, not in a sandbox.
 
 ## Scene 4 — The core
 
-**Visual:** the particles stream out of the walls onto three charcoal hex plates with thin glowing yellow rims (the brand cube, as a hive cell; refs 06, 07, 08). The plates separate into an exploded stack. The middle plate carries a network of glowing nodes. Service labels ride an orbit ring around it, and a `+` hotspot on each plate opens a short card (ref 01).
+**Visual:** the particles settle into a hexagonal core built from stacked layers (refs 06, 07, 08). Service labels orbit it (ref 08). `+` hotspots sit on each layer (ref 01).
 
-- **Kicker:** 03 · The core
-- **Headline:** Every build makes the lab smarter.
-- **Body:** What proves itself becomes a reusable core of data, models and agents, with products on top. Ready for the next company, and the next service.
-- **Hotspots (bottom → top):**
+- **Kicker:** 03 · Productized
+- **Headline:** What works becomes a product.
+- **Body:** The system we build with you gets hardened into a solution, ready for the next company with the same problem.
+- **Layer hotspots:**
   - **Data:** your systems, documents and history, connected.
-  - **Models & agents:** AI that reasons, decides and takes real work off your team.
-  - **Products & services:** SaaS, internal tools and AI-powered services like SEO and GEO.
-- **Orbit labels:** AI agents · SaaS products · Custom software · SEO & GEO · Internal tools
+  - **Agents:** AI that takes real work off your team.
+  - **Product:** the interface your people actually use.
+- **Orbit labels:** AI agents · Internal tools · MVPs · Visibility · Funnels
 
 ## Scene 5 — Many
 
-**Visual:** the core shrinks into a small glowing pin on Berlin while its beads rain down into a honeycomb dot map of Germany. The map lights up outwards from Berlin and light trails arc to ten cities (ref 04), each landing with a ping and a label.
+**Visual:** light trails sweep out of the core (ref 04) across a dot map of Germany. Cities light up one by one. On every full orbit the core gains one more layer.
 
 - **Kicker:** 04 · Made for many
 - **Headline:** Built with one. Made for many.
-- **Body:** From Berlin across Germany, our SaaS products and AI-powered services carry what we learn to every company that needs it.
-- **Numbers:** 12+ AI systems in production · 6 wks to a first release · 4 industries
+- **Body:** Every solution goes to market across Germany, and every one makes us sharper. The next problem gets solved faster, and bigger.
+- **Numbers on the map:** 12+ tools in production · 6 wks to first release · 4 industries
 
 ## CTA
 
-Over the lit map.
-
-- **Kicker:** Your turn
-- **Headline:** Bring us your hardest problem.
-- **Body:** Tell us what slows your team down. We'll show you what AI can do about it, and how fast.
-- **Buttons:** Book a call · See what we build
+- **Headline:** Bring us the problem.
+- **Body:** Tell us what slows your team down. We'll tell you if we can build it, and how fast.
+- **Button:** Book a call
 
 ---
 
@@ -116,15 +113,16 @@ All images are in `refs/`.
 
 ## How we build it
 
-- **three.js (built):** all five scenes run in real time from one particle system; one scroll progress value drives everything. Code: `components/pages/HomeV2/` (`storyTimeline.js` holds every scroll range, `storyCamera.js` the camera path).
-- **Review a frame (dev only):** `/home-v2?p=0.77` pins the story to one moment; `?spark=blue` swaps the yellow spark for the blue one.
-- **Mobile:** fewer particles, its own camera framing, copy at the bottom; hotspots and city labels hidden.
-- **Google Flow (not needed yet):** images for posters, case photos and a reduced-motion fallback.
-- **CMS (to do):** turn the story into one Puck block so the copy is editable in en + de.
+- **three.js:** scenes 1, 2, 4, 5 (particles, ripple, hex core, light trails). One scroll progress value drives the whole scene.
+- **Google Flow video:** scene 3 (the gate), or a backup for any scene that is too heavy in real time.
+- **Google Flow images:** posters, mobile fallbacks, textures, case photos.
+- **Mobile:** fewer particles, or a pre-rendered fallback.
+- **CMS:** the story is one Puck block so the copy stays editable in en + de.
 
 ## Open questions
 
-1. Are the numbers still true: 12+ AI systems in production, 6 wks to a first release, 4 industries?
-2. Market: "Germany" (map + copy) or "DACH"?
-3. Products to show after the story: SPOKY, Content OS, Komplyo — still the right three?
-4. German copy for every scene (the story is English only so far).
+1. Scenes 3–5 tell the co-develop → product path. Keep it as one chapter, or widen it to cover agents, SaaS, custom software and AI-powered services too?
+2. Scene 5 headline still says *Built with one. Made for many.* Keep it there?
+3. Are the numbers still true: 12+ tools, 6 wks, 4 industries?
+4. Market: say "Germany" or "DACH"?
+5. Products to show: SPOKY, Content OS, Komplyo — still the right three?
