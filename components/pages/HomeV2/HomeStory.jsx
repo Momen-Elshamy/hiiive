@@ -4,10 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import buttons from "@/components/ui/buttons.module.css";
 import styles from "./HomeStory.module.css";
 import Preloader from "./Preloader";
-import { STATIONS } from "./factory/stations";
 import { SCREENS, STORY, activeStation, clamp01, ramp, stationScreen } from "./homeTimeline";
-
-const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
 
 // How far the page has loaded once each step is done, as shown on the
 // preloader's bar (the three.js chunk is the biggest download). The first
@@ -15,32 +12,6 @@ const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
 const LOAD = { start: 0.06, fonts: 0.18, engine: 0.55, scene: 0.72, shaders: 0.92 };
 // Don't hold the page back longer than this; a late scene fades in by itself.
 const LOAD_TIMEOUT = 12000;
-
-const copy = {
-  hero: {
-    kicker: "Hiiive · AI lab & tech house, Berlin",
-    headline: "The lab where AI gets to work",
-    accent: "on your hardest problems.",
-    sub: "Smart people and smart systems, inventing AI products, agents and software, and putting them to work for real companies.",
-    primary: { label: "Book a call", href: BOOK_A_CALL },
-    secondary: { label: "See what we build", href: "/work" },
-    capabilities: ["AI agents", "SaaS products", "Custom software", "AI-powered SEO & GEO"],
-  },
-  spark: {
-    kicker: "01 · The spark",
-    title: "We find the pattern in the noise.",
-    body: "A senior crew of engineers and AI specialists. We spot the work companies keep doing by hand, and build the AI that does it for them.",
-  },
-  factory: {
-    kicker: "02 · The software factory",
-    title: "Problems go in. Working software comes out.",
-  },
-  cta: {
-    kicker: "Your turn",
-    title: "Bring us your hardest problem.",
-    body: "Tell us what slows your team down. We'll show you what AI can do about it, and how fast.",
-  },
-};
 
 const NO_POINTER = { x: 0, y: 0 };
 
@@ -66,7 +37,7 @@ function show(el, opacity, transform) {
  * stations power on one by one while the stepper follows. One canvas, one
  * scroll position (in screens, see homeTimeline.js) for the scene and the copy.
  */
-export default function HomeStory() {
+export default function HomeStory({ copy, preloader }) {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
@@ -248,14 +219,14 @@ export default function HomeStory() {
   };
 
   return (
-    <section ref={sectionRef} className={styles.story} aria-label="The Hiiive story">
+    <section ref={sectionRef} className={styles.story} aria-label={copy.ariaLabel}>
       {/* Outside the sticky stage, so it can sit over the site header. */}
-      <Preloader progress={loaded} />
+      <Preloader progress={loaded} label={preloader.label} ariaLabel={preloader.ariaLabel} />
       <div ref={stageRef} className={styles.stage}>
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <div ref={shadeRef} className={styles.shade} aria-hidden="true" />
 
-        {STATIONS.map((station, i) => (
+        {copy.stations.map((station, i) => (
           <div
             key={station.key}
             ref={(el) => (pinRefs.current[i] = el)}
@@ -301,7 +272,7 @@ export default function HomeStory() {
           <Kicker>{copy.factory.kicker}</Kicker>
           <h2 className={styles.chapterTitle}>{copy.factory.title}</h2>
           <ol className={styles.steps}>
-            {STATIONS.map((station, i) => (
+            {copy.stations.map((station, i) => (
               <li key={station.key} className={`${styles.step} ${i === active ? styles.stepActive : ""}`}>
                 <button type="button" className={styles.stepButton} onClick={() => goTo(i)}>
                   <span className={styles.stepNumber}>{station.step}</span>
@@ -318,13 +289,13 @@ export default function HomeStory() {
           <h2 className={styles.chapterTitle}>{copy.cta.title}</h2>
           <p className={styles.chapterBody}>{copy.cta.body}</p>
           <div className={`${styles.ctaRow} ${styles.ctaRowStart}`}>
-            <a href={BOOK_A_CALL} className={`${buttons.button} ${buttons.primary}`}>Book a call</a>
-            <a href="/work" className={`${buttons.button} ${buttons.secondary}`}>See what we build</a>
+            <a href={copy.cta.primary.href} className={`${buttons.button} ${buttons.primary}`}>{copy.cta.primary.label}</a>
+            <a href={copy.cta.secondary.href} className={`${buttons.button} ${buttons.secondary}`}>{copy.cta.secondary.label}</a>
           </div>
         </div>
 
         <div ref={hintRef} className={styles.hint} aria-hidden="true">
-          <span>Scroll</span>
+          <span>{copy.hint}</span>
           <span className={styles.hintLine} />
         </div>
       </div>

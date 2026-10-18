@@ -1,18 +1,14 @@
 import section from "@/components/pages/HomeV2/HomeSection.module.css";
+import { buildPageMetadata } from "@/lib/seo";
 import styles from "./Lab.module.css";
+import { labCopy } from "./copy";
 import LabCta from "./LabCta";
 import ProductCard from "./ProductCard";
-import { PRODUCTS } from "./products";
-
-const copy = {
-  kicker: "AI Lab",
-  title: ["Built with one.", "Made for many."],
-  intro:
-    "Every product in the lab started as work for one company. We run them in our own company first, then make them for everyone with the same problem.",
-};
+import { labProducts } from "./products";
 
 /** /lab: the AI Lab's products. `base` is the lab's path (/lab or /de/lab). */
-export default function LabIndex({ base }) {
+export default function LabIndex({ base, locale }) {
+  const copy = labCopy(locale);
   return (
     <div className={`${section.section} ${styles.page}`}>
       <div className={section.inner}>
@@ -32,15 +28,21 @@ export default function LabIndex({ base }) {
         </div>
 
         <ul className={styles.grid}>
-          {PRODUCTS.map((product) => (
+          {labProducts(locale).map((product) => (
             <li key={product.slug}>
-              <ProductCard product={product} href={`${base}/${product.slug}`} />
+              <ProductCard product={product} href={`${base}/${product.slug}`} learnMore={copy.learnMore} />
             </li>
           ))}
         </ul>
       </div>
 
-      <LabCta />
+      <LabCta copy={copy.cta} />
     </div>
   );
+}
+
+/** Title, description, canonical and hreflang links for /lab in a language. */
+export function labMetadata(locale) {
+  const { meta } = labCopy(locale);
+  return buildPageMetadata({ root: { metaTitle: meta.title, metaDescription: meta.description }, path: "lab", locale });
 }

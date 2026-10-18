@@ -3,6 +3,7 @@ import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
 import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
+import HomePage, { homeMetadata } from "@/components/pages/HomeV2/HomePage";
 import { resolveRedirect } from "@premast/site-core/services/resolve-redirect.js";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 
@@ -56,11 +57,7 @@ async function resolveContent(pathSegments) {
 
   const locale = await resolveLocale(models);
   const { rest } = splitLocale(pathSegments);
-
-  // A bare locale prefix (e.g. /de) maps to the localized home page.
-  if (rest.length === 0) {
-    return findLocalized(Page, { slug: "home", published: true }, locale);
-  }
+  if (rest.length === 0) return null; // a bare prefix is the home page, not CMS content
 
   for (let i = rest.length - 1; i >= 1; i--) {
     const prefix = "/" + rest.slice(0, i).join("/");
@@ -78,10 +75,12 @@ async function resolveContent(pathSegments) {
 }
 
 export async function generateMetadata({ params }) {
-  if (!isCmsDbEnabled()) return {};
-
   const { path } = await params;
   if (!path || path.length === 0) return {};
+  const bare = splitLocale(path);
+  if (bare.localePrefix && bare.rest.length === 0) return homeMetadata(bare.localePrefix);
+  if (!isCmsDbEnabled()) return {};
+
   try {
     const doc = await resolveContent(path);
     if (doc) {
@@ -100,6 +99,9 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
   const { filter } = (await searchParams) ?? {};
 
   if (!path || path.length === 0) return notFound();
+  // A bare language prefix (/de) is the home page in that language.
+  const bare = splitLocale(path);
+  if (bare.localePrefix && bare.rest.length === 0) return <HomePage locale={bare.localePrefix} />;
   if (!isCmsDbEnabled()) return notFound();
 
   // Set when no page matches but a redirect does; followed after the try, so
@@ -113,23 +115,6 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
 
     const locale = await resolveLocale(models);
     const { localePrefix, rest } = splitLocale(path);
-
-    // Bare locale prefix (/de) -> localized home page.
-    if (localePrefix && rest.length === 0) {
-      const home = await findLocalized(Page, { slug: "home", published: true }, locale);
-      if (!home) return notFound();
-      const puckData = parsePuckData(home.content) ?? { root: {}, content: [] };
-      const finalData = await siteConfig.runBeforePageRender(puckData, home);
-      const jsonLd = puckData.root?.props?.structuredData;
-      return (
-        <>
-          {jsonLd && (
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-          )}
-          <Render config={siteConfig.puckConfig} data={finalData} />
-        </>
-      );
-    }
 
     // --- Try content type match first (on the locale-stripped path) ---
     for (let i = rest.length - 1; i >= 1; i--) {

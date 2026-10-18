@@ -3,7 +3,7 @@ import { NavIcon } from "@/components/layout/navIcons";
 import styles from "./Lab.module.css";
 
 /** A product as a card that links to its page (the /lab grid, "More from the AI Lab"). */
-export default function ProductCard({ product, href, compact = false }) {
+export default function ProductCard({ product, href, learnMore, compact = false }) {
   const Name = compact ? "h3" : "h2";
   return (
     <a href={href} className={`${styles.card} ${compact ? styles.cardCompact : ""}`}>
@@ -16,7 +16,7 @@ export default function ProductCard({ product, href, compact = false }) {
       <span className={styles.cardFoot}>
         <span>{product.site.label}</span>
         <span className={styles.cardMore}>
-          Learn more
+          {learnMore}
           <NavIcon name="arrow-right" />
         </span>
       </span>

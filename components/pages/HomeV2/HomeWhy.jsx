@@ -28,59 +28,25 @@ const LIGHT = {
   },
 };
 
-const content = {
-  kicker: "Why Hiiive",
-  title: "An AI lab, not an agency.",
-  intro: "Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.",
-  partners: {
-    label: "Part of Germany's AI ecosystem",
-    // White versions of /public/logos, made for the dark background. h is
-    // each logo's height in px, set by eye so they carry the same weight.
-    logos: [
-      { name: "NVIDIA Inception", src: "/img/home-v2/partners/nvidia-inception.png", h: 34 },
-      { name: "KI Bundesverband", src: "/img/home-v2/partners/ki-bundesverband.png", h: 34 },
-      { name: "Telekom TechBoost", src: "/img/home-v2/partners/telekom-techboost.png", h: 36 },
-      { name: "Berlin Partner", src: "/img/home-v2/partners/berlin-partner.png", h: 34 },
-      { name: "Wayra", src: "/img/home-v2/partners/wayra.png", h: 31 },
-    ],
-  },
-  statement: {
-    lines: ["Built with one.", "Made for many."],
-    body: "What we build with one company becomes a product the next one starts from, and every build makes it better.",
-  },
-  ourselves: {
-    title: "We run it ourselves first.",
-    body: "Dvision, Spoky and Komplyo, and the AI behind our services, run in our own company before they reach yours. Our money and our risk go first.",
-    window: { name: "Dvision", status: "Running at Hiiive" },
-    command: "$ ship dvision --to your-team",
-  },
-  team: {
-    title: "Senior people, inside your team.",
-    body: "The people you meet are the people who build. No layers, no hand-offs.",
-    // Framing per photo so heads come out the same size on one eye line:
-    // hf = head height (hair to chin) and ef = eye height, as fractions of
-    // the photo's height; cx = face centre, as a fraction of its width.
-    people: [
-      { name: "Roman Rittmann", role: "Co-founder & MD", photo: "/img/team-roman.jpg", hf: 0.51, ef: 0.44, cx: "57%" },
-      { name: "Noel Lorenz", role: "Co-founder & MD", photo: "/img/team-noel.jpg", hf: 0.46, ef: 0.25, cx: "51%" },
-      { name: "Momen Elshamy", role: "CTO", photo: "/img/team-momen.jpg", hf: 0.92, ef: 0.48, cx: "51%" },
-    ],
-  },
-  handover: {
-    lines: ["Live is the start,", "not the handover."],
-    body: "We stay on what we ship and keep improving it while your team uses it.",
-    // Illustrative release notes, faint in the background.
-    log: [
-      "v2.4.0  new agent: invoice matching",
-      "v2.3.2  faster replies in German",
-      "v2.3.0  connected to your CRM",
-      "v2.2.1  human review for edge cases",
-      "v2.2.0  weekly report to your inbox",
-      "v2.1.0  second team onboarded",
-      "v2.0.0  live in production",
-    ],
-  },
-};
+// The programs Hiiive is part of: white versions of /public/logos, made for the
+// dark background. h is each logo's height in px, set by eye so they carry
+// the same weight.
+const PARTNERS = [
+  { name: "NVIDIA Inception", src: "/img/home-v2/partners/nvidia-inception.png", h: 34 },
+  { name: "KI Bundesverband", src: "/img/home-v2/partners/ki-bundesverband.png", h: 34 },
+  { name: "Telekom TechBoost", src: "/img/home-v2/partners/telekom-techboost.png", h: 36 },
+  { name: "Berlin Partner", src: "/img/home-v2/partners/berlin-partner.png", h: 34 },
+  { name: "Wayra", src: "/img/home-v2/partners/wayra.png", h: 31 },
+];
+
+// Framing per photo so heads come out the same size on one eye line: hf =
+// head height (hair to chin) and ef = eye height, as fractions of the photo's
+// height; cx = face centre, as a fraction of its width. Roles come from the copy.
+const PEOPLE = [
+  { key: "roman", name: "Roman Rittmann", photo: "/img/team-roman.jpg", hf: 0.51, ef: 0.44, cx: "57%" },
+  { key: "noel", name: "Noel Lorenz", photo: "/img/team-noel.jpg", hf: 0.46, ef: 0.25, cx: "51%" },
+  { key: "momen", name: "Momen Elshamy", photo: "/img/team-momen.jpg", hf: 0.92, ef: 0.48, cx: "51%" },
+];
 
 function Check() {
   return (
@@ -129,9 +95,9 @@ function PixelArrows() {
   );
 }
 
-export default function HomeWhy() {
+export default function HomeWhy({ copy }) {
   const ref = useInView({ threshold: 0.2 });
-  const { partners, statement, ourselves, team, handover } = content;
+  const { statement, ourselves, team, handover } = copy;
 
   return (
     <section ref={ref} className={`${section.section} ${styles.why}`} aria-labelledby="home-why-title">
@@ -140,17 +106,17 @@ export default function HomeWhy() {
           <div className={section.headCopy}>
             <div className={section.kicker}>
               <span className={section.kickerDot} />
-              {content.kicker}
+              {copy.kicker}
             </div>
-            <h2 id="home-why-title" className={section.title}>{content.title}</h2>
-            <p className={section.intro}>{content.intro}</p>
+            <h2 id="home-why-title" className={section.title}>{copy.title}</h2>
+            <p className={section.intro}>{copy.intro}</p>
           </div>
         </div>
 
         <div className={styles.logoRow}>
-          <p className={styles.logoLabel}>{partners.label}</p>
+          <p className={styles.logoLabel}>{copy.partnersLabel}</p>
           <ul className={styles.logoList}>
-            {partners.logos.map((logo) => (
+            {PARTNERS.map((logo) => (
               <li key={logo.name} className={styles.logoItem}>
                 <img
                   className={styles.logo}
@@ -219,7 +185,7 @@ export default function HomeWhy() {
           {/* Senior people, inside your team */}
           <article className={`${styles.card} ${styles.wide} ${styles.team}`}>
             <ul className={styles.photos}>
-              {team.people.map((person) => (
+              {PEOPLE.map((person) => (
                 <li key={person.name} className={styles.photo}>
                   <img
                     src={person.photo}
@@ -229,7 +195,7 @@ export default function HomeWhy() {
                   />
                   <span className={styles.person}>
                     <span className={styles.personName}>{person.name}</span>
-                    <span className={styles.personRole}>{person.role}</span>
+                    <span className={styles.personRole}>{team.roles[person.key]}</span>
                   </span>
                 </li>
               ))}

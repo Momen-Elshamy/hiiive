@@ -12,55 +12,19 @@ import { useInView } from "./useInView";
  * Copy and numbers are the ones on the live /work page.
  */
 
-const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
-
-const content = {
-  kicker: "04 · Proof",
-  title: "Proof, not promises.",
-  intro: "Every project shipped to production and is still running. Numbers are measured and agreed with the client.",
-  all: { label: "All case studies", href: "/work" },
-  read: "Read the case study",
-  cases: [
-    {
-      client: "Mindverse",
-      logo: "/logos/mindverse.svg",
-      tag: "SEO & digital presence",
-      stat: "3.4×",
-      statLabel: "organic sessions in 12 months",
-      title: "The organic engine behind a leading German AI platform.",
-      // No photo for this one: the card draws the growth itself, monthly
-      // organic sessions rising to 3.4× (shape illustrative, end point real).
-      chart: [1, 1.04, 1.12, 1.2, 1.33, 1.5, 1.62, 1.86, 2.1, 2.38, 2.72, 3.02, 3.4],
-      href: "/work/mindverse-organic-engine",
-    },
-    {
-      client: "ahead",
-      tag: "Event game",
-      stat: "2 wks",
-      statLabel: "to build it for ahead's booth at FIBO 2026",
-      title: "An offline-first big-screen game with a mobile control panel.",
-      image: "/img/case-ahead.jpg",
-      href: "/work/ahead-fibo-game",
-    },
-    {
-      client: "Wavelr",
-      logo: "/logos/wavelr.svg",
-      tag: "MVP & SEO",
-      stat: "8 wks",
-      statLabel: "to a live marketplace, built from zero",
-      title: "The verified-PV marketplace for the German solar market.",
-      image: "/img/home-v2/case-wavelr.jpg",
-      href: "/work/wavelr-pv-marketplace",
-    },
-  ],
-  next: {
-    kicker: "Next step",
-    title: "Let's look at the work you shouldn't be doing.",
-    body: "A 30-minute call. We map one workflow, tell you if AI is the answer, and what it would take. No deck.",
-    cta: "Book a call",
-    href: BOOK_A_CALL,
+// What each card shows besides its copy (copy.items[key]).
+const CASES = [
+  {
+    key: "mindverse",
+    client: "Mindverse",
+    logo: "/logos/mindverse.svg",
+    // No photo for this one: the card draws the growth itself, monthly
+    // organic sessions rising to 3.4× (shape illustrative, end point real).
+    chart: [1, 1.04, 1.12, 1.2, 1.33, 1.5, 1.62, 1.86, 2.1, 2.38, 2.72, 3.02, 3.4],
   },
-};
+  { key: "ahead", client: "ahead", image: "/img/case-ahead.jpg" },
+  { key: "wavelr", client: "Wavelr", logo: "/logos/wavelr.svg", image: "/img/home-v2/case-wavelr.jpg" },
+];
 
 function Arrow({ flip = false }) {
   return (
@@ -114,7 +78,8 @@ function GrowthChart({ values }) {
   );
 }
 
-export default function HomeCases() {
+export default function HomeCases({ copy }) {
+  const cases = CASES.map((c) => ({ ...c, ...copy.items[c.key] }));
   const ref = useInView({ threshold: 0.15 });
   const trackRef = useRef(null);
   const [edges, setEdges] = useState({ start: true, end: false, fits: false });
@@ -149,21 +114,21 @@ export default function HomeCases() {
           <div className={section.headCopy}>
             <div className={section.kicker}>
               <span className={section.kickerDot} />
-              {content.kicker}
+              {copy.kicker}
             </div>
-            <h2 id="home-cases-title" className={section.title}>{content.title}</h2>
-            <p className={section.intro}>{content.intro}</p>
+            <h2 id="home-cases-title" className={section.title}>{copy.title}</h2>
+            <p className={section.intro}>{copy.intro}</p>
           </div>
           <div className={styles.controls}>
-            <a href={content.all.href} className={styles.all}>
-              {content.all.label} <Arrow />
+            <a href={copy.all.href} className={styles.all}>
+              {copy.all.label} <Arrow />
             </a>
             {edges.fits ? null : (
               <div className={styles.arrows}>
-                <button type="button" className={styles.arrow} onClick={() => step(-1)} disabled={edges.start} aria-label="Previous case">
+                <button type="button" className={styles.arrow} onClick={() => step(-1)} disabled={edges.start} aria-label={copy.previous}>
                   <Arrow flip />
                 </button>
-                <button type="button" className={styles.arrow} onClick={() => step(1)} disabled={edges.end} aria-label="Next case">
+                <button type="button" className={styles.arrow} onClick={() => step(1)} disabled={edges.end} aria-label={copy.next}>
                   <Arrow />
                 </button>
               </div>
@@ -173,7 +138,7 @@ export default function HomeCases() {
       </div>
 
       <ul ref={trackRef} className={styles.track}>
-        {content.cases.map((c, i) => (
+        {cases.map((c, i) => (
           <li key={c.client} className={styles.slide} style={{ "--i": i }}>
             <a href={c.href} className={`${styles.caseCard} ${c.chart ? styles.chartCard : ""}`}>
               {c.chart ? <GrowthChart values={c.chart} /> : <img className={styles.photo} src={c.image} alt="" loading="lazy" />}
@@ -193,23 +158,23 @@ export default function HomeCases() {
                 </div>
                 <h3 className={styles.caseTitle}>{c.title}</h3>
                 <span className={styles.read}>
-                  {content.read} <Arrow />
+                  {copy.read} <Arrow />
                 </span>
               </div>
             </a>
           </li>
         ))}
-        <li className={styles.slide} style={{ "--i": content.cases.length }}>
-          <a href={content.next.href} className={`${styles.caseCard} ${styles.nextCard}`}>
+        <li className={styles.slide} style={{ "--i": cases.length }}>
+          <a href={copy.nextStep.href} className={`${styles.caseCard} ${styles.nextCard}`}>
             <span className={styles.nextDots} aria-hidden="true" />
             <span className={styles.nextGlow} aria-hidden="true" />
             <div className={styles.nextCopy}>
-              <span className={styles.nextKicker}>{content.next.kicker}</span>
-              <h3 className={styles.nextTitle}>{content.next.title}</h3>
-              <p className={styles.nextBody}>{content.next.body}</p>
+              <span className={styles.nextKicker}>{copy.nextStep.kicker}</span>
+              <h3 className={styles.nextTitle}>{copy.nextStep.title}</h3>
+              <p className={styles.nextBody}>{copy.nextStep.body}</p>
             </div>
             <span className={`${buttons.button} ${buttons.primary} ${styles.nextButton}`}>
-              {content.next.cta} <Arrow />
+              {copy.nextStep.cta} <Arrow />
             </span>
           </a>
         </li>

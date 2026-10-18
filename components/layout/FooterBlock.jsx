@@ -1,4 +1,4 @@
-import { PRODUCTS } from "@/components/pages/Lab/products";
+import { labProducts } from "@/components/pages/Lab/products";
 import styles from "./FooterBlock.module.css";
 
 // The fallback columns (and the CMS block's defaults); the live footer is
@@ -14,7 +14,7 @@ const defaultColumns = [
    },
    {
       heading: "AI Lab",
-      links: PRODUCTS.map((product) => ({ label: product.name, href: `/lab/${product.slug}` })),
+      links: labProducts("en").map((product) => ({ label: product.name, href: `/lab/${product.slug}` })),
    },
    {
       heading: "Company",

@@ -18,7 +18,7 @@ import styles from "./Preloader.module.css";
 const HOLD = 250; // ms at 100% before fading out
 const FADE = 1000; // ms the fade-out takes (see the CSS)
 
-export default function Preloader({ progress }) {
+export default function Preloader({ progress, label = "Opening the lab", ariaLabel = "Loading the page" }) {
   const rootRef = useRef(null);
   const barRef = useRef(null);
   const valueRef = useRef(null);
@@ -90,7 +90,7 @@ export default function Preloader({ progress }) {
       className={styles.preloader}
       data-preloader="idle"
       role="progressbar"
-      aria-label="Loading the page"
+      aria-label={ariaLabel}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={0}
@@ -105,7 +105,7 @@ export default function Preloader({ progress }) {
           <span className={styles.spark} />
         </span>
         <span className={styles.meta} aria-hidden="true">
-          <span>Opening the lab</span>
+          <span>{label}</span>
           <span ref={valueRef} className={styles.value}>0%</span>
         </span>
       </div>

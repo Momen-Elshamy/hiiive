@@ -1,19 +1,6 @@
-import HomeStory from "@/components/pages/HomeV2/HomeStory";
-import HomeWhy from "@/components/pages/HomeV2/HomeWhy";
-import HomeCases from "@/components/pages/HomeV2/HomeCases";
+import { permanentRedirect } from "next/navigation";
 
-// Prototype route for the new home story. Kept out of search until it replaces "/".
-export const metadata = {
-  title: "Home v2 (prototype) | HIIIVE",
-  robots: { index: false, follow: false },
-};
-
+// The new home was built here as a prototype; it is the home page now.
 export default function HomeV2Page() {
-  return (
-    <>
-      <HomeStory />
-      <HomeWhy />
-      <HomeCases />
-    </>
-  );
+  permanentRedirect("/");
 }

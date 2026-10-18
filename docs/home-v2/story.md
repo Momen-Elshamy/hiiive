@@ -1,6 +1,6 @@
 # Home v2 — Story & copy
 
-Status: **draft 6**, scenes 1–3 + CTA built at `/home-v2` · Branch: `feat/home-v2-story`
+Status: **the home page** (`/`, `/de`; the old `/home-v2` redirects there), scenes 1–3 + CTA, Why Hiiive and Proof · Branch: `feat/home-v2-story`
 
 ## The idea in one line
 
@@ -21,7 +21,7 @@ One scene, one camera, no cuts: the pattern from scenes 1–2 is the factory's f
 ## Look
 
 - **Palette:** brand charcoal with one glowing line of HIIIVE yellow (`--hv-accent`, `#f7f42c`), like the brand renders. The aurora keeps cool steel/teal curtains but burns yellow along its lower edge; the spark is yellow and casts warm white light on charcoal beads.
-- **Header (night variant):** transparent over the story, dark glass once you scroll, CTA with a glowing yellow edge. The email link is hidden here. Only active on `/home-v2` for now.
+- **Header (night variant):** transparent over the story, dark glass once you scroll; its CTA is the shared light button. The email link is hidden here. Active on the home and the AI Lab pages.
 
 ## Rules from review
 
@@ -133,11 +133,12 @@ All images are in `refs/`.
 - **The factory** is modelled in code (`factory/factoryModel.js`): each station owns its lights and moving parts, so it can power on by itself. Lit like a product shot: area lights, crisp shadows, AO, bloom on the light slits only, film grain and a vignette.
 - **One timeline** (`homeTimeline.js`) in screens of scroll drives the scene and the copy: story, pull-out, station power-on, CTA.
 - **Preloader** (`Preloader.jsx`): covers the page until the scene can draw, so it shows up complete. The bar follows the real steps (fonts, the three.js chunk, building the scene, compiling every shader, the first frame) and creeps on while one runs; then the hero rises in. It gives up after 12 s and lets a late scene fade in by itself.
-- **Review a moment (dev only):** `/home-v2?s=5.2` pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
+- **Review a moment (dev only):** `/?s=5.2` (or `/de?s=5.2`) pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
 - **Buttons:** one style for the night pages and the night header, in `components/ui/buttons.module.css`: a 4px rectangle like the rest of the site, primary light on night, secondary an outline.
 - **Nav:** AI Engineering (the three AI services) and AI Lab (Dvision, Spoky, Komplyo). The live nav and footer are CMS globals (en + de); the code defaults in `Header.jsx` and `FooterBlock.jsx` match them. The SEO and funnels pages are unpublished.
 - **/studio → /ai-engineering:** the catch-all page now follows CMS redirects (Admin → Redirects). Once this code is deployed, run `node scripts/move-studio-to-ai-engineering.mjs --write` once: it renames the slugs, adds the 301s and repoints every /studio link (dry run without `--write`).
-- **AI Lab pages:** `/lab` and `/lab/<product>` (also under `/de/...`, English copy for now), all from `components/pages/Lab/products.js`. Dvision was called Content OS before.
+- **AI Lab pages:** `/lab` and `/lab/<product>`, in English and German (`/de/lab/...`), all from `components/pages/Lab/products.js` and `copy.js`. Dvision was called Content OS before.
+- **Languages:** every word on the home is in `components/pages/HomeV2/copy.js` (en, de); `/de` is the German home and unprefixed pages follow the visitor's language cookie, like the CMS pages. The small labels printed on the 3D factory stay English.
 - **Mobile:** fewer particles, no AO, the factory framed in the top half with the copy at the bottom; only the active station's text shows.
 - **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.
 - **CMS (to do):** turn the story into Puck blocks so the copy is editable in en + de.
@@ -146,4 +147,4 @@ All images are in `refs/`.
 
 1. Are the numbers still true for the sections after the story (12+ systems, 6 wks, 4 industries)?
 2. Products to show after the story: Spoky, Dvision (formerly Content OS), Komplyo — still the right three?
-3. German copy for every scene (English only so far).
+3. German copy: written for the home and the AI Lab pages; worth a native read before launch.

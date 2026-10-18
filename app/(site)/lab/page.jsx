@@ -1,10 +1,13 @@
-import LabIndex from "@/components/pages/Lab/LabIndex";
+import LabIndex, { labMetadata } from "@/components/pages/Lab/LabIndex";
+import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n";
 
-export const metadata = {
-  title: "AI Lab | HIIIVE",
-  description: "Products that started as work for one company and are made for many: Dvision, Spoky and Komplyo.",
-};
+// The AI Lab in the language of the visitor's cookie, as on every unprefixed
+// page; /de/lab is the prefixed route ([locale]/lab).
+export async function generateMetadata() {
+  return labMetadata(await resolveLocale());
+}
 
-export default function LabPage() {
-  return <LabIndex base="/lab" />;
+export default async function LabPage() {
+  const locale = await resolveLocale();
+  return <LabIndex base={locale === DEFAULT_LOCALE ? "/lab" : `/${locale}/lab`} locale={locale} />;
 }

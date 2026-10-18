@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import buttons from "@/components/ui/buttons.module.css";
-import { PRODUCTS } from "@/components/pages/Lab/products";
+import { labProducts } from "@/components/pages/Lab/products";
 import styles from "./HeaderBlock.module.css";
 import LangSwitcher from "./LangSwitcher";
 import { NavIcon } from "./navIcons";
@@ -25,7 +25,7 @@ export const defaultNavItems = [
    {
       label: "AI Lab",
       href: "/lab",
-      dropdown: PRODUCTS.map((product) => ({
+      dropdown: labProducts("en").map((product) => ({
          icon: product.icon,
          title: product.name,
          badge: "",
@@ -83,29 +83,24 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    const [menuOpen, setMenuOpen] = useState(false);
    const closeMenu = () => setMenuOpen(false);
 
-   // The home page opens on the dark hero, so the nav sits transparently on top
-   // of it and only fades to the light paper bar once the user scrolls past it.
-   const pathname = usePathname();
-   const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
-   // The new pages (the home story, prototype at /home-v2, and the AI Lab) stay
-   // dark from top to bottom, so their nav stays dark too: transparent at the
-   // top, dark glass once scrolled.
-   const isNight = /^\/(?:(?:en|de)\/)?(?:home-v2|lab)(?:\/.*)?$/.test(pathname || "");
-   const overlay = isHome || isNight;
+   // The new pages (the home story and the AI Lab) stay dark from top to
+   // bottom, so their nav does too: it floats transparently over the page at
+   // the top and turns to dark glass once the page scrolls.
+   const pathname = usePathname() || "/";
+   const isHome = pathname === "/" || /^\/(?:en|de)\/?$/.test(pathname);
+   const isNight = isHome || /^\/(?:(?:en|de)\/)?(?:home-v2|lab)(?:\/.*)?$/.test(pathname);
    const [scrolled, setScrolled] = useState(false);
 
    useEffect(() => {
-      if (!overlay) return undefined;
+      if (!isNight) return undefined;
       const onScroll = () => setScrolled(window.scrollY > 24);
       onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       return () => window.removeEventListener("scroll", onScroll);
-   }, [overlay]);
+   }, [isNight]);
 
-   const onDark = isHome && !scrolled && !menuOpen;
    const rootClass = [
       styles.headerRoot,
-      onDark ? styles.onDark : "",
       isNight ? styles.night : "",
       isNight && (scrolled || menuOpen) ? styles.nightGlass : "",
    ].join(" ");
@@ -113,7 +108,7 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    const hasDropdown = (item) => Array.isArray(item.dropdown) && item.dropdown.length > 0;
 
    return (
-      <div className={overlay ? `${styles.headerOverlay} ${isNight ? styles.nightWrap : ""}` : undefined}>
+      <div className={isNight ? `${styles.headerOverlay} ${styles.nightWrap}` : undefined}>
          <header className={rootClass}>
             <div className={styles.headerInner}>
                <div className={styles.headerLeft}>

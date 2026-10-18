@@ -1,11 +1,13 @@
 import buttons from "@/components/ui/buttons.module.css";
 import section from "@/components/pages/HomeV2/HomeSection.module.css";
 import Halftone from "@/components/pages/HomeV2/why/Halftone";
+import { buildPageMetadata } from "@/lib/seo";
 import styles from "./Lab.module.css";
-import LabCta, { BOOK_A_CALL } from "./LabCta";
+import { fill, labCopy } from "./copy";
+import LabCta from "./LabCta";
 import ProductCard from "./ProductCard";
 import ProductWindow from "./ProductWindow";
-import { PRODUCTS } from "./products";
+import { labProducts } from "./products";
 
 function External() {
   return (
@@ -17,8 +19,9 @@ function External() {
 }
 
 /** /lab/<product>: what the product does, and the way to its own site. */
-export default function ProductPage({ product, base }) {
-  const others = PRODUCTS.filter((other) => other.slug !== product.slug);
+export default function ProductPage({ product, base, locale }) {
+  const copy = labCopy(locale);
+  const others = labProducts(locale).filter((other) => other.slug !== product.slug);
 
   return (
     <div className={`${section.section} ${styles.page}`}>
@@ -26,7 +29,7 @@ export default function ProductPage({ product, base }) {
         <div className={styles.hero}>
           <div>
             <nav className={styles.crumbs} aria-label="Breadcrumb">
-              <a href={base}>AI Lab</a>
+              <a href={base}>{copy.crumb}</a>
               <span aria-hidden="true">/</span>
               <span aria-current="page">{product.name}</span>
             </nav>
@@ -35,11 +38,11 @@ export default function ProductPage({ product, base }) {
             <p className={styles.lead}>{product.intro}</p>
             <div className={styles.actions}>
               <a href={product.site.href} target="_blank" rel="noopener" className={`${buttons.button} ${buttons.primary}`}>
-                Visit {product.site.label}
+                {fill(copy.visit, { site: product.site.label })}
                 <External />
               </a>
-              <a href={BOOK_A_CALL} className={`${buttons.button} ${buttons.secondary}`}>
-                Book a call
+              <a href={copy.bookCall.href} className={`${buttons.button} ${buttons.secondary}`}>
+                {copy.bookCall.label}
               </a>
             </div>
           </div>
@@ -52,10 +55,10 @@ export default function ProductPage({ product, base }) {
         <section className={styles.block} aria-labelledby="product-features">
           <div className={section.kicker}>
             <span className={section.kickerDot} />
-            What it does
+            {copy.whatKicker}
           </div>
           <h2 id="product-features" className={section.title}>
-            What {product.name} does.
+            {fill(copy.whatTitle, { name: product.name })}
           </h2>
           <ol className={styles.features}>
             {product.features.map((feature, i) => (
@@ -71,22 +74,31 @@ export default function ProductPage({ product, base }) {
         <section className={styles.block} aria-labelledby="product-more">
           <div className={section.kicker}>
             <span className={section.kickerDot} />
-            AI Lab
+            {copy.moreKicker}
           </div>
           <h2 id="product-more" className={section.title}>
-            More from the lab.
+            {copy.moreTitle}
           </h2>
           <ul className={styles.more}>
             {others.map((other) => (
               <li key={other.slug}>
-                <ProductCard product={other} href={`${base}/${other.slug}`} compact />
+                <ProductCard product={other} href={`${base}/${other.slug}`} learnMore={copy.learnMore} compact />
               </li>
             ))}
           </ul>
         </section>
       </div>
 
-      <LabCta />
+      <LabCta copy={copy.cta} />
     </div>
   );
+}
+
+/** Title, description, canonical and hreflang links for a product page. */
+export function productMetadata(product, locale) {
+  return buildPageMetadata({
+    root: { metaTitle: `${product.name} | ${labCopy(locale).crumb} | HIIIVE`, metaDescription: product.intro },
+    path: `lab/${product.slug}`,
+    locale,
+  });
 }
