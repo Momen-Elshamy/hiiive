@@ -85,15 +85,15 @@ Over the final overview of the factory.
 
 ### Why Hiiive
 
-What sets the company apart, not a list of services (a services bento was cut for being crowded and too detailed).
+What sets the company apart, not a list of services. A services bento (too crowded, too detailed) and a version with isometric illustrations (toy-like) were both cut.
 
 - **Headline:** An AI lab, not an agency.
 - **Intro:** Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.
-- **Points** (copy left, one isometric illustration right, in the factory's look: modules with the yellow band on a bead floor):
-  1. **We run it ourselves first.** Our products and the AI behind our services run in our own company first (Content OS in daily use, Spoky with real users, Komplyo in build). Illustration: the three products as modules, live / validating / in build.
-  2. **Built with one, made for many.** What we build with one company becomes a product the next one starts from. Illustration: one module feeding five smaller ones along lit lanes.
-  3. **Senior people, inside your team.** The people you meet build; no layers, no hand-offs. Illustration: a team as dark blocks with three lit Hiiive blocks among them.
-- **Part of:** NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
+- **Bento of four cards** in the style of the reference cards (ref 09 Invertase, ref 10 Harness): dark cards with halftone light, one simple visual each, light type.
+  1. **Built with one. Made for many.** Statement card over light trails (ref 04): one warm source, ribbons of light running out to five companies.
+  2. **We run it ourselves first.** A minimal flow (Content OS running at Hiiive → ✓ → `$ ship content-os --to your-team`), as in ref 09, with a halftone sphere and a yellow rim.
+  3. **Senior people, inside your team.** Photo card (ref 10) with the four people on the live About page: Roman Rittmann, Noel Lorenz, Momen Elshamy, Sarah Scheffler.
+  4. **Part of Germany's AI ecosystem.** Logo wall: NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
 
 ### 04 · Proof (photo cards, ref 10)
 

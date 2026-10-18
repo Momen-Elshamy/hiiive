@@ -3,42 +3,58 @@
 import section from "./HomeSection.module.css";
 import styles from "./HomeWhy.module.css";
 import { useInView } from "./useInView";
-import { OwnProductsArt, OneToManyArt, InsideTeamArt } from "./why/isoArt";
+import Halftone from "./why/Halftone";
+import Trails from "./why/Trails";
 
 /*
- * "Why Hiiive": what sets the company apart, in three points, each with one
- * illustration in the factory's visual language. Then the programs and
- * networks Hiiive is part of.
+ * "Why Hiiive": what sets the company apart, as a bento of four cards in the
+ * style of the reference cards (ref 09, Invertase; ref 10, Harness): dark
+ * cards with halftone light, one simple visual each, light type.
  */
+
+// Halftone light per card (module-level so the canvases draw once).
+const LIGHT = {
+  statement: { glows: [{ x: 1, y: 0, r: 0.8, color: [96, 104, 230], strength: 0.7 }] },
+  ourselves: {
+    glows: [{ x: 0.34, y: -0.1, r: 0.42, color: [240, 186, 96], strength: 0.85 }],
+    sphere: { x: 0.8, y: 0.58, r: 0.37, minWidth: 600 },
+  },
+  partners: {
+    glows: [
+      { x: 0, y: 1.05, r: 0.7, color: [42, 163, 201], strength: 0.55 },
+      { x: 1, y: -0.05, r: 0.45, color: [96, 104, 230], strength: 0.35 },
+    ],
+  },
+};
 
 const content = {
   kicker: "Why Hiiive",
   title: "An AI lab, not an agency.",
   intro: "Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.",
-  points: [
-    {
-      title: "We run it ourselves first.",
-      body: "Our products and the AI behind our services run in our own company before they reach yours: Content OS in daily use, Spoky with real users, Komplyo in build. Our money and our risk go first, so what you get has already worked.",
-      Art: OwnProductsArt,
-      art: "Three Hiiive products as modules: Content OS lit and shipping, Spoky blinking in validation, Komplyo still an outline.",
-    },
-    {
-      title: "Built with one, made for many.",
-      body: "What we build with one company becomes a product the next one can start from. You get a system made for your operation, the next company starts where you finished, and every build makes the product better, yours included.",
-      Art: OneToManyArt,
-      art: "One module sending work along lanes to five smaller modules, which light up one after another.",
-    },
-    {
-      title: "Senior people, inside your team.",
-      body: "The people you meet are the people who build. Senior engineers and AI specialists work inside your team, on your real data and processes. No layers, no hand-offs.",
-      Art: InsideTeamArt,
-      art: "A team as a grid of dark blocks, with three lit Hiiive blocks sitting among them.",
-    },
-  ],
+  statement: {
+    lines: ["Built with one.", "Made for many."],
+    body: "What we build with one company becomes a product the next one starts from, and every build makes it better.",
+  },
+  ourselves: {
+    title: "We run it ourselves first.",
+    body: "Content OS, Spoky and Komplyo, and the AI behind our services, run in our own company before they reach yours. Our money and our risk go first.",
+    window: { name: "Content OS", status: "Running at Hiiive" },
+    command: "$ ship content-os --to your-team",
+  },
+  team: {
+    title: "Senior people, inside your team.",
+    body: "The people you meet are the people who build. No layers, no hand-offs.",
+    people: [
+      { name: "Roman Rittmann", role: "Co-founder & MD", photo: "/img/team-roman.jpg" },
+      { name: "Noel Lorenz", role: "Co-founder & MD", photo: "/img/team-noel.jpg" },
+      { name: "Momen Elshamy", role: "CTO", photo: "/img/team-momen.jpg" },
+      { name: "Sarah Scheffler", role: "SEO & digital presence", photo: "/img/team-sarah.jpg" },
+    ],
+  },
   partners: {
-    label: "Part of",
+    title: "Part of Germany's AI ecosystem.",
     // White versions of /public/logos, made for the dark background.
-    items: [
+    logos: [
       { name: "NVIDIA Inception", src: "/img/home-v2/partners/nvidia-inception.png" },
       { name: "KI Bundesverband", src: "/img/home-v2/partners/ki-bundesverband.png" },
       { name: "Telekom TechBoost", src: "/img/home-v2/partners/telekom-techboost.png" },
@@ -48,25 +64,31 @@ const content = {
   },
 };
 
-function Point({ index, title, body, Art, art }) {
-  const ref = useInView({ threshold: 0.3 });
+function Check() {
   return (
-    <li ref={ref} className={styles.point}>
-      <div className={styles.copy}>
-        <span className={styles.number}>{String(index + 1).padStart(2, "0")}</span>
-        <h3 className={styles.pointTitle}>{title}</h3>
-        <p className={styles.pointBody}>{body}</p>
-      </div>
-      <div className={styles.art}>
-        <Art title={art} />
-      </div>
-    </li>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m5 12.5 4.5 4.5L19 7.5" />
+    </svg>
+  );
+}
+
+function Branch() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="6" cy="5" r="2" />
+      <circle cx="6" cy="19" r="2" />
+      <circle cx="18" cy="9" r="2" />
+      <path d="M6 7v10M18 11c0 4-6 3-11 6" />
+    </svg>
   );
 }
 
 export default function HomeWhy() {
+  const ref = useInView({ threshold: 0.2 });
+  const { statement, ourselves, team, partners } = content;
+
   return (
-    <section className={`${section.section} ${styles.why}`} aria-labelledby="home-why-title">
+    <section ref={ref} className={`${section.section} ${styles.why}`} aria-labelledby="home-why-title">
       <div className={section.inner}>
         <div className={section.head}>
           <div className={section.headCopy}>
@@ -79,21 +101,92 @@ export default function HomeWhy() {
           </div>
         </div>
 
-        <ol className={styles.points}>
-          {content.points.map((point, i) => (
-            <Point key={point.title} index={i} {...point} />
-          ))}
-        </ol>
+        <div className={styles.grid}>
+          {/* Built with one, made for many */}
+          <article className={`${styles.card} ${styles.narrow} ${styles.statement}`}>
+            <Halftone className={styles.halftone} glows={LIGHT.statement.glows} />
+            <Trails className={styles.trails} />
+            <div className={styles.statementCopy}>
+              <h3 className={styles.statementText}>
+                {statement.lines.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </h3>
+              <p className={styles.cardBody}>{statement.body}</p>
+            </div>
+          </article>
 
-        <div className={styles.partners}>
-          <span className={styles.partnersLabel}>{content.partners.label}</span>
-          <ul className={styles.partnerList}>
-            {content.partners.items.map((p) => (
-              <li key={p.name}>
-                <img className={styles.partner} src={p.src} alt={p.name} loading="lazy" />
-              </li>
-            ))}
-          </ul>
+          {/* We run it ourselves first */}
+          <article className={`${styles.card} ${styles.wide} ${styles.ourselves}`}>
+            <Halftone className={styles.halftone} glows={LIGHT.ourselves.glows} sphere={LIGHT.ourselves.sphere} />
+            <div className={styles.flow} aria-hidden="true">
+              <div className={styles.window}>
+                <span className={styles.windowDots}>
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className={styles.windowName}>{ourselves.window.name}</span>
+                <span className={styles.windowStatus}>
+                  <span className={styles.liveDot} />
+                  {ourselves.window.status}
+                </span>
+              </div>
+              <span className={styles.connector} />
+              <span className={styles.check}>
+                <Check />
+              </span>
+              <span className={styles.connector} />
+              <div className={styles.terminal}>
+                <span className={styles.terminalIcon}>
+                  <Branch />
+                </span>
+                <code className={styles.command} style={{ "--chars": ourselves.command.length }}>
+                  {ourselves.command}
+                </code>
+                <span className={styles.caret} />
+              </div>
+            </div>
+            <div className={styles.cardCopy}>
+              <h3 className={styles.cardTitle}>{ourselves.title}</h3>
+              <p className={styles.cardBody}>{ourselves.body}</p>
+            </div>
+          </article>
+
+          {/* Senior people, inside your team */}
+          <article className={`${styles.card} ${styles.wide} ${styles.team}`}>
+            <ul className={styles.photos}>
+              {team.people.map((person) => (
+                <li key={person.name} className={styles.photo}>
+                  <img src={person.photo} alt={person.name} loading="lazy" />
+                  <span className={styles.person}>
+                    <span className={styles.personName}>{person.name}</span>
+                    <span className={styles.personRole}>{person.role}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <span className={styles.teamShade} aria-hidden="true" />
+            <div className={styles.cardCopy}>
+              <h3 className={styles.cardTitle}>{team.title}</h3>
+              <p className={styles.cardBody}>{team.body}</p>
+            </div>
+          </article>
+
+          {/* Part of Germany's AI ecosystem */}
+          <article className={`${styles.card} ${styles.narrow} ${styles.partners}`}>
+            <Halftone className={styles.halftone} glows={LIGHT.partners.glows} />
+            <ul className={styles.logos}>
+              {partners.logos.map((logo) => (
+                <li key={logo.name} className={styles.logoCell}>
+                  <img className={styles.logo} src={logo.src} alt={logo.name} loading="lazy" />
+                </li>
+              ))}
+            </ul>
+            <div className={styles.cardCopy}>
+              <h3 className={styles.cardTitle}>{partners.title}</h3>
+            </div>
+          </article>
         </div>
       </div>
     </section>

@@ -1,7 +1,9 @@
-/* "Why Hiiive": three points, copy on the left and one illustration on the
-   right, separated by hairlines; then a quiet row of partner logos. */
+/* "Why Hiiive" bento (refs 09 Invertase, 10 Harness): dark cards with
+   halftone light, one simple visual each, title and one line at the bottom.
+   Animations start once the section is in view ([data-inview]). */
 
 .why {
+  --hairline: color-mix(in srgb, var(--hv-ink-rev) 8%, transparent);
   padding: 100px 0 120px;
 }
 
@@ -17,128 +19,483 @@
   pointer-events: none;
 }
 
-.points {
-  list-style: none;
-  border-bottom: 1px solid var(--hv-hairline-rev);
-}
-
-.point {
+.grid {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  align-items: center;
-  gap: 56px;
-  padding: 40px 0;
-  border-top: 1px solid var(--hv-hairline-rev);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
 }
 
-.copy {
-  max-width: 460px;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+.narrow {
+  grid-column: span 5;
 }
 
-.art {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.9s ease 0.1s, transform 0.9s ease 0.1s;
+.wide {
+  grid-column: span 7;
 }
 
-.point[data-inview="true"] .copy,
-.point[data-inview="true"] .art {
-  opacity: 1;
-  transform: none;
+/* Card ---------------------------------------------------------------------- */
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 460px;
+  padding: 32px;
+  border: 1px solid color-mix(in srgb, var(--hv-ink-rev) 7%, transparent);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--hv-ink-rev) 3%, transparent), transparent 45%),
+    var(--hv-card-night);
 }
 
-.number {
-  font-size: 13px;
+.halftone {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+}
+
+.cardCopy {
+  position: relative;
+}
+
+.cardTitle {
+  font-size: 20px;
   font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: var(--hv-accent);
-}
-
-.pointTitle {
-  margin-top: 14px;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: clamp(26px, 2.4vw, 36px);
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   color: var(--hv-ink-rev);
 }
 
-.pointBody {
-  margin-top: 16px;
-  font-size: 16px;
-  line-height: 1.65;
+.cardBody {
+  margin-top: 8px;
+  max-width: 440px;
+  font-size: 15px;
+  line-height: 1.55;
   color: var(--hv-soft-rev);
 }
 
-/* Partners --------------------------------------------------------------------- */
-.partners {
-  margin-top: 56px;
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
+/* Built with one, made for many: statement over light trails ---------------- */
+.statement {
+  justify-content: flex-start;
 }
 
-.partnersLabel {
+.trails {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.statementCopy {
+  max-width: 330px;
+}
+
+.statementText {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(30px, 2.7vw, 40px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  background: linear-gradient(180deg, var(--hv-ink-rev) 35%, var(--hv-muted-rev));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.statement .cardBody {
+  margin-top: 16px;
+  max-width: 300px;
+}
+
+.pulse {
+  stroke-dasharray: 0.07 1;
+  stroke-dashoffset: 0.07;
+  animation: pulse 3.6s linear infinite;
+  animation-play-state: paused;
+}
+
+.why[data-inview="true"] .pulse {
+  animation-play-state: running;
+}
+
+/* We run it ourselves first: a minimal flow, as in ref 09 ------------------- */
+.ourselves {
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(380px, 100%);
+  margin-top: 6px;
+}
+
+.window,
+.terminal {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.window {
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--hv-ink-rev) 16%, transparent);
+  background: color-mix(in srgb, var(--hv-card-night) 85%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--hv-ink-rev) 8%, transparent),
+    0 24px 48px -24px var(--hv-night);
+}
+
+.windowDots {
+  display: flex;
+  gap: 5px;
+}
+
+.windowDots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--hv-ink-rev) 22%, transparent);
+}
+
+.windowName {
   font-size: 13px;
-  color: var(--hv-muted-rev);
+  font-weight: 500;
+  color: var(--hv-ink-rev);
 }
 
-.partnerList {
-  list-style: none;
-  display: flex;
+.windowStatus {
+  margin-left: auto;
+  display: inline-flex;
   align-items: center;
-  gap: 44px;
-  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--hv-soft-rev);
 }
 
-.partner {
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hv-accent);
+  box-shadow: 0 0 10px var(--hv-accent);
+  animation: livePulse 2s ease-out infinite;
+}
+
+.connector {
+  width: 1px;
+  height: 18px;
+  background: color-mix(in srgb, var(--hv-ink-rev) 22%, transparent);
+}
+
+.check {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--hv-ink-rev) 45%, transparent);
+  border-radius: 50%;
+  background: var(--hv-card-night);
+  color: var(--hv-ink-rev);
+}
+
+.check svg {
+  width: 13px;
+  height: 13px;
+}
+
+.terminal {
+  gap: 12px;
+  padding: 10px 14px 10px 10px;
+  border: 1px solid color-mix(in srgb, var(--hv-ink-rev) 10%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--hv-night) 75%, transparent);
+}
+
+.terminalIcon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 7px;
+  color: var(--hv-soft-rev);
+}
+
+.terminalIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.command {
+  width: calc(var(--chars) * 1ch);
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--hv-ink-rev) 78%, transparent);
+}
+
+.caret {
+  width: 7px;
+  height: 15px;
+  margin-left: -8px;
+  background: var(--hv-accent);
+  opacity: 0;
+}
+
+.why[data-inview="true"] .check {
+  animation: pop 0.5s 0.3s ease both;
+}
+
+.why[data-inview="true"] .command {
+  animation: type 1.5s steps(var(--chars)) 0.8s both;
+}
+
+.why[data-inview="true"] .caret {
+  animation: caret 1s steps(1) 0.8s infinite;
+}
+
+/* Senior people, inside your team: photo card, as in ref 10 ----------------- */
+.team .cardCopy {
+  max-width: 480px;
+}
+
+.photos {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--hv-card-night);
+}
+
+.photo {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: grayscale(1) brightness(0.66) contrast(1.08);
+  transform: scale(1.02);
+  transition: filter 0.6s ease, transform 0.9s ease;
+}
+
+.photo:hover img {
+  filter: grayscale(1) brightness(0.82) contrast(1.08);
+  transform: scale(1.06);
+}
+
+.person {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-shadow: 0 1px 12px var(--hv-night);
+}
+
+.personName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hv-ink-rev);
+}
+
+.personRole {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--hv-ink-rev) 72%, transparent);
+}
+
+.teamShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--hv-night) 96%, transparent) 0%,
+      color-mix(in srgb, var(--hv-night) 70%, transparent) 30%,
+      transparent 60%
+    ),
+    linear-gradient(to bottom, color-mix(in srgb, var(--hv-night) 88%, transparent) 0%, transparent 28%);
+  pointer-events: none;
+}
+
+/* Part of Germany's AI ecosystem: logo wall ----------------------------------- */
+.partners {
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hairline);
+}
+
+.logoCell {
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.logoCell:nth-child(odd) {
+  border-right: 1px solid var(--hairline);
+}
+
+.logoCell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  border-right: 0;
+}
+
+.logo {
   display: block;
   height: 34px;
   width: auto;
-  opacity: 0.6;
+  max-width: 80%;
+  object-fit: contain;
+  opacity: 0.68;
   transition: opacity 0.2s ease;
 }
 
-.partner:hover {
-  opacity: 0.95;
+.logoCell:hover .logo {
+  opacity: 1;
+}
+
+/* Keyframes --------------------------------------------------------------------- */
+@keyframes pulse {
+  from {
+    stroke-dashoffset: 0.07;
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--hv-accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes type {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .copy,
-  .art {
-    opacity: 1;
-    transform: none;
+  .pulse {
+    display: none;
+  }
+
+  .liveDot,
+  .why[data-inview="true"] .check,
+  .why[data-inview="true"] .command,
+  .why[data-inview="true"] .caret {
+    animation: none;
+  }
+
+  .photo img {
     transition: none;
   }
 }
 
-@media (max-width: 900px) {
-  .point {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-    padding: 32px 0;
+/* Tablet and down: one card per row ----------------------------------------------- */
+@media (max-width: 1000px) {
+  .narrow,
+  .wide {
+    grid-column: 1 / -1;
   }
 
-  .art {
-    order: -1;
+  .card {
+    min-height: 440px;
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 640px) {
   .why {
     padding: 72px 0 88px;
   }
 
-  .partners {
-    gap: 20px;
+  .card {
+    min-height: 0;
+    padding: 24px;
   }
 
-  .partnerList {
-    gap: 28px;
+  .statement {
+    min-height: 460px;
+  }
+
+  .team {
+    min-height: 480px;
+  }
+
+  .person {
+    display: none;
+  }
+
+  .logoCell {
+    height: 80px;
+  }
+
+  .logo {
+    height: 26px;
+  }
+
+  .command {
+    font-size: 11.5px;
   }
 }
