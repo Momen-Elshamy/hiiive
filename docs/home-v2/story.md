@@ -89,11 +89,12 @@ What sets the company apart, not a list of services. A services bento (too crowd
 
 - **Headline:** An AI lab, not an agency.
 - **Intro:** Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.
-- **Bento of four cards** in the style of the reference cards (ref 09 Invertase, ref 10 Harness): dark cards with halftone light, one simple visual each, light type.
-  1. **Built with one. Made for many.** Statement card over light trails (ref 04): one warm source, ribbons of light running out to five companies.
+- **Part of:** a plain row of logos right above the cards: NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
+- **Bento of four cards** in the style of the reference cards (ref 09 Invertase, ref 10 Harness): dark cards with fine halftone light, one simple visual each, light type.
+  1. **Built with one. Made for many.** Statement card over light trails (ref 04): one warm source fanning out to five companies.
   2. **We run it ourselves first.** A minimal flow (Content OS running at Hiiive → ✓ → `$ ship content-os --to your-team`), as in ref 09, with a halftone sphere and a yellow rim.
-  3. **Senior people, inside your team.** Photo card (ref 10) with the four people on the live About page: Roman Rittmann, Noel Lorenz, Momen Elshamy, Sarah Scheffler.
-  4. **Part of Germany's AI ecosystem.** Logo wall: NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
+  3. **Senior people, inside your team.** Photo card (ref 10) with Roman Rittmann, Noel Lorenz and Momen Elshamy, framed so heads match in size and sit on one eye line.
+  4. **Live is the start, not the handover.** Statement card with pixel arrows over faint, slowly scrolling release notes: we keep improving what we ship.
 
 ### 04 · Proof (photo cards, ref 10)
 

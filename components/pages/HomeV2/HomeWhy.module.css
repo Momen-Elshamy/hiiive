@@ -1,6 +1,6 @@
-/* "Why Hiiive" bento (refs 09 Invertase, 10 Harness): dark cards with
-   halftone light, one simple visual each, title and one line at the bottom.
-   Animations start once the section is in view ([data-inview]). */
+/* "Why Hiiive": a plain row of partner logos, then a bento (refs 09
+   Invertase, 10 Harness) of dark cards with halftone light, one simple
+   visual each. Animations start once the section is in view ([data-inview]). */
 
 .why {
   --hairline: color-mix(in srgb, var(--hv-ink-rev) 8%, transparent);
@@ -17,6 +17,47 @@
   height: 40vh;
   background: linear-gradient(to bottom, transparent, var(--hv-night));
   pointer-events: none;
+}
+
+/* Partner logos, in one plain line above the cards ---------------------------- */
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: -12px 0 32px;
+  padding: 22px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.logoLabel {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--hv-muted-rev);
+}
+
+.logoList {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logo {
+  display: block;
+  height: 32px;
+  width: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.logo:hover {
+  opacity: 0.95;
 }
 
 .grid {
@@ -275,11 +316,13 @@
 }
 
 .photos {
+  --head: 48%; /* head height, hair to chin, as a share of the card's height */
+  --eye: 42%; /* the eye line, from the top */
   position: absolute;
   inset: 0;
   z-index: -2;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2px;
   margin: 0;
   padding: 0;
@@ -290,21 +333,45 @@
 .photo {
   position: relative;
   overflow: hidden;
+  background: var(--hv-night);
 }
 
+/* Each photo is sized so its head is --head tall with the eyes on --eye
+   (framing numbers in HomeWhy.jsx); its top and bottom fade into the night. */
 .photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-  filter: grayscale(1) brightness(0.66) contrast(1.08);
-  transform: scale(1.02);
-  transition: filter 0.6s ease, transform 0.9s ease;
+  position: absolute;
+  left: 50%;
+  top: calc(var(--eye) - var(--ef) * var(--head) / var(--hf));
+  height: calc(var(--head) / var(--hf));
+  width: auto;
+  max-width: none;
+  transform: translateX(calc(-1 * var(--cx)));
+  scale: 1.01;
+  filter: grayscale(1) brightness(0.74) contrast(1.08);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 84%, transparent 100%);
+  transition: filter 0.6s ease, scale 0.9s ease;
 }
 
 .photo:hover img {
-  filter: grayscale(1) brightness(0.82) contrast(1.08);
-  transform: scale(1.06);
+  filter: grayscale(1) brightness(0.88) contrast(1.08);
+  scale: 1.04;
+}
+
+/* Darker sides on every column: separates the portraits and tones down the
+   light studio wall behind one of them. */
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--hv-night) 62%, transparent),
+    transparent 24%,
+    transparent 76%,
+    color-mix(in srgb, var(--hv-night) 62%, transparent)
+  );
+  pointer-events: none;
 }
 
 .person {
@@ -345,49 +412,79 @@
   pointer-events: none;
 }
 
-/* Part of Germany's AI ecosystem: logo wall ----------------------------------- */
-.partners {
-  justify-content: space-between;
-  gap: 32px;
+/* Live is the start, not the handover: statement over release notes ------- */
+.handover {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.logos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.log {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--hairline);
+  padding: 0 28px;
+  overflow: hidden;
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 26px;
+  white-space: pre;
+  text-align: left;
+  color: color-mix(in srgb, var(--hv-ink-rev) 20%, transparent);
+  /* Clear in the middle, where the statement sits. */
+  -webkit-mask-image: radial-gradient(ellipse 78% 60% at 50% 50%, transparent 48%, #000 100%);
+  mask-image: radial-gradient(ellipse 78% 60% at 50% 50%, transparent 48%, #000 100%);
 }
 
-.logoCell {
-  height: 96px;
-  display: grid;
-  place-items: center;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.logoCell:nth-child(odd) {
-  border-right: 1px solid var(--hairline);
-}
-
-.logoCell:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  border-right: 0;
-}
-
-.logo {
+/* The notes scroll up slowly, like a changelog that keeps growing. */
+.logTrack {
   display: block;
-  height: 34px;
-  width: auto;
-  max-width: 80%;
-  object-fit: contain;
-  opacity: 0.68;
-  transition: opacity 0.2s ease;
+  padding-top: 20px;
+  animation: logScroll 32s linear infinite;
+  animation-play-state: paused;
 }
 
-.logoCell:hover .logo {
-  opacity: 1;
+.why[data-inview="true"] .logTrack {
+  animation-play-state: running;
+}
+
+.handoverCopy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+}
+
+.handover .statementText {
+  align-items: center;
+}
+
+.handover .cardBody {
+  margin-top: 18px;
+  max-width: 290px;
+}
+
+.arrows {
+  width: 86px;
+  height: 20px;
+  margin-top: 22px;
+}
+
+.arrow rect {
+  fill: var(--hv-ink-rev);
+}
+
+.arrow {
+  opacity: 0.18;
+  animation: arrowStep 2.2s ease-in-out infinite;
+  animation-delay: calc(var(--n) * 0.22s);
+  animation-play-state: paused;
+}
+
+.why[data-inview="true"] .arrow {
+  animation-play-state: running;
 }
 
 /* Keyframes --------------------------------------------------------------------- */
@@ -426,6 +523,23 @@
   }
 }
 
+@keyframes logScroll {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes arrowStep {
+  0%,
+  45%,
+  100% {
+    opacity: 0.18;
+  }
+  12% {
+    opacity: 1;
+  }
+}
+
 @keyframes caret {
   0%,
   100% {
@@ -442,10 +556,16 @@
   }
 
   .liveDot,
+  .logTrack,
+  .arrow,
   .why[data-inview="true"] .check,
   .why[data-inview="true"] .command,
   .why[data-inview="true"] .caret {
     animation: none;
+  }
+
+  .arrow:first-child {
+    opacity: 1;
   }
 
   .photo img {
@@ -487,12 +607,28 @@
     display: none;
   }
 
-  .logoCell {
-    height: 80px;
+  .photos {
+    --head: 30%;
+    --eye: 33%;
+  }
+
+  .handover {
+    min-height: 400px;
+  }
+
+  .logoRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .logoList {
+    justify-content: flex-start;
+    gap: 18px 28px;
   }
 
   .logo {
-    height: 26px;
+    height: 24px;
   }
 
   .command {

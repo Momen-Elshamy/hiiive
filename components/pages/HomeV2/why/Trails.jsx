@@ -5,34 +5,46 @@ import styles from "../HomeWhy.module.css";
 
 /*
  * Light trails (ref 04, Luminal) for "Built with one, made for many": one
- * warm source in the lower left, ribbons of light that sweep along the floor
- * and rise to five companies on the right, cooling from brand yellow to
- * aurora teal and blue on the way. A pulse of light runs along each ribbon.
+ * warm source in the lower left fans out into five ribbons of fine light,
+ * each ending at a company. The ribbons cool from brand yellow to aurora
+ * teal and blue on the way; a faint pulse runs along each.
  */
 
 const VIEW = { w: 520, h: 460 };
 const ORIGIN = { x: 34, y: 428 };
 
-// Each ribbon: where it ends (a company) and the control point that makes it
-// hug the floor before it rises.
-const RIBBONS = [
-  { end: [472, 70], control: [448, 452] },
-  { end: [494, 148], control: [454, 448] },
-  { end: [476, 228], control: [440, 444] },
-  { end: [432, 298], control: [408, 440] },
-  { end: [362, 352], control: [348, 436] },
+// Final heading (degrees above horizontal) and length of each ribbon. The
+// fan stays below the copy in the card's upper left.
+const FAN = [
+  { angle: 34, length: 460 },
+  { angle: 26, length: 470 },
+  { angle: 18, length: 475 },
+  { angle: 10, length: 470 },
+  { angle: 3, length: 455 },
 ];
 
-// A ribbon is a few strands of light side by side.
+// Fine strands that make up a ribbon: a small angular spread and length
+// change each, so the ribbon reads as a band of light, not a single line.
 const STRANDS = [
-  { dc: [0, 0], de: [0, 0], width: 2.2, opacity: 1 },
-  { dc: [12, 7], de: [7, 5], width: 1.1, opacity: 0.55 },
-  { dc: [-12, -7], de: [-6, -4], width: 0.8, opacity: 0.4 },
-  { dc: [22, 12], de: [12, 9], width: 0.6, opacity: 0.22 },
+  { spread: 0, stretch: 1, width: 1.6, opacity: 0.95 },
+  { spread: 0.9, stretch: 0.985, width: 0.9, opacity: 0.55 },
+  { spread: -0.9, stretch: 1.01, width: 0.9, opacity: 0.5 },
+  { spread: 1.8, stretch: 0.97, width: 0.6, opacity: 0.3 },
+  { spread: -1.8, stretch: 1.02, width: 0.6, opacity: 0.28 },
+  { spread: 2.8, stretch: 0.96, width: 0.5, opacity: 0.16 },
 ];
 
-const strandPath = ({ end, control }, { dc, de }) =>
-  `M${ORIGIN.x} ${ORIGIN.y} Q${control[0] + dc[0]} ${control[1] + dc[1]} ${end[0] + de[0]} ${end[1] + de[1]}`;
+const rad = (deg) => (deg * Math.PI) / 180;
+const toward = (angle, distance) => [ORIGIN.x + Math.cos(rad(angle)) * distance, ORIGIN.y - Math.sin(rad(angle)) * distance];
+
+/** Leaves the source flatter than its final heading, then bends up to it. */
+function ribbonPath({ angle, length }, { spread = 0, stretch = 1 } = {}) {
+  const l = length * stretch;
+  const [x1, y1] = toward(angle * 0.25 + spread * 0.4, l * 0.42);
+  const [x2, y2] = toward(angle * 0.82 + spread * 0.8, l * 0.8);
+  const [x3, y3] = toward(angle + spread, l);
+  return `M${ORIGIN.x} ${ORIGIN.y} C${x1.toFixed(1)} ${y1.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)} ${x3.toFixed(1)} ${y3.toFixed(1)}`;
+}
 
 export default function Trails({ className }) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
@@ -45,31 +57,26 @@ export default function Trails({ className }) {
       aria-hidden="true"
     >
       <defs>
-        {RIBBONS.map(({ end }, i) => (
-          <linearGradient
-            key={i}
-            id={`${id}-ribbon-${i}`}
-            gradientUnits="userSpaceOnUse"
-            x1={ORIGIN.x}
-            y1={ORIGIN.y}
-            x2={end[0]}
-            y2={end[1]}
-          >
-            <stop offset="0%" stopColor="#fff6c9" />
-            <stop offset="28%" stopColor="var(--hv-accent)" />
-            <stop offset="64%" stopColor="var(--hv-aurora-teal)" />
-            <stop offset="100%" stopColor="#b9d6ff" />
-          </linearGradient>
-        ))}
+        {FAN.map((ribbon, i) => {
+          const [x2, y2] = toward(ribbon.angle, ribbon.length);
+          return (
+            <linearGradient key={i} id={`${id}-ribbon-${i}`} gradientUnits="userSpaceOnUse" x1={ORIGIN.x} y1={ORIGIN.y} x2={x2} y2={y2}>
+              <stop offset="0%" stopColor="#fff6c9" />
+              <stop offset="22%" stopColor="var(--hv-accent)" />
+              <stop offset="60%" stopColor="var(--hv-aurora-teal)" />
+              <stop offset="100%" stopColor="var(--hv-aurora-blue)" />
+            </linearGradient>
+          );
+        })}
         <radialGradient id={`${id}-source`}>
-          <stop offset="0%" stopColor="var(--hv-accent)" stopOpacity="0.7" />
+          <stop offset="0%" stopColor="var(--hv-accent)" stopOpacity="0.6" />
           <stop offset="100%" stopColor="var(--hv-accent)" stopOpacity="0" />
         </radialGradient>
         <filter id={`${id}-glow`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="6" />
+          <feGaussianBlur stdDeviation="7" />
         </filter>
-        <filter id={`${id}-node`} x="-200%" y="-200%" width="500%" height="500%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+        <filter id={`${id}-soft`} x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="2.2" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -77,25 +84,18 @@ export default function Trails({ className }) {
         </filter>
       </defs>
 
-      {/* Soft light under the strands. */}
-      <g filter={`url(#${id}-glow)`} opacity="0.75">
-        {RIBBONS.map((ribbon, i) => (
-          <path
-            key={i}
-            d={strandPath(ribbon, STRANDS[0])}
-            fill="none"
-            stroke={`url(#${id}-ribbon-${i})`}
-            strokeWidth="7"
-            strokeLinecap="round"
-          />
+      {/* Soft light under each ribbon. */}
+      <g filter={`url(#${id}-glow)`} opacity="0.45">
+        {FAN.map((ribbon, i) => (
+          <path key={i} d={ribbonPath(ribbon)} fill="none" stroke={`url(#${id}-ribbon-${i})`} strokeWidth="9" strokeLinecap="round" />
         ))}
       </g>
 
-      {RIBBONS.map((ribbon, i) =>
+      {FAN.map((ribbon, i) =>
         STRANDS.map((strand, s) => (
           <path
             key={`${i}-${s}`}
-            d={strandPath(ribbon, strand)}
+            d={ribbonPath(ribbon, strand)}
             fill="none"
             stroke={`url(#${id}-ribbon-${i})`}
             strokeWidth={strand.width}
@@ -105,33 +105,37 @@ export default function Trails({ className }) {
         )),
       )}
 
-      {/* A pulse of light running out along each ribbon. */}
-      {RIBBONS.map((ribbon, i) => (
+      {/* A faint pulse of light running out along each ribbon. */}
+      {FAN.map((ribbon, i) => (
         <path
           key={`pulse-${i}`}
           className={styles.pulse}
-          d={strandPath(ribbon, STRANDS[0])}
+          d={ribbonPath(ribbon)}
           pathLength="1"
           fill="none"
           stroke="#fffbe8"
-          strokeWidth="2.6"
+          strokeWidth="1.6"
           strokeLinecap="round"
-          filter={`url(#${id}-node)`}
-          style={{ animationDelay: `${(i * 0.55).toFixed(2)}s`, animationDuration: `${(3.4 + i * 0.25).toFixed(2)}s` }}
+          opacity="0.8"
+          filter={`url(#${id}-soft)`}
+          style={{ animationDelay: `${(i * 0.7).toFixed(2)}s`, animationDuration: `${(4.2 + i * 0.3).toFixed(2)}s` }}
         />
       ))}
 
       {/* The companies. */}
-      {RIBBONS.map(({ end }, i) => (
-        <g key={`node-${i}`}>
-          <circle cx={end[0]} cy={end[1]} r="8" fill="none" stroke="#b9d6ff" strokeOpacity="0.28" />
-          <circle cx={end[0]} cy={end[1]} r="3.4" fill="#e9f4ff" filter={`url(#${id}-node)`} />
-        </g>
-      ))}
+      {FAN.map((ribbon, i) => {
+        const [x, y] = toward(ribbon.angle, ribbon.length);
+        return (
+          <g key={`node-${i}`}>
+            <circle cx={x} cy={y} r="6.5" fill="none" stroke="#b9d6ff" strokeOpacity="0.2" />
+            <circle cx={x} cy={y} r="2.6" fill="#e9f4ff" filter={`url(#${id}-soft)`} />
+          </g>
+        );
+      })}
 
       {/* The source. */}
-      <circle cx={ORIGIN.x} cy={ORIGIN.y} r="30" fill={`url(#${id}-source)`} />
-      <circle cx={ORIGIN.x} cy={ORIGIN.y} r="5.5" fill="#fffbe0" filter={`url(#${id}-node)`} />
+      <circle cx={ORIGIN.x} cy={ORIGIN.y} r="26" fill={`url(#${id}-source)`} />
+      <circle cx={ORIGIN.x} cy={ORIGIN.y} r="4.5" fill="#fffbe0" filter={`url(#${id}-soft)`} />
     </svg>
   );
 }

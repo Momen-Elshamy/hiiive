@@ -27,7 +27,7 @@ const normalize = (v) => {
 const LIGHT = normalize([-0.6, -0.75, 0.32]); // towards the light: upper left, a little in front
 const RIM = normalize([0.5, 0.86]); // the rim faces lower right
 
-export default function Halftone({ glows = [], sphere, spacing = 7, className }) {
+export default function Halftone({ glows = [], sphere, spacing = 5, className }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function Halftone({ glows = [], sphere, spacing = 7, className })
       ctx.clearRect(0, 0, w, h);
 
       const size = Math.max(w, h);
-      const maxDot = spacing * 0.44;
+      const maxDot = spacing * 0.4;
       const ball = sphere && w >= (sphere.minWidth ?? 0) ? sphere : null;
       const sx = ball ? ball.x * w : 0;
       const sy = ball ? ball.y * h : 0;
