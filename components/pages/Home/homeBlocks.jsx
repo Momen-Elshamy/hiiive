@@ -285,7 +285,7 @@ export const HomePillarsBlock = {
     labLead: "Lab is where the systems we build with partners become products in their own right — hardened, extended, and run for the next company with the same problem.",
     products: [
       { name: "SPOKY", desc: "Validating with real users", status: "In validation" },
-      { name: "CONTENT OS", desc: "Agentic content operations, in daily use", status: "In production" },
+      { name: "DVISION", desc: "Agentic content operations, in daily use", status: "In production" },
       { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
     ],
     labLinkLabel: "See the Lab",

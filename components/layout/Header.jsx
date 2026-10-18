@@ -1,25 +1,40 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import buttons from "@/components/ui/buttons.module.css";
+import { PRODUCTS } from "@/components/pages/Lab/products";
 import styles from "./HeaderBlock.module.css";
 import LangSwitcher from "./LangSwitcher";
 import { NavIcon } from "./navIcons";
 
+// The fallback nav (and the CMS block's defaults). The live nav is edited in
+// the CMS: Admin → Globals → Header, in each language.
 export const defaultNavItems = [
    {
-      label: "Studio",
+      label: "AI Engineering",
       href: "/studio",
       dropdown: [
          { icon: "code", title: "AI software & internal tools", badge: "", description: "Custom systems and agents that take real work off your team.", href: "/studio#ai-software" },
-         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/studio#mvp" },
-         { icon: "search", title: "Organic visibility (SEO)", badge: "", description: "AI-native search: built to be found by people and by models.", href: "/studio#seo" },
-         { icon: "funnel", title: "Digital presence & funnels", badge: "", description: "Sites, funnels and conversion structure that turn traffic into pipeline.", href: "/studio#funnels" },
+         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/studio/mvp-build" },
          { icon: "sparkles", title: "AI transformation & consulting", badge: "", description: "Audit, roadmap and enablement — so the change actually sticks.", href: "/studio#consulting" },
       ],
-      dropdownFooterLabel: "Explore Studio",
+      dropdownFooterLabel: "Explore AI Engineering",
       dropdownFooterHref: "/studio",
    },
-   { label: "Lab", href: "/lab" },
+   { label: "Work", href: "/work" },
+   {
+      label: "AI Lab",
+      href: "/lab",
+      dropdown: PRODUCTS.map((product) => ({
+         icon: product.icon,
+         title: product.name,
+         badge: "",
+         description: product.menu,
+         href: `/lab/${product.slug}`,
+      })),
+      dropdownFooterLabel: "Explore AI Lab",
+      dropdownFooterHref: "/lab",
+   },
    { label: "About", href: "/about" },
 ];
 
@@ -72,9 +87,10 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    // of it and only fades to the light paper bar once the user scrolls past it.
    const pathname = usePathname();
    const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
-   // The new home story (prototype at /home-v2) stays dark from top to bottom,
-   // so its nav stays dark too: transparent at the top, dark glass once scrolled.
-   const isNight = /^\/(?:(?:en|de)\/)?home-v2(?:\/.*)?$/.test(pathname || "");
+   // The new pages (the home story, prototype at /home-v2, and the AI Lab) stay
+   // dark from top to bottom, so their nav stays dark too: transparent at the
+   // top, dark glass once scrolled.
+   const isNight = /^\/(?:(?:en|de)\/)?(?:home-v2|lab)(?:\/.*)?$/.test(pathname || "");
    const overlay = isHome || isNight;
    const [scrolled, setScrolled] = useState(false);
 
@@ -128,7 +144,7 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
                      {email}
                   </a>
                   <LangSwitcher />
-                  <a href={ctaLink} className={styles.headerCta}>
+                  <a href={ctaLink} className={isNight ? `${buttons.button} ${buttons.primary} ${buttons.small}` : styles.headerCta}>
                      {cta}
                   </a>
                </div>
@@ -167,7 +183,11 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
                </div>
             ))}
             <LangSwitcher className={styles.mobileLang} />
-            <a href={ctaLink} onClick={closeMenu} className={styles.mobileMenuCta}>
+            <a
+               href={ctaLink}
+               onClick={closeMenu}
+               className={isNight ? `${buttons.button} ${buttons.primary} ${styles.mobileCtaNight}` : styles.mobileMenuCta}
+            >
                {cta}
             </a>
          </nav>

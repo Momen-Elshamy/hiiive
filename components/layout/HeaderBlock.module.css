@@ -300,8 +300,9 @@
   flex-direction: column;
 }
 
+/* Indented under its group's link (which sits 24px in). */
 .mobileSubLink {
-  padding: 8px 0 8px 16px;
+  padding: 8px 24px 8px 40px;
   font-size: 15px;
   color: #4a4e55;
   text-decoration: none;
@@ -449,7 +450,7 @@
 }
 
 .mobileLang {
-  padding: 14px 0 4px;
+  padding: 14px 24px 4px;
   font-size: 15px;
 }
 
@@ -468,7 +469,8 @@
 
 /* ==========================================================================
    Night variant (new home story). Transparent over the dark stage, dark glass
-   once the page scrolls. The CTA carries the brand's glowing yellow edge.
+   once the page scrolls. Its CTAs use the shared night button
+   (components/ui/buttons.module.css).
    ========================================================================== */
 .night {
   background: transparent;
@@ -523,27 +525,6 @@
 .night .langSep,
 .nightWrap .langSep {
   color: var(--hv-pill-border);
-}
-
-.night .headerCta {
-  background: var(--hv-ink);
-  color: var(--hv-ink-rev);
-  border: 1px solid color-mix(in srgb, var(--hv-accent) 45%, transparent);
-  border-radius: 999px;
-  padding: 10px 20px;
-  box-shadow:
-    0 0 20px -8px var(--hv-accent),
-    inset 0 1px 0 color-mix(in srgb, var(--hv-accent) 25%, transparent);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.night .headerCta:hover {
-  opacity: 1;
-  color: var(--hv-ink-rev);
-  border-color: var(--hv-accent);
-  box-shadow:
-    0 0 28px -6px var(--hv-accent),
-    inset 0 1px 0 color-mix(in srgb, var(--hv-accent) 40%, transparent);
 }
 
 .night .dropdown {
@@ -614,9 +595,8 @@
   color: var(--hv-muted-rev);
 }
 
-.nightWrap .mobileMenuCta {
-  background: var(--hv-accent);
-  color: var(--hv-ink) !important;
+.mobileCtaNight {
+  margin: 0.5rem 24px 0;
 }
 
 @media (max-width: 900px) {

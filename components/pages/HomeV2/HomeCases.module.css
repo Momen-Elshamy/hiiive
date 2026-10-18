@@ -361,23 +361,9 @@
   color: var(--hv-soft-rev);
 }
 
+/* Styled by the shared buttons; the whole card is the link. */
 .nextButton {
   align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 13px 22px;
-  border-radius: 4px;
-  background: var(--hv-ink-rev);
-  color: var(--hv-ink);
-  font-size: 15px;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
-}
-
-.nextButton svg {
-  width: 15px;
-  height: 15px;
 }
 
 .nextCard:hover .nextButton {

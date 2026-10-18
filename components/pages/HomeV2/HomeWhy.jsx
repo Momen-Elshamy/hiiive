@@ -50,9 +50,9 @@ const content = {
   },
   ourselves: {
     title: "We run it ourselves first.",
-    body: "Content OS, Spoky and Komplyo, and the AI behind our services, run in our own company before they reach yours. Our money and our risk go first.",
-    window: { name: "Content OS", status: "Running at Hiiive" },
-    command: "$ ship content-os --to your-team",
+    body: "Dvision, Spoky and Komplyo, and the AI behind our services, run in our own company before they reach yours. Our money and our risk go first.",
+    window: { name: "Dvision", status: "Running at Hiiive" },
+    command: "$ ship dvision --to your-team",
   },
   team: {
     title: "Senior people, inside your team.",

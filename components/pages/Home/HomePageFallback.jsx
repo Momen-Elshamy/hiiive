@@ -49,7 +49,7 @@ const services = [
 
 const products = [
   { name: "SPOKY", desc: "Validating with real users", status: "In validation" },
-  { name: "CONTENT OS", desc: "Agentic content operations, in daily use", status: "In production" },
+  { name: "DVISION", desc: "Agentic content operations, in daily use", status: "In production" },
   { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
 ];
 

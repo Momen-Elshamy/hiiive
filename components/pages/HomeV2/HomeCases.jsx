@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import buttons from "@/components/ui/buttons.module.css";
 import section from "./HomeSection.module.css";
 import styles from "./HomeCases.module.css";
 import { useInView } from "./useInView";
@@ -207,7 +208,7 @@ export default function HomeCases() {
               <h3 className={styles.nextTitle}>{content.next.title}</h3>
               <p className={styles.nextBody}>{content.next.body}</p>
             </div>
-            <span className={styles.nextButton}>
+            <span className={`${buttons.button} ${buttons.primary} ${styles.nextButton}`}>
               {content.next.cta} <Arrow />
             </span>
           </a>

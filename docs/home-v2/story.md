@@ -92,7 +92,7 @@ What sets the company apart, not a list of services. A services bento (too crowd
 - **Part of:** a plain row of logos right above the cards: NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
 - **Bento of four cards** in the style of the reference cards (ref 09 Invertase, ref 10 Harness): dark cards with fine halftone light, one simple visual each, light type.
   1. **Built with one. Made for many.** Statement card over light trails (ref 04): one warm source fanning out to five companies.
-  2. **We run it ourselves first.** A minimal flow (Content OS running at Hiiive → ✓ → `$ ship content-os --to your-team`), as in ref 09, with a halftone sphere and a yellow rim.
+  2. **We run it ourselves first.** A minimal flow (Dvision running at Hiiive → ✓ → `$ ship dvision --to your-team`), as in ref 09, with a halftone sphere and a yellow rim.
   3. **Senior people, inside your team.** Photo card (ref 10) with Roman Rittmann, Noel Lorenz and Momen Elshamy, framed so heads match in size and sit on one eye line.
   4. **Live is the start, not the handover.** Statement card with pixel arrows over faint, slowly scrolling release notes: we keep improving what we ship.
 
@@ -134,6 +134,9 @@ All images are in `refs/`.
 - **One timeline** (`homeTimeline.js`) in screens of scroll drives the scene and the copy: story, pull-out, station power-on, CTA.
 - **Preloader** (`Preloader.jsx`): covers the page until the scene can draw, so it shows up complete. The bar follows the real steps (fonts, the three.js chunk, building the scene, compiling every shader, the first frame) and creeps on while one runs; then the hero rises in. It gives up after 12 s and lets a late scene fade in by itself.
 - **Review a moment (dev only):** `/home-v2?s=5.2` pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
+- **Buttons:** one style for the night pages and the night header, in `components/ui/buttons.module.css`: a 4px rectangle like the rest of the site, primary light on night, secondary an outline.
+- **Nav:** AI Engineering (the three AI services, still under `/studio`) and AI Lab (Dvision, Spoky, Komplyo). The live nav and footer are CMS globals (en + de); the code defaults in `Header.jsx` and `FooterBlock.jsx` match them.
+- **AI Lab pages:** `/lab` and `/lab/<product>` (also under `/de/...`, English copy for now), all from `components/pages/Lab/products.js`. Dvision was called Content OS before.
 - **Mobile:** fewer particles, no AO, the factory framed in the top half with the copy at the bottom; only the active station's text shows.
 - **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.
 - **CMS (to do):** turn the story into Puck blocks so the copy is editable in en + de.
@@ -141,5 +144,5 @@ All images are in `refs/`.
 ## Open questions
 
 1. Are the numbers still true for the sections after the story (12+ systems, 6 wks, 4 industries)?
-2. Products to show after the story: SPOKY, Content OS, Komplyo — still the right three?
+2. Products to show after the story: Spoky, Dvision (formerly Content OS), Komplyo — still the right three?
 3. German copy for every scene (English only so far).

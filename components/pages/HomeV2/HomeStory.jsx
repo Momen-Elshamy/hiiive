@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import buttons from "@/components/ui/buttons.module.css";
 import styles from "./HomeStory.module.css";
 import Preloader from "./Preloader";
 import { STATIONS } from "./factory/stations";
@@ -280,8 +281,8 @@ export default function HomeStory() {
           </h1>
           <p className={styles.sub}>{copy.hero.sub}</p>
           <div className={styles.ctaRow}>
-            <a href={copy.hero.primary.href} className={styles.btnPrimary}>{copy.hero.primary.label}</a>
-            <a href={copy.hero.secondary.href} className={styles.btnSecondary}>{copy.hero.secondary.label}</a>
+            <a href={copy.hero.primary.href} className={`${buttons.button} ${buttons.primary}`}>{copy.hero.primary.label}</a>
+            <a href={copy.hero.secondary.href} className={`${buttons.button} ${buttons.secondary}`}>{copy.hero.secondary.label}</a>
           </div>
           <ul className={styles.caps}>
             {copy.hero.capabilities.map((cap) => (
@@ -317,8 +318,8 @@ export default function HomeStory() {
           <h2 className={styles.chapterTitle}>{copy.cta.title}</h2>
           <p className={styles.chapterBody}>{copy.cta.body}</p>
           <div className={`${styles.ctaRow} ${styles.ctaRowStart}`}>
-            <a href={BOOK_A_CALL} className={styles.btnPrimary}>Book a call</a>
-            <a href="/work" className={styles.btnSecondary}>See what we build</a>
+            <a href={BOOK_A_CALL} className={`${buttons.button} ${buttons.primary}`}>Book a call</a>
+            <a href="/work" className={`${buttons.button} ${buttons.secondary}`}>See what we build</a>
           </div>
         </div>
 
