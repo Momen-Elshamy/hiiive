@@ -22,14 +22,16 @@ const MOVES = [
   ["studio", "ai-engineering"],
   ["studio/mvp-build", "ai-engineering/mvp-build"],
 ];
-// "/studio…" and "/de/studio…" in links (also inside HTML in JSON), never the word in text.
-const LINK = /(^|[^\w-])((?:\/[a-z]{2})?)\/studio(?=$|[/#?"'\s<)\\])/g;
+// Links to the pages that move ("/studio", "/studio/mvp-build", with any
+// "/de" prefix or #anchor), also inside HTML in JSON. Never the word in text,
+// and never other /studio/… pages: they don't move and get no redirect.
+const LINK = /(^|[^\w-])((?:\/[a-z]{2})?)\/studio(\/mvp-build)?(?=$|[#?"'\s<)\\])/g;
 
 function relink(content) {
   let count = 0;
-  const next = content.replace(LINK, (match, before, locale) => {
+  const next = content.replace(LINK, (match, before, locale, page = "") => {
     count += 1;
-    return `${before}${locale}/ai-engineering`;
+    return `${before}${locale}/ai-engineering${page}`;
   });
   return { next, count };
 }
