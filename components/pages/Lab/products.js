@@ -8,7 +8,7 @@ const PRODUCTS = [
   {
     slug: "dvision",
     name: "Dvision",
-    icon: "chart",
+    icon: "dvision",
     site: { label: "dvision.ai", href: "https://dvision.ai" },
     glows: [
       { x: 1, y: 0, r: 0.8, color: [42, 163, 201], strength: 0.75 },
@@ -62,7 +62,7 @@ const PRODUCTS = [
   {
     slug: "spoky",
     name: "Spoky",
-    icon: "message",
+    icon: "spoky",
     site: { label: "myspoky.com", href: "https://www.myspoky.com" },
     glows: [
       { x: 1, y: 0, r: 0.8, color: [240, 186, 96], strength: 0.7 },
@@ -114,7 +114,7 @@ const PRODUCTS = [
   {
     slug: "komplyo",
     name: "Komplyo",
-    icon: "shield",
+    icon: "komplyo",
     site: { label: "komplyo.de", href: "https://komplyo.de" },
     glows: [
       { x: 1, y: 0, r: 0.8, color: [96, 104, 230], strength: 0.75 },
@@ -169,7 +169,7 @@ const PRODUCTS = [
 export function labProducts(locale = "en") {
   return PRODUCTS.map(({ copy, ...product }) => {
     const text = copy[locale] ?? copy.en;
-    return { ...product, ...text, ui: { name: product.name, ...text.ui } };
+    return { ...product, ...text, ui: { name: product.name, icon: product.icon, ...text.ui } };
   });
 }
 

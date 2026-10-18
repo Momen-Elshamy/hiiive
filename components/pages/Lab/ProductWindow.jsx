@@ -1,3 +1,4 @@
+import { NavIcon } from "@/components/layout/navIcons";
 import styles from "./Lab.module.css";
 
 function Check() {
@@ -21,7 +22,10 @@ export default function ProductWindow({ ui }) {
           <i />
           <i />
         </span>
-        <span className={styles.windowName}>{ui.name}</span>
+        <span className={styles.windowName}>
+          <NavIcon name={ui.icon} className={styles.windowMark} />
+          {ui.name}
+        </span>
         <span className={styles.windowStatus}>
           <span className={styles.liveDot} />
           {ui.status}

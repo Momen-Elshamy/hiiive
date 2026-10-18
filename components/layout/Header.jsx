@@ -5,7 +5,7 @@ import buttons from "@/components/ui/buttons.module.css";
 import { labProducts } from "@/components/pages/Lab/products";
 import styles from "./HeaderBlock.module.css";
 import LangSwitcher from "./LangSwitcher";
-import { NavIcon } from "./navIcons";
+import { NavIcon, isMark } from "./navIcons";
 
 // The fallback nav (and the CMS block's defaults). The live nav is edited in
 // the CMS: Admin → Globals → Header, in each language.
@@ -26,7 +26,7 @@ export const defaultNavItems = [
       label: "AI Lab",
       href: "/lab",
       dropdown: labProducts("en").map((product) => ({
-         icon: product.icon,
+         icon: product.icon, // the product's own mark
          title: product.name,
          badge: "",
          description: product.menu,
@@ -46,6 +46,14 @@ function Caret() {
    );
 }
 
+// A link to an AI Lab product (/lab/<slug>, any language) always shows that
+// product's own mark, whatever icon the CMS item was given.
+const LAB_LINK = /\/lab\/([a-z0-9-]+)\/?(?:[?#].*)?$/;
+function iconFor(d) {
+   const slug = (d.href || "").match(LAB_LINK)?.[1];
+   return slug && isMark(slug) ? slug : d.icon;
+}
+
 function Dropdown({ item }) {
    return (
       <div className={styles.dropdownWrap}>
@@ -53,7 +61,7 @@ function Dropdown({ item }) {
             {item.dropdown.map((d, j) => (
                <a key={j} href={d.href || "/"} className={styles.ddItem} role="menuitem">
                   <span className={styles.ddIconBox}>
-                     <NavIcon name={d.icon} className={styles.ddIcon} />
+                     <NavIcon name={iconFor(d)} className={styles.ddIcon} />
                   </span>
                   <span className={styles.ddBody}>
                      <span className={styles.ddTitleRow}>

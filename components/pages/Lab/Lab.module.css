@@ -242,9 +242,18 @@
 }
 
 .windowName {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
   font-weight: 500;
   color: var(--hv-ink-rev);
+}
+
+.windowMark {
+  width: 14px;
+  height: 14px;
+  color: var(--hv-accent);
 }
 
 .windowStatus {
