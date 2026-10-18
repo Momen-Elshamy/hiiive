@@ -108,7 +108,8 @@ export default function HomeCases({ copy }) {
   };
 
   return (
-    <section ref={ref} className={`${section.section} ${styles.cases}`} aria-labelledby="home-cases-title">
+    // id="work": pages across the site link here as /#work.
+    <section ref={ref} id="work" className={`${section.section} ${styles.cases}`} aria-labelledby="home-cases-title">
       <div className={section.inner}>
         <div className={section.head}>
           <div className={section.headCopy}>
