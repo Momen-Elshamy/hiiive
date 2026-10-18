@@ -218,6 +218,29 @@
   height: 18px;
 }
 
+/* An AI Lab product's own mark: no box, in the text colour; on hover it
+   shows the product's brand colours (see navIcons.jsx). */
+.ddMark {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1b1d1e;
+}
+
+.ddMarkIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.ddItem:hover .ddMarkIcon,
+.ddItem:focus-visible .ddMarkIcon {
+  --mark-1: var(--mark-1-brand);
+  --mark-2: var(--mark-2-brand);
+}
+
 .ddBody {
   display: flex;
   flex-direction: column;
@@ -547,6 +570,10 @@
 .night .ddItem:hover .ddIconBox {
   background: var(--hv-accent);
   color: var(--hv-ink);
+}
+
+.night .ddMark {
+  color: var(--hv-ink-rev);
 }
 
 .night .ddTitle {

@@ -58,20 +58,24 @@ function Dropdown({ item }) {
    return (
       <div className={styles.dropdownWrap}>
          <div className={styles.dropdown} role="menu">
-            {item.dropdown.map((d, j) => (
-               <a key={j} href={d.href || "/"} className={styles.ddItem} role="menuitem">
-                  <span className={styles.ddIconBox}>
-                     <NavIcon name={iconFor(d)} className={styles.ddIcon} />
-                  </span>
-                  <span className={styles.ddBody}>
-                     <span className={styles.ddTitleRow}>
-                        <span className={styles.ddTitle}>{d.title}</span>
-                        {d.badge ? <span className={styles.ddBadge}>{d.badge}</span> : null}
+            {item.dropdown.map((d, j) => {
+               const icon = iconFor(d);
+               return (
+                  <a key={j} href={d.href || "/"} className={styles.ddItem} role="menuitem">
+                     {/* A product's mark stands on its own; line icons sit in a box. */}
+                     <span className={isMark(icon) ? styles.ddMark : styles.ddIconBox}>
+                        <NavIcon name={icon} className={isMark(icon) ? styles.ddMarkIcon : styles.ddIcon} />
                      </span>
-                     {d.description ? <span className={styles.ddDesc}>{d.description}</span> : null}
-                  </span>
-               </a>
-            ))}
+                     <span className={styles.ddBody}>
+                        <span className={styles.ddTitleRow}>
+                           <span className={styles.ddTitle}>{d.title}</span>
+                           {d.badge ? <span className={styles.ddBadge}>{d.badge}</span> : null}
+                        </span>
+                        {d.description ? <span className={styles.ddDesc}>{d.description}</span> : null}
+                     </span>
+                  </a>
+               );
+            })}
             {item.dropdownFooterLabel ? (
                <a href={item.dropdownFooterHref || "/"} className={styles.ddFooter}>
                   <span>{item.dropdownFooterLabel}</span>
