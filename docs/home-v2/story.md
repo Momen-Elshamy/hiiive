@@ -132,6 +132,7 @@ All images are in `refs/`.
 - **One three.js scene** (`components/pages/HomeV2/homeScene.js`): the factory, standing on scenes 1–2 as a particle layer (`storyLayer.js`) laid out as its floor. The camera follows the story camera inside the pattern, then pulls back (distance grows exponentially) to a fixed shot of the whole line, sized to the viewport so it always sits right of the copy; the factory rises out of the floor on the way.
 - **The factory** is modelled in code (`factory/factoryModel.js`): each station owns its lights and moving parts, so it can power on by itself. Lit like a product shot: area lights, crisp shadows, AO, bloom on the light slits only, film grain and a vignette.
 - **One timeline** (`homeTimeline.js`) in screens of scroll drives the scene and the copy: story, pull-out, station power-on, CTA.
+- **Preloader** (`Preloader.jsx`): covers the page until the scene can draw, so it shows up complete. The bar follows the real steps (fonts, the three.js chunk, building the scene, compiling every shader, the first frame) and creeps on while one runs; then the hero rises in. It gives up after 12 s and lets a late scene fade in by itself.
 - **Review a moment (dev only):** `/home-v2?s=5.2` pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
 - **Mobile:** fewer particles, no AO, the factory framed in the top half with the copy at the bottom; only the active station's text shows.
 - **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.

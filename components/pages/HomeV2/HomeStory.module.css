@@ -32,6 +32,12 @@
   opacity: 1;
 }
 
+/* Behind the preloader the scene shows at once; the canvas only fades in when
+   the scene comes in after the preloader has stopped waiting for it. */
+.story:has([data-preloader="loading"]) .canvas {
+  transition: none;
+}
+
 /* No WebGL: keep a calm glow so the copy still has a backdrop. */
 .stage[data-fallback="true"] {
   background: radial-gradient(120% 70% at 50% 110%, var(--theme-accent-muted), transparent 60%);
@@ -89,6 +95,42 @@
   transform: translateX(-50%);
   background: radial-gradient(closest-side, color-mix(in srgb, var(--hv-night) 72%, transparent), transparent);
   z-index: -1;
+}
+
+/* Entrance: while the preloader covers the page the hero's lines wait
+   (hidden at once); when it lifts they rise in one after another, the scroll
+   hint last. */
+.hero > *,
+.hint > * {
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(0.35s + var(--i, 0) * 0.08s);
+}
+
+.hero > :nth-child(2) {
+  --i: 1;
+}
+
+.hero > :nth-child(3) {
+  --i: 2;
+}
+
+.hero > :nth-child(4) {
+  --i: 3;
+}
+
+.hero > :nth-child(5) {
+  --i: 4;
+}
+
+.hint > * {
+  --i: 7;
+}
+
+.story:has([data-preloader="loading"]) .hero > *,
+.story:has([data-preloader="loading"]) .hint > * {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: none;
 }
 
 .headline {
@@ -439,5 +481,12 @@
 
   .step:not(.stepActive) {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story:has([data-preloader="loading"]) .hero > *,
+  .story:has([data-preloader="loading"]) .hint > * {
+    transform: none;
   }
 }

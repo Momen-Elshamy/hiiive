@@ -2,10 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./HomeStory.module.css";
+import Preloader from "./Preloader";
 import { STATIONS } from "./factory/stations";
 import { SCREENS, STORY, activeStation, clamp01, ramp, stationScreen } from "./homeTimeline";
 
 const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
+
+// How far the page has loaded once each step is done, as shown on the
+// preloader's bar (the three.js chunk is the biggest download). The first
+// frame drawn completes it.
+const LOAD = { start: 0.06, fonts: 0.18, engine: 0.55, scene: 0.72, shaders: 0.92 };
+// Don't hold the page back longer than this; a late scene fades in by itself.
+const LOAD_TIMEOUT = 12000;
 
 const copy = {
   hero: {
@@ -68,10 +76,12 @@ export default function HomeStory() {
   const panelRef = useRef(null);
   const closingRef = useRef(null);
   const pinRefs = useRef([]);
+  const loaded = useRef(0); // 0–1, read by <Preloader>
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const section = sectionRef.current;
+    const stage = stageRef.current;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const params = new URLSearchParams(window.location.search);
     const spark = params.get("spark") === "blue" ? "blue" : "yellow";
@@ -86,6 +96,11 @@ export default function HomeStory() {
     let current = target;
     let shown = 0;
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+    const reach = (value) => {
+      loaded.current = Math.max(loaded.current, value);
+    };
+    reach(LOAD.start);
+    const giveUp = setTimeout(() => reach(1), LOAD_TIMEOUT);
 
     // Where the factory copy sits on screen; pins that land on it are hidden.
     const zone = { phone: false, right: 0, bottom: 0, top: 0 };
@@ -144,6 +159,10 @@ export default function HomeStory() {
       applyCopy(current);
       if (!scene || !visible) return;
       const anchors = scene.render(current, now / 1000, reducedMotion ? NO_POINTER : pointer);
+      if (!stage.dataset.ready) {
+        stage.dataset.ready = "true";
+        reach(1);
+      }
       // Checkpoints show once the camera has pulled out to the whole factory.
       const pins = ramp(current, [SCREENS.zoom[1] - 0.3, SCREENS.zoom[1]]) * (1 - ramp(current, SCREENS.cta) * 0.5);
       anchors.forEach((anchor, i) => {
@@ -162,15 +181,32 @@ export default function HomeStory() {
         document.fonts.load('600 200px "Big Shoulders"'),
         document.fonts.load('600 40px "Inter"'),
       ]).catch(() => {});
-      // three.js only loads on the client, in its own chunk.
-      const { createHomeScene } = await import("./homeScene");
-      if (disposed) return;
+      reach(LOAD.fonts);
+      let home = null;
       try {
-        scene = createHomeScene(canvasRef.current, { spark, reducedMotion });
-        stageRef.current.dataset.ready = "true";
+        // three.js only loads on the client, in its own chunk.
+        const { createHomeScene } = await import("./homeScene");
+        if (disposed) return;
+        reach(LOAD.engine);
+        // Let the bar paint before building the scene blocks the main thread.
+        await new Promise(requestAnimationFrame);
+        home = createHomeScene(canvasRef.current, { spark, reducedMotion });
+        reach(LOAD.scene);
+        await home.warmUp();
       } catch {
-        stageRef.current.dataset.fallback = "true";
+        // No WebGL (or the chunk failed to load): the copy keeps a calm backdrop.
+        home?.dispose();
+        stage.dataset.fallback = "true";
+        reach(1);
+        return;
       }
+      if (disposed) {
+        home.dispose();
+        return;
+      }
+      reach(LOAD.shaders);
+      scene = home; // the frame loop draws the first frame, which completes the bar
+      if (!visible) reach(1); // scrolled past the story: no frame to wait for
     })();
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -193,6 +229,7 @@ export default function HomeStory() {
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      clearTimeout(giveUp);
       observer.disconnect();
       window.removeEventListener("scroll", readScroll);
       window.removeEventListener("resize", onResize);
@@ -211,6 +248,8 @@ export default function HomeStory() {
 
   return (
     <section ref={sectionRef} className={styles.story} aria-label="The Hiiive story">
+      {/* Outside the sticky stage, so it can sit over the site header. */}
+      <Preloader progress={loaded} />
       <div ref={stageRef} className={styles.stage}>
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <div ref={shadeRef} className={styles.shade} aria-hidden="true" />

@@ -238,6 +238,21 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     return anchors;
   }
 
+  /**
+   * Compiles every shader the story needs up front (the hidden factory's too),
+   * then draws one frame of the powered-up factory so its shadows, AO and glow
+   * are ready as well: nothing stutters the first time it comes into view.
+   * Runs behind the preloader; the frame loop then draws the real first frame.
+   */
+  async function warmUp() {
+    try {
+      await renderer.compileAsync(scene, camera);
+    } catch {
+      // Not fatal: the frame below compiles whatever is left.
+    }
+    render(SCREENS.stations[STATION_COUNT - 1], 0, { x: 0, y: 0 });
+  }
+
   function dispose() {
     observer.disconnect();
     story.dispose();
@@ -253,5 +268,5 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
   // Dev-only handle for inspecting frames from the console.
   if (process.env.NODE_ENV !== "production") window.__home = { renderer, scene, camera, composer, bloom, gtao, story, factory, render };
 
-  return { render, dispose };
+  return { render, warmUp, dispose };
 }
