@@ -28,6 +28,8 @@ One scene, one camera, no cuts: the pattern from scenes 1–2 is the factory's f
 - **No hexagons, honeycombs, hives or bees.** The name HIIIVE has nothing to do with bees, so the visuals never play on it.
 - **Hiiive is a software factory.** From the Phrasso reference (ref 01) the point is the factory machine itself and its render quality, not only the `+` checkpoints. A first take on scenes 3–5 (gate, hex core, Germany map) was cut for missing both.
 - **Change texture and light, not shapes,** when polishing what was approved.
+- **Type:** sentence case everywhere, Inter at weight 500 with tight tracking for headings. No all caps, no heavy display type (the HIIIVE logo keeps its own font).
+- **Talk about the company, not service details.** Sections explain what makes Hiiive different, without slogans; services and numbers stay secondary.
 - **No camera tour of the factory's parts.** Once the whole factory is in view the camera holds still.
 - **No hard transitions.** A crossfade and a dip to black between the pattern and the factory were both rejected; the pattern has to flow into the factory. It is the factory's floor, not its roof.
 
@@ -81,17 +83,17 @@ Over the final overview of the factory.
 
 ## After the story
 
-### 03 · What we ship (bento, ref 09)
+### Why Hiiive
 
-- **Headline:** Agents, products and services. All built on AI.
-- **Intro:** Everything that leaves the factory runs in production, inside real companies.
-- **Cards** (dark, dot grid, one coloured glow; each with a small live UI mock instead of an image):
-  - **AI software & internal tools** (big): an agent run log, "Runs inside your tools", **12+** internal tools shipped.
-  - **SaaS products · Lab:** Content OS (in production), Spoky (in validation), Komplyo (in build).
-  - **MVP design & build:** six-week track to a first release, **6 wks** median.
-  - **SEO & GEO:** Google · ChatGPT · Perplexity, **3.4×** organic sessions (Mindverse).
-  - **Digital presence & funnels:** visits → leads → calls → clients.
-  - **AI transformation & consulting:** audit → roadmap → enablement.
+What sets the company apart, not a list of services (a services bento was cut for being crowded and too detailed).
+
+- **Headline:** An AI lab, not an agency.
+- **Intro:** Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.
+- **Points** (copy left, one isometric illustration right, in the factory's look: modules with the yellow band on a bead floor):
+  1. **We run it ourselves first.** Our products and the AI behind our services run in our own company first (Content OS in daily use, Spoky with real users, Komplyo in build). Illustration: the three products as modules, live / validating / in build.
+  2. **Built with one, made for many.** What we build with one company becomes a product the next one starts from. Illustration: one module feeding five smaller ones along lit lanes.
+  3. **Senior people, inside your team.** The people you meet build; no layers, no hand-offs. Illustration: a team as dark blocks with three lit Hiiive blocks among them.
+- **Part of:** NVIDIA Inception, KI Bundesverband, Telekom TechBoost, Berlin Partner, Wayra (white versions in `public/img/home-v2/partners/`).
 
 ### 04 · Proof (photo cards, ref 10)
 

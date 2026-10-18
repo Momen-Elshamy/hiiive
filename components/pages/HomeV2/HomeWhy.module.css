@@ -1,0 +1,144 @@
+/* "Why Hiiive": three points, copy on the left and one illustration on the
+   right, separated by hairlines; then a quiet row of partner logos. */
+
+.why {
+  padding: 100px 0 120px;
+}
+
+/* Blends the end of the story above into the night background. */
+.why::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -40vh;
+  height: 40vh;
+  background: linear-gradient(to bottom, transparent, var(--hv-night));
+  pointer-events: none;
+}
+
+.points {
+  list-style: none;
+  border-bottom: 1px solid var(--hv-hairline-rev);
+}
+
+.point {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: 56px;
+  padding: 40px 0;
+  border-top: 1px solid var(--hv-hairline-rev);
+}
+
+.copy {
+  max-width: 460px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.art {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.9s ease 0.1s, transform 0.9s ease 0.1s;
+}
+
+.point[data-inview="true"] .copy,
+.point[data-inview="true"] .art {
+  opacity: 1;
+  transform: none;
+}
+
+.number {
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--hv-accent);
+}
+
+.pointTitle {
+  margin-top: 14px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(26px, 2.4vw, 36px);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--hv-ink-rev);
+}
+
+.pointBody {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--hv-soft-rev);
+}
+
+/* Partners --------------------------------------------------------------------- */
+.partners {
+  margin-top: 56px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.partnersLabel {
+  font-size: 13px;
+  color: var(--hv-muted-rev);
+}
+
+.partnerList {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+
+.partner {
+  display: block;
+  height: 34px;
+  width: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.partner:hover {
+  opacity: 0.95;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy,
+  .art {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .point {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 32px 0;
+  }
+
+  .art {
+    order: -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .why {
+    padding: 72px 0 88px;
+  }
+
+  .partners {
+    gap: 20px;
+  }
+
+  .partnerList {
+    gap: 28px;
+  }
+}

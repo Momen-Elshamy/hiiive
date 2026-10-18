@@ -1,0 +1,124 @@
+/* Isometric illustrations for "Why Hiiive", drawn in the factory's language:
+   powder-coat modules with a painted yellow band, light in thin slits and
+   LEDs, standing on a floor of beads. The palette lives here so the SVG
+   only references variables. */
+
+.art {
+  --shell-top: #e3e3df;
+  --shell-left: #c4c4bf;
+  --shell-right: #a2a29d;
+  --band-left: #e6e22a;
+  --band-right: #bcb81e;
+  --band-top: #f1ed3f;
+  --graphite-top: #2b2d31;
+  --graphite-left: #1f2124;
+  --graphite-right: #17181b;
+  --ghost: #6c7383;
+  --bead: #45526b;
+  --light: var(--hv-accent);
+  --light-warm: #fff1c2;
+  --print: #2a2c2f;
+
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  fill: var(--print);
+}
+
+.sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  fill: color-mix(in srgb, var(--print) 70%, transparent);
+}
+
+.faceLabel {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  fill: var(--hv-soft-rev);
+}
+
+/* A light that is on breathes a little; one being validated blinks slowly. */
+.breathe {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.blink {
+  animation: blink 2.4s ease-in-out infinite;
+}
+
+/* Lights that switch on in sequence, staggered with --delay. */
+.switchOn {
+  opacity: 0.12;
+  animation: switchOn 4.8s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.ghostLine {
+  fill: none;
+  stroke: var(--ghost);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  animation: march 1.6s linear infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes switchOn {
+  0%,
+  8% {
+    opacity: 0.12;
+  }
+  18%,
+  80% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0.12;
+  }
+}
+
+@keyframes march {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathe,
+  .blink,
+  .ghostLine {
+    animation: none;
+  }
+
+  .switchOn {
+    animation: none;
+    opacity: 1;
+  }
+}

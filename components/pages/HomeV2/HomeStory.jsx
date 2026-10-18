@@ -9,7 +9,7 @@ const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
 
 const copy = {
   hero: {
-    kicker: "HIIIVE · AI lab & tech house, Berlin",
+    kicker: "Hiiive · AI lab & tech house, Berlin",
     headline: "The lab where AI gets to work",
     accent: "on your hardest problems.",
     sub: "Smart people and smart systems, inventing AI products, agents and software, and putting them to work for real companies.",
