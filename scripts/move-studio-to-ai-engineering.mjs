@@ -6,11 +6,12 @@
 //   node scripts/move-studio-to-ai-engineering.mjs           # dry run: prints the changes
 //   node scripts/move-studio-to-ai-engineering.mjs --write   # applies them
 //
-// It renames the page slugs (every locale), adds 301 redirects from the old
-// paths, points every /studio link in the header, footer and pages at
-// /ai-engineering, and links the old home's AI Lab card to /lab. Before writing
+// It adds 301 redirects from the old paths, renames the page slugs (every
+// locale), then points every /studio link in the header, footer and pages at
+// /ai-engineering and links the old home's AI Lab card to /lab. Before writing
 // it backs the docs up to .cms-backups/; each write only lands if the doc is
-// unchanged since it was read, so an edit made in the meantime is skipped.
+// unchanged since it was read. If a page move is skipped that way, it stops
+// before touching any link; running it again finishes the job.
 import fs from "node:fs";
 import mongoose from "mongoose";
 
@@ -85,11 +86,15 @@ if (!WRITE) {
   fs.writeFileSync(backup, JSON.stringify(changes.map(({ doc }) => doc), null, 2));
   console.log(`\nbackup: ${backup}`);
 
-  for (const { col, name, doc, set } of changes) {
+  const write = async ({ col, name, doc, set }) => {
     const { links, ...fields } = set;
     const result = await col.updateOne({ _id: doc._id, updatedAt: doc.updatedAt }, { $set: { ...fields, updatedAt: new Date() } });
     console.log(`${name}: ${result.modifiedCount === 1 ? "written" : "SKIPPED (changed since read)"}`);
-  }
+    return result.modifiedCount === 1;
+  };
+
+  // 1. Redirects first: one only applies where no page is found, so it does
+  //    nothing until its page has moved.
   const now = new Date();
   for (const [from, to] of MOVES) {
     await redirects.updateOne(
@@ -102,6 +107,20 @@ if (!WRITE) {
     );
     console.log(`redirect /${from} -> /${to}: written`);
   }
+
+  // 2. The page moves. Links may only point at /ai-engineering once every page
+  //    is there, so stop if one was edited in the meantime (re-run to finish:
+  //    pages already moved are left alone).
+  for (const change of changes.filter((c) => c.set.slug)) {
+    if (!(await write(change))) {
+      console.log("\nStopped before changing any links. Run the script again.");
+      await mongoose.disconnect();
+      process.exit(1);
+    }
+  }
+
+  // 3. The links.
+  for (const change of changes.filter((c) => !c.set.slug)) await write(change);
 }
 
 await mongoose.disconnect();
