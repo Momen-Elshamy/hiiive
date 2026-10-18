@@ -465,3 +465,162 @@
     display: flex;
   }
 }
+
+/* ==========================================================================
+   Night variant (new home story). Transparent over the dark stage, dark glass
+   once the page scrolls. The CTA carries the brand's glowing yellow edge.
+   ========================================================================== */
+.night {
+  background: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.headerOverlay .headerRoot.night {
+  box-shadow: none;
+}
+
+.headerOverlay .headerRoot.nightGlass {
+  background: color-mix(in srgb, var(--hv-night) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 1px 0 var(--hv-hairline-rev);
+}
+
+.night .headerInner {
+  padding: 18px 40px;
+}
+
+.night .headerLogo {
+  font-size: 30px;
+  color: var(--hv-ink-rev);
+}
+
+.night .headerNavLink {
+  color: var(--hv-soft-rev);
+}
+
+.night .headerNavLink:hover,
+.night .navItem:hover .headerNavLink {
+  color: var(--hv-ink-rev);
+}
+
+.night .headerEmail {
+  display: none;
+}
+
+.night .langLink,
+.nightWrap .langLink {
+  color: var(--hv-muted-rev);
+}
+
+.night .langLink:hover,
+.night .langActive,
+.nightWrap .langLink:hover,
+.nightWrap .langActive {
+  color: var(--hv-ink-rev);
+}
+
+.night .langSep,
+.nightWrap .langSep {
+  color: var(--hv-pill-border);
+}
+
+.night .headerCta {
+  background: var(--hv-ink);
+  color: var(--hv-ink-rev);
+  border: 1px solid color-mix(in srgb, var(--hv-accent) 45%, transparent);
+  border-radius: 999px;
+  padding: 10px 20px;
+  box-shadow:
+    0 0 20px -8px var(--hv-accent),
+    inset 0 1px 0 color-mix(in srgb, var(--hv-accent) 25%, transparent);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.night .headerCta:hover {
+  opacity: 1;
+  color: var(--hv-ink-rev);
+  border-color: var(--hv-accent);
+  box-shadow:
+    0 0 28px -6px var(--hv-accent),
+    inset 0 1px 0 color-mix(in srgb, var(--hv-accent) 40%, transparent);
+}
+
+.night .dropdown {
+  background: color-mix(in srgb, var(--hv-ink) 94%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-color: var(--hv-hairline-rev);
+  box-shadow: 0 24px 60px -12px color-mix(in srgb, var(--hv-night) 60%, transparent);
+}
+
+.night .ddItem:hover {
+  background: color-mix(in srgb, var(--hv-ink-rev) 6%, transparent);
+}
+
+.night .ddIconBox {
+  background: var(--hv-hairline-rev);
+  color: var(--hv-accent);
+}
+
+.night .ddItem:hover .ddIconBox {
+  background: var(--hv-accent);
+  color: var(--hv-ink);
+}
+
+.night .ddTitle {
+  color: var(--hv-ink-rev);
+}
+
+.night .ddBadge {
+  border-color: var(--hv-pill-border);
+  color: var(--hv-soft-rev);
+}
+
+.night .ddDesc {
+  color: var(--hv-muted-rev);
+}
+
+.night .ddItem:hover .ddDesc {
+  color: var(--hv-soft-rev);
+}
+
+.night .ddFooter {
+  border-top-color: var(--hv-hairline-rev);
+  color: var(--hv-ink-rev);
+}
+
+.night .hamburger span {
+  background: var(--hv-ink-rev);
+}
+
+.nightWrap .mobileMenu {
+  background: color-mix(in srgb, var(--hv-night) 92%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top-color: var(--hv-hairline-rev);
+}
+
+.nightWrap .mobileMenuLink {
+  color: var(--hv-soft-rev);
+}
+
+.nightWrap .mobileMenuLink:hover {
+  color: var(--hv-ink-rev);
+  background: color-mix(in srgb, var(--hv-ink-rev) 4%, transparent);
+}
+
+.nightWrap .mobileSubLink {
+  color: var(--hv-muted-rev);
+}
+
+.nightWrap .mobileMenuCta {
+  background: var(--hv-accent);
+  color: var(--hv-ink) !important;
+}
+
+@media (max-width: 900px) {
+  .night .headerInner {
+    padding: 14px 20px;
+  }
+}

@@ -19,6 +19,7 @@
   --hv-soft-rev: #a0a3ac;
   --hv-hairline-rev: #272a33;
   --hv-pill-border: #33363f;
+  --hv-night: #000000; /* home story stage, matches the three.js clear colour */
   --font-display: "Big Shoulders", "Big Shoulders Display", system-ui, sans-serif;
   --font-heading: "Poppins", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;

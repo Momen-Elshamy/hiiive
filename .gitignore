@@ -18,3 +18,6 @@ pnpm-debug.log*
 # misc
 .DS_Store
 *.tgz
+
+# Third-party reference screenshots for the home redesign (local only, not ours to publish)
+docs/home-v2/refs/

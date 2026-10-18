@@ -72,23 +72,33 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    // of it and only fades to the light paper bar once the user scrolls past it.
    const pathname = usePathname();
    const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
+   // The new home story (prototype at /home-v2) stays dark from top to bottom,
+   // so its nav stays dark too: transparent at the top, dark glass once scrolled.
+   const isNight = /^\/(?:(?:en|de)\/)?home-v2\/?$/.test(pathname || "");
+   const overlay = isHome || isNight;
    const [scrolled, setScrolled] = useState(false);
 
    useEffect(() => {
-      if (!isHome) return undefined;
+      if (!overlay) return undefined;
       const onScroll = () => setScrolled(window.scrollY > 24);
       onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       return () => window.removeEventListener("scroll", onScroll);
-   }, [isHome]);
+   }, [overlay]);
 
    const onDark = isHome && !scrolled && !menuOpen;
+   const rootClass = [
+      styles.headerRoot,
+      onDark ? styles.onDark : "",
+      isNight ? styles.night : "",
+      isNight && (scrolled || menuOpen) ? styles.nightGlass : "",
+   ].join(" ");
 
    const hasDropdown = (item) => Array.isArray(item.dropdown) && item.dropdown.length > 0;
 
    return (
-      <div className={isHome ? styles.headerOverlay : undefined}>
-         <header className={`${styles.headerRoot} ${onDark ? styles.onDark : ""}`}>
+      <div className={overlay ? `${styles.headerOverlay} ${isNight ? styles.nightWrap : ""}` : undefined}>
+         <header className={rootClass}>
             <div className={styles.headerInner}>
                <div className={styles.headerLeft}>
                   <a href="/" className={styles.headerLogo}>
