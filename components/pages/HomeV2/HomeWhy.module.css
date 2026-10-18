@@ -19,45 +19,44 @@
   pointer-events: none;
 }
 
-/* Partner logos, in one plain line above the cards ---------------------------- */
+/* Partner logos: a quiet caption and one centred row above the cards ----- */
 .logoRow {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  margin: -12px 0 32px;
-  padding: 22px 0;
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
+  margin: 4px 0 56px;
+  text-align: center;
 }
 
 .logoLabel {
-  flex-shrink: 0;
   font-size: 13px;
   color: var(--hv-muted-rev);
 }
 
+/* One cell per logo, so the logos sit at even distances whatever their width. */
 .logoList {
-  flex: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 24px 32px;
-  margin: 0;
+  max-width: 1040px;
+  margin: 26px auto 0;
   padding: 0;
   list-style: none;
 }
 
+.logoItem {
+  display: flex;
+  justify-content: center;
+}
+
 .logo {
   display: block;
-  height: 32px;
+  height: var(--h, 32px);
   width: auto;
-  opacity: 0.6;
+  max-width: 100%;
+  opacity: 0.66;
   transition: opacity 0.2s ease;
 }
 
 .logo:hover {
-  opacity: 0.95;
+  opacity: 0.9;
 }
 
 .grid {
@@ -617,18 +616,19 @@
   }
 
   .logoRow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    margin-bottom: 40px;
   }
 
   .logoList {
-    justify-content: flex-start;
-    gap: 18px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px 34px;
+    margin-top: 20px;
   }
 
   .logo {
-    height: 24px;
+    height: calc(var(--h, 32px) * 0.78);
   }
 
   .command {

@@ -33,14 +33,15 @@ const content = {
   title: "An AI lab, not an agency.",
   intro: "Agencies deliver a project and move on. We build our own products, run on our own AI, and keep building what we ship.",
   partners: {
-    label: "Part of",
-    // White versions of /public/logos, made for the dark background.
+    label: "Part of Germany's AI ecosystem",
+    // White versions of /public/logos, made for the dark background. h is
+    // each logo's height in px, set by eye so they carry the same weight.
     logos: [
-      { name: "NVIDIA Inception", src: "/img/home-v2/partners/nvidia-inception.png" },
-      { name: "KI Bundesverband", src: "/img/home-v2/partners/ki-bundesverband.png" },
-      { name: "Telekom TechBoost", src: "/img/home-v2/partners/telekom-techboost.png" },
-      { name: "Berlin Partner", src: "/img/home-v2/partners/berlin-partner.png" },
-      { name: "Wayra", src: "/img/home-v2/partners/wayra.png" },
+      { name: "NVIDIA Inception", src: "/img/home-v2/partners/nvidia-inception.png", h: 34 },
+      { name: "KI Bundesverband", src: "/img/home-v2/partners/ki-bundesverband.png", h: 34 },
+      { name: "Telekom TechBoost", src: "/img/home-v2/partners/telekom-techboost.png", h: 36 },
+      { name: "Berlin Partner", src: "/img/home-v2/partners/berlin-partner.png", h: 34 },
+      { name: "Wayra", src: "/img/home-v2/partners/wayra.png", h: 31 },
     ],
   },
   statement: {
@@ -147,11 +148,17 @@ export default function HomeWhy() {
         </div>
 
         <div className={styles.logoRow}>
-          <span className={styles.logoLabel}>{partners.label}</span>
+          <p className={styles.logoLabel}>{partners.label}</p>
           <ul className={styles.logoList}>
             {partners.logos.map((logo) => (
-              <li key={logo.name}>
-                <img className={styles.logo} src={logo.src} alt={logo.name} loading="lazy" />
+              <li key={logo.name} className={styles.logoItem}>
+                <img
+                  className={styles.logo}
+                  src={logo.src}
+                  alt={logo.name}
+                  loading="lazy"
+                  style={{ "--h": `${logo.h}px` }}
+                />
               </li>
             ))}
           </ul>
