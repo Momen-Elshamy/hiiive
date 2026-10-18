@@ -3,9 +3,10 @@ import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
 import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
+import { redirectLocale, redirectTarget } from "@/lib/redirects";
 import HomePage, { homeMetadata } from "@/components/pages/HomeV2/HomePage";
 import { resolveRedirect } from "@premast/site-core/services/resolve-redirect.js";
-import { notFound, permanentRedirect, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect, unstable_rethrow } from "next/navigation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,15 +36,16 @@ function splitLocale(pathSegments) {
 }
 
 /**
- * A CMS redirect for a path with no page (Admin → Redirects, or one written
- * when an editor renamed a slug). Redirects are stored without the language
- * prefix, so the visitor's prefix is put back on the target.
+ * For a path with nothing at it: follow a CMS redirect (Admin → Redirects, or
+ * one written when an editor renamed a page's or item's slug), else 404.
+ * Both end the render by throwing, as Next's redirect() and notFound() do.
  */
-async function findRedirect(rest, localePrefix, models) {
-  const hit = await resolveRedirect("/" + rest.join("/"), localePrefix, models);
-  if (!hit) return null;
-  const prefixed = localePrefix && hit.toPath !== `/${localePrefix}` && !hit.toPath.startsWith(`/${localePrefix}/`);
-  return { to: prefixed ? `/${localePrefix}${hit.toPath}` : hit.toPath, statusCode: hit.statusCode };
+async function redirectOrNotFound(rest, localePrefix, models) {
+  const hit = await resolveRedirect("/" + rest.join("/"), redirectLocale(localePrefix), models);
+  if (!hit) notFound();
+  const to = redirectTarget(hit.toPath, localePrefix);
+  if (hit.statusCode === 302) redirect(to);
+  permanentRedirect(to);
 }
 
 /** Resolve a path to a ContentItem, a standalone Page, or the localized home. */
@@ -104,9 +106,6 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
   if (bare.localePrefix && bare.rest.length === 0) return <HomePage locale={bare.localePrefix} />;
   if (!isCmsDbEnabled()) return notFound();
 
-  // Set when no page matches but a redirect does; followed after the try, so
-  // the redirect isn't swallowed by its catch.
-  let moved = null;
   try {
     const connectDB = await siteConfig.getConnectDB();
     await connectDB();
@@ -128,7 +127,7 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
           { contentType: contentType._id, slug, published: true },
           locale,
         );
-        if (!item) return notFound();
+        if (!item) return await redirectOrNotFound(rest, localePrefix, models);
 
         const puckData = parsePuckData(item.content) ?? { root: {}, content: [] };
         const finalData = await siteConfig.runBeforePageRender(puckData, item);
@@ -164,10 +163,9 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
       }
     }
 
-    moved = await findRedirect(rest, localePrefix, models);
-  } catch {
+    return await redirectOrNotFound(rest, localePrefix, models);
+  } catch (error) {
+    unstable_rethrow(error); // let a redirect or 404 through
     return notFound();
   }
-  if (moved) (moved.statusCode === 302 ? redirect : permanentRedirect)(moved.to);
-  return notFound();
 }
