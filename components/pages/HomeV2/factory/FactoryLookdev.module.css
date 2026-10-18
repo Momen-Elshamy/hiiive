@@ -28,7 +28,7 @@
 .copy {
   position: absolute;
   top: 16vh;
-  left: max(40px, calc((100vw - 1280px) / 2));
+  left: max(40px, calc((100% - 1280px) / 2));
   max-width: 440px;
   pointer-events: none;
 }

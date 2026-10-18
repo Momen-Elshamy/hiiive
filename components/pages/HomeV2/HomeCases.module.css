@@ -3,7 +3,7 @@
    The track starts at the content column and runs out to the screen edge. */
 
 .cases {
-  --gutter: max(40px, calc((100vw - 1280px) / 2));
+  --gutter: max(40px, calc((100% - 1280px) / 2)); /* the content column's edge */
   padding: 40px 0 140px;
 }
 
