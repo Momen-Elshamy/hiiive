@@ -8,7 +8,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 import { createFactory } from "./factoryModel";
-import { OVERVIEW, VIEW_DIR } from "../homeTimeline";
+import { OVERVIEW, VIEW_DIR } from "../homeFraming";
 
 /*
  * Look-dev stage for the factory (the home story builds its own stage in

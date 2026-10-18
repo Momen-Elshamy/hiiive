@@ -10,7 +10,8 @@ import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLigh
 import { createFactory, STATION_COUNT } from "./factory/factoryModel";
 import { GrainShader, LIGHT } from "./factory/factoryView";
 import { createStoryLayer, STORY_FOV, STORY_BLOOM } from "./storyLayer";
-import { SCREENS, FACTORY_FOV, VIEW_DIR, OVERVIEW, framing, stationPower, clamp01, ramp, lerp } from "./homeTimeline";
+import { FACTORY_FOV, VIEW_DIR, OVERVIEW, framing } from "./homeFraming";
+import { SCREENS, stationPower, clamp01, ramp, lerp } from "./homeTimeline";
 
 /*
  * The home story's one scene: the software factory, standing on the pattern
