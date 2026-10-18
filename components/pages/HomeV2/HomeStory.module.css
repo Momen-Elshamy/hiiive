@@ -1,9 +1,10 @@
-/* Home v2 — scroll story (scenes 1–2). Tall section, sticky stage, the
-   three.js canvas fills the stage and the copy floats over it. */
+/* Home v2 — the scroll story: one tall section, one sticky stage, the
+   three.js canvas fills the stage and the copy floats over it. The height is
+   the scroll travel in homeTimeline.js (SCREENS.end) plus one screen. */
 
 .story {
   position: relative;
-  height: 620vh; /* 420vh of story + one pinned screen + a 100vh tail for the factory crossfade */
+  height: 1270vh;
   background: var(--hv-night);
   color: var(--hv-ink-rev);
   font-family: var(--font-body);
@@ -34,6 +35,15 @@
 /* No WebGL: keep a calm glow so the copy still has a backdrop. */
 .stage[data-fallback="true"] {
   background: radial-gradient(120% 70% at 50% 110%, var(--theme-accent-muted), transparent 60%);
+}
+
+/* Keeps the left copy column readable over the factory (faded in from JS). */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hv-night) 82%, transparent) 0%, color-mix(in srgb, var(--hv-night) 45%, transparent) 30%, transparent 48%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Shared kicker ------------------------------------------------------------ */
@@ -119,6 +129,11 @@
   pointer-events: auto;
 }
 
+.ctaRowStart {
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+
 .btnPrimary,
 .btnSecondary {
   display: inline-flex;
@@ -168,14 +183,14 @@
   background: color-mix(in srgb, var(--hv-night) 55%, transparent);
 }
 
-/* Scene 2 — chapter copy --------------------------------------------------- */
+/* Chapter copy: the spark, the factory (with its stepper), the closing CTA - */
 .chapter {
   position: absolute;
   top: 16vh;
   left: max(40px, calc((100vw - 1280px) / 2));
-  max-width: 460px;
+  max-width: 440px;
   opacity: 0;
-  pointer-events: none;
+  visibility: hidden;
   will-change: opacity, transform;
 }
 
@@ -193,6 +208,179 @@
   margin-top: 16px;
   font-size: 16px;
   line-height: 1.6;
+  color: var(--hv-soft-rev);
+}
+
+/* Factory stepper ------------------------------------------------------------- */
+.steps {
+  margin-top: 32px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--hv-hairline-rev);
+}
+
+.step {
+  position: relative;
+  padding: 10px 0 10px 20px;
+}
+
+/* The active station gets a yellow tick on the rail. */
+.step::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 12px;
+  width: 2px;
+  height: 18px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.stepActive::before {
+  background: var(--hv-accent);
+}
+
+.stepButton {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stepNumber {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepActive .stepNumber {
+  color: var(--hv-accent);
+}
+
+.stepActive .stepTitle,
+.stepButton:hover .stepTitle {
+  color: var(--hv-ink-rev);
+}
+
+.stepBody {
+  max-height: 0;
+  overflow: hidden;
+  margin-left: 30px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease;
+}
+
+.stepActive .stepBody {
+  max-height: 120px;
+  margin-top: 6px;
+  opacity: 1;
+}
+
+/* + checkpoints pinned to the stations (moved every frame from JS) ---------- */
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform;
+}
+
+.checkpoint {
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+
+.plus {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--hv-ink-rev);
+  color: var(--hv-ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--hv-night) 55%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.pinActive .plus {
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--hv-accent) 35%, transparent),
+    0 0 24px 4px color-mix(in srgb, var(--hv-accent) 25%, transparent);
+}
+
+.checkpoint:hover .plus,
+.plus:focus-visible {
+  transform: rotate(45deg);
+  outline: none;
+}
+
+.card {
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--hv-hairline-rev);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--hv-ink) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translate(-6px, -50%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.checkpoint:hover .card,
+.checkpoint:focus-within .card {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.cardStep {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-accent);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-ink-rev);
+}
+
+.cardBody {
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--hv-soft-rev);
 }
 
@@ -219,18 +407,41 @@
 }
 
 @media (max-width: 767px) {
-  .story {
-    height: 540vh;
-  }
-
   .hero {
     padding-top: 16vh;
   }
 
   .chapter {
     top: auto;
-    bottom: 10vh;
+    bottom: 8vh;
     left: 20px;
     right: 20px;
+  }
+
+  /* Dark fade behind the copy so it reads over the scene. */
+  .chapter::before {
+    content: "";
+    position: absolute;
+    inset: -56px -20px -8vh;
+    background: linear-gradient(to top, var(--hv-night) 55%, transparent);
+    z-index: -1;
+  }
+
+  .chapterTitle {
+    font-size: 28px;
+  }
+
+  .shade,
+  .card {
+    display: none;
+  }
+
+  /* Phones show only the station being powered on. */
+  .steps {
+    margin-top: 18px;
+  }
+
+  .step:not(.stepActive) {
+    display: none;
   }
 }

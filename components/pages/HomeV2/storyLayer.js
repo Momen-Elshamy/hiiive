@@ -1,12 +1,8 @@
 import * as THREE from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { STORY, ramp, ease, lerp } from "./storyTimeline";
+import { STORY, ramp, ease, lerp } from "./homeTimeline";
 
 /*
- * Home story, scenes 1–2.
+ * Home story, scenes 1–2, as a layer of the home scene.
  *
  * The field particles play both scenes. Each owns two positions: a spot in
  * the aurora bands (scene 1, "noise") and a cell in the disc field (scene 2).
@@ -14,11 +10,15 @@ import { STORY, ramp, ease, lerp } from "./storyTimeline";
  * the spark lands and its ripple snaps particles into the grid from the centre
  * outwards. A second, denser aurora-only layer adds detail to scene 1 and
  * fades away while the field particles settle.
+ *
+ * Everything is built in "story units" (the field is 22 × 14). The home scene
+ * shrinks the layer onto the AI lab's top plate and renders it through its own
+ * camera; `uScale` keeps point sizes and light falloff in story units.
  */
 
-const FIELD = { width: 22, depth: 14 };
-const FOV = 38;
-const BLOOM = { strength: 0.55 };
+export const FIELD = { width: 22, depth: 14 };
+export const STORY_FOV = 38;
+export const STORY_BLOOM = { strength: 0.55, radius: 0.4, threshold: 0.35 };
 
 // Brand: matte charcoal and one glowing line of HIIIVE yellow (#f7f42c, see
 // --hv-accent). The aurora keeps cool curtains but burns yellow along its
@@ -61,6 +61,7 @@ const fieldVertexShader = /* glsl */ `
   uniform float uWave;
   uniform float uSize;
   uniform float uProj;
+  uniform float uScale;
   uniform vec3 uDrop;
   uniform float uDropI;
   uniform vec3 uFillPos;
@@ -109,17 +110,20 @@ const fieldVertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mv;
 
     float dotSize = mix(0.026, 0.05, aRand.y);
-    gl_PointSize = mix(dotSize, uSize, morph) * uProj / -mv.z;
+    gl_PointSize = mix(dotSize, uSize, morph) * uScale * uProj / -mv.z;
 
+    // Lights are given in world space; falloff is measured in story units.
     vec3 toDrop = (viewMatrix * vec4(uDrop, 1.0)).xyz - mv.xyz;
     float d1 = length(toDrop);
     vL1 = toDrop / d1;
-    vA1 = uDropI / (1.0 + d1 * d1 * 0.12);
+    float s1 = d1 / uScale;
+    vA1 = uDropI / (1.0 + s1 * s1 * 0.12);
 
     vec3 toFill = (viewMatrix * vec4(uFillPos, 1.0)).xyz - mv.xyz;
     float d2 = length(toFill);
     vL2 = toFill / d2;
-    vA2 = 1.0 / (1.0 + d2 * d2 * 0.05);
+    float s2 = d2 / uScale;
+    vA2 = 1.0 / (1.0 + s2 * s2 * 0.05);
 
     vColor = aColor;
     vBright = aRand.w;
@@ -136,6 +140,7 @@ const fieldFragmentShader = /* glsl */ `
   uniform float uFillI;
   uniform vec3 uBase;
   uniform vec3 uAmbient;
+  uniform float uFade;
 
   varying vec3 vColor;
   varying float vBright;
@@ -170,8 +175,8 @@ const fieldFragmentShader = /* glsl */ `
     bead *= 1.0 - smoothstep(0.75, 1.0, r) * 0.6;
 
     vec3 col = mix(dotCol, bead, vMorph);
-    float alpha = mix(glow, 1.0 - smoothstep(0.92, 1.0, r), vMorph) * vFade;
-    gl_FragColor = vec4(col, alpha);
+    float alpha = mix(glow, 1.0 - smoothstep(0.92, 1.0, r), vMorph) * vFade * uFade;
+    gl_FragColor = vec4(col * uFade, alpha);
   }
 `;
 
@@ -179,6 +184,7 @@ const hazeVertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uSettle;
   uniform float uProj;
+  uniform float uScale;
 
   attribute vec3 aColor;
   attribute vec4 aRand;
@@ -193,7 +199,7 @@ const hazeVertexShader = /* glsl */ `
     a.y -= uSettle * (1.5 + aRand.z * 2.0); // sinks while it fades
     vec4 mv = modelViewMatrix * vec4(a, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = mix(0.018, 0.036, aRand.y) * uProj / -mv.z;
+    gl_PointSize = mix(0.018, 0.036, aRand.y) * uScale * uProj / -mv.z;
     vColor = aColor * aRand.w * 0.7;
     vAlpha = 1.0 - smoothstep(0.0, 0.7, uSettle + aRand.x * 0.2);
   }
@@ -344,27 +350,16 @@ function additiveMaterial(uniforms, vertexShader, fragmentShader) {
   });
 }
 
-export function createStoryScene(canvas, { spark = "yellow", reducedMotion = false } = {}) {
-  const small = window.innerWidth < 768;
+/**
+ * Builds scenes 1–2 into `group` (story units). The caller places and scales
+ * the group, then each frame asks `cameraAt` where the story camera is and
+ * calls `update` to animate the particles and the spark.
+ */
+export function createStoryLayer({ small = false, spark = "yellow" } = {}) {
   const cols = small ? 140 : 220;
   const rows = small ? 90 : 140;
   const spacing = FIELD.width / (cols - 1);
-  const dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 1.75);
-
-  const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: false,
-    powerPreference: "high-performance",
-    // Lets dev screenshots read the canvas; costs a little, so dev only.
-    preserveDrawingBuffer: process.env.NODE_ENV !== "production",
-  });
-  renderer.setPixelRatio(dpr);
-  // Pure black: with the composer's float targets three.js colour-converts a
-  // non-black clear colour twice, which lifts the background to grey.
-  renderer.setClearColor(0x000000, 1);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+  const group = new THREE.Group();
 
   const tone = COLORS.spark[spark] ? spark : "yellow";
   const sparkColor = new THREE.Color(COLORS.spark[tone]);
@@ -373,6 +368,7 @@ export function createStoryScene(canvas, { spark = "yellow", reducedMotion = fal
     uTime: { value: 0 },
     uSettle: { value: 0 },
     uProj: { value: 1 },
+    uScale: { value: 1 },
   };
   const uniforms = {
     ...shared,
@@ -386,19 +382,20 @@ export function createStoryScene(canvas, { spark = "yellow", reducedMotion = fal
     uFillI: { value: 0 },
     uBase: { value: new THREE.Color(COLORS.bead) },
     uAmbient: { value: new THREE.Color(COLORS.ambient) },
+    uFade: { value: 1 },
   };
 
   const fieldGeometry = buildField(cols, rows);
   const fieldMaterial = additiveMaterial(uniforms, fieldVertexShader, fieldFragmentShader);
   const field = new THREE.Points(fieldGeometry, fieldMaterial);
   field.frustumCulled = false;
-  scene.add(field);
+  group.add(field);
 
   const hazeGeometry = buildHaze(small ? 50000 : 150000);
   const hazeMaterial = additiveMaterial(shared, hazeVertexShader, hazeFragmentShader);
   const haze = new THREE.Points(hazeGeometry, hazeMaterial);
   haze.frustumCulled = false;
-  scene.add(haze);
+  group.add(haze);
 
   const dropGeometry = new THREE.PlaneGeometry(0.42, 2.6);
   // Put the head (not the plane centre) at the mesh origin.
@@ -410,89 +407,70 @@ export function createStoryScene(canvas, { spark = "yellow", reducedMotion = fal
   );
   const drop = new THREE.Mesh(dropGeometry, dropMaterial);
   drop.visible = false;
-  scene.add(drop);
+  group.add(drop);
 
-  const composer = new EffectComposer(renderer);
-  composer.setPixelRatio(dpr);
-  composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), BLOOM.strength, 0.4, 0.35);
-  composer.addPass(bloom);
-  composer.addPass(new OutputPass());
+  const fillLocal = new THREE.Vector3(-7, 2.5, 1);
 
-  const resize = () => {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    if (!width || !height) return;
-    renderer.setSize(width, height, false);
-    composer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    shared.uProj.value = (height * dpr) / (2 * Math.tan(THREE.MathUtils.degToRad(FOV) / 2));
-  };
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(canvas);
-  resize();
-
-  const camPos = new THREE.Vector3();
-  const look = new THREE.Vector3();
-
-  function render(progress, time, pointer) {
+  /** Story camera at `progress`, in story units: front view of the aurora → low over the field → slow push in. */
+  function cameraAt(progress, pointer, position, look) {
     const settle = ease(ramp(progress, STORY.settle));
-    const fall = ramp(progress, STORY.drop);
-    const wave = ramp(progress, STORY.wave);
-    const impact = STORY.drop[1];
-    const impacted = progress >= impact;
-
-    // Camera: front view of the aurora → looking down onto the field → slow push in.
-    const dolly = ease(wave);
-    camPos.set(
+    const dolly = ease(ramp(progress, STORY.wave));
+    position.set(
       pointer.x * 0.35,
       lerp(0.6, 2.4, settle) - dolly * 0.3 + pointer.y * 0.18,
       lerp(13, 10.5, settle) - dolly * 1.2,
     );
     // Low, near-horizontal view: field in the lower half, room above for the falling spark.
     look.set(0, lerp(-0.8, 1.4, settle), lerp(0, -0.6, settle));
-    camera.position.copy(camPos);
-    camera.lookAt(look);
+  }
+
+  /**
+   * Animates scenes 1–2 at `progress`. `proj` converts sizes to pixels for the
+   * current camera; `fade` dims the whole layer (the zoom-out). Returns the
+   * impact flash (0–1) so the caller can push its bloom.
+   */
+  function update(progress, time, { camera, proj, fade = 1 }) {
+    const settle = ease(ramp(progress, STORY.settle));
+    const fall = ramp(progress, STORY.drop);
+    const wave = ramp(progress, STORY.wave);
+    const impact = STORY.drop[1];
+    const impacted = progress >= impact;
 
     // The spark: accelerates down, lands, then hovers as the field's light.
     const afterImpact = ramp(progress, [impact, impact + 0.12]);
     const dropY = impacted ? lerp(0.25, 0.9, ease(afterImpact)) : lerp(5.2, 0.25, fall * fall);
     drop.position.set(0, dropY, 0);
     drop.quaternion.copy(camera.quaternion);
-    drop.visible = fall > 0;
+    drop.visible = fall > 0 && fade > 0.001;
     drop.scale.set(1, impacted ? 1 : 0.7 + fall * 0.6, 1);
-    dropMaterial.uniforms.uOpacity.value = Math.min(1, fall * 6);
+    dropMaterial.uniforms.uOpacity.value = Math.min(1, fall * 6) * fade;
     dropMaterial.uniforms.uTail.value = impacted ? 1 - ramp(progress, [impact, impact + 0.03]) : 1;
 
     const flash = impacted ? Math.exp(-ramp(progress, [impact, STORY.wave[1]]) * 10) : 0;
-    uniforms.uDrop.value.copy(drop.position);
+    group.updateMatrixWorld();
+    group.localToWorld(uniforms.uDrop.value.copy(drop.position));
+    group.localToWorld(uniforms.uFillPos.value.copy(fillLocal));
     uniforms.uDropI.value = fall > 0 ? 0.45 + fall * 0.35 + flash * 3 : 0;
     uniforms.uFillI.value = wave;
     uniforms.uWave.value = wave;
+    uniforms.uFade.value = fade;
     shared.uSettle.value = settle;
-    shared.uTime.value = reducedMotion ? 0 : time;
+    shared.uTime.value = time;
+    shared.uProj.value = proj;
+    shared.uScale.value = group.scale.x;
     haze.visible = settle < 1;
-    bloom.strength = BLOOM.strength + flash * 1.2;
+    field.visible = fade > 0.001;
+    return flash;
+  }
 
-    composer.render();
+  /** The spark's position in world space (for a real light that follows it). */
+  function sparkWorld(target) {
+    return group.localToWorld(target.copy(drop.position));
   }
 
   function dispose() {
-    resizeObserver.disconnect();
-    fieldGeometry.dispose();
-    fieldMaterial.dispose();
-    hazeGeometry.dispose();
-    hazeMaterial.dispose();
-    dropGeometry.dispose();
-    dropMaterial.dispose();
-    composer.dispose();
-    renderer.dispose();
-    if (window.__story?.renderer === renderer) delete window.__story;
+    [fieldGeometry, fieldMaterial, hazeGeometry, hazeMaterial, dropGeometry, dropMaterial].forEach((thing) => thing.dispose());
   }
 
-  // Dev-only handle for inspecting frames from the console.
-  if (process.env.NODE_ENV !== "production") window.__story = { renderer, composer, bloom, uniforms, scene, render };
-
-  return { render, dispose };
+  return { group, cameraAt, update, sparkWorld, dispose };
 }

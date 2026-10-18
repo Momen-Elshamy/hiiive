@@ -1,6 +1,6 @@
 # Home v2 — Story & copy
 
-Status: **draft 4**, scenes 1–3 + CTA built at `/home-v2` · Branch: `feat/home-v2-story`
+Status: **draft 5**, scenes 1–3 + CTA built at `/home-v2` · Branch: `feat/home-v2-story`
 
 ## The idea in one line
 
@@ -16,7 +16,7 @@ Hiiive is an AI lab and tech house: smart people and smart systems inventing AI 
 | 3 | The software factory | Problems go in, working software comes out, station by station. |
 | — | CTA | Bring us your hardest problem. |
 
-Scenes 1–2 are one particle system on one camera; the factory crossfades in over the last frame of scene 2.
+One scene, one camera, no cuts: scenes 1–2 play out on top of the factory's AI lab, then the camera pulls out of the pattern until the whole factory is in view.
 
 ## Look
 
@@ -27,6 +27,9 @@ Scenes 1–2 are one particle system on one camera; the factory crossfades in ov
 
 - **No hexagons, honeycombs, hives or bees.** The name HIIIVE has nothing to do with bees, so the visuals never play on it.
 - **Hiiive is a software factory.** From the Phrasso reference (ref 01) the point is the factory machine itself and its render quality, not only the `+` checkpoints. A first take on scenes 3–5 (gate, hex core, Germany map) was cut for missing both.
+- **Change texture and light, not shapes,** when polishing what was approved.
+- **No camera tour of the factory's parts.** Once the whole factory is in view the camera holds still.
+- **No hard transitions.** A crossfade and a dip to black between the pattern and the factory were both rejected; the pattern has to flow into the factory.
 
 ---
 
@@ -50,7 +53,11 @@ Scenes 1–2 are one particle system on one camera; the factory crossfades in ov
 
 ## Scene 3 — The software factory
 
-**Visual:** an isometric factory in the Phrasso style (ref 01): matte off-white modules with a painted yellow band under each top plate, a glass intake tube, a glass build line, a quality gate and four output lanes of LED chips, on a dark floor. It fades in over the last frame of scene 2. Scroll moves the camera from station to station, then pulls back to the whole line.
+**Visual:** an isometric factory in the Phrasso style (ref 01): matte off-white modules with a painted yellow band under each top plate, a glass intake tube, a glass build line, a quality gate and four output lanes of LED chips, on a dark floor.
+
+**Transition (zoom out):** the pattern from scene 2 was happening on top of the factory's AI lab all along. The camera pulls straight out of it, like a powers-of-ten zoom: the bead field shrinks onto the lab's plate, the HIIIVE print shows through it, the lab appears around it, then the whole line. The factory comes out of the dark as an unlit silhouette; the pattern fades into the plate.
+
+**Scroll ("power on"):** with the whole factory in view the camera holds still. Each station powers on as it becomes the active step, from intake to output: its slits, LEDs and floor glow switch on and its parts start moving, while the room light comes up. The stepper on the left and the glowing `+` of the active station show where you are.
 
 - **Kicker:** 02 · The software factory
 - **Headline:** Problems go in. Working software comes out.
@@ -103,9 +110,11 @@ All images are in `refs/`.
 
 ## How we build it
 
-- **three.js, real time:** scenes 1–2 are one particle system (`components/pages/HomeV2/storyScene.js`, scroll ranges in `storyTimeline.js`). The factory is modelled in code (`factory/factoryModel.js`), lit like a product shot (`factory/factoryView.js`: area lights, crisp shadows, AO, bloom on the light slits only, grain and vignette) and toured on scroll (`factory/factoryTour.js`).
-- **Review a frame (dev only):** `/home-v2?p=0.6` pins scenes 1–2, `/home-v2?f=0.53` pins the factory tour; `/home-v2/factory` is the factory look-dev page.
-- **Mobile:** fewer particles, no AO, its own camera framing with the scene in the top half and the copy at the bottom; only the active station's text shows.
+- **One three.js scene** (`components/pages/HomeV2/homeScene.js`): the factory, plus scenes 1–2 as a particle layer (`storyLayer.js`) shrunk onto the AI lab's plate. The camera follows the story camera inside the pattern, then pulls out (distance grows exponentially) to a fixed shot of the whole line, sized to the viewport so it always sits right of the copy.
+- **The factory** is modelled in code (`factory/factoryModel.js`): each station owns its lights and moving parts, so it can power on by itself. Lit like a product shot: area lights, crisp shadows, AO, bloom on the light slits only, film grain and a vignette.
+- **One timeline** (`homeTimeline.js`) in screens of scroll drives the scene and the copy: story, pull-out, station power-on, CTA.
+- **Review a moment (dev only):** `/home-v2?s=5.2` pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
+- **Mobile:** fewer particles, no AO, the factory framed in the top half with the copy at the bottom; only the active station's text shows.
 - **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.
 - **CMS (to do):** turn the story into Puck blocks so the copy is editable in en + de.
 

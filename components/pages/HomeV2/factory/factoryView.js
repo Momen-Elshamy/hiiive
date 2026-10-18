@@ -8,10 +8,11 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 import { createFactory } from "./factoryModel";
-import { createTour, OVERVIEW, VIEW_DIR } from "./factoryTour";
+import { OVERVIEW, VIEW_DIR } from "../homeTimeline";
 
 /*
- * Look-dev stage for the factory, lit like a product shot: a big soft area
+ * Look-dev stage for the factory (the home story builds its own stage in
+ * homeScene.js and reuses the lights and grain from here), lit like a product shot: a big soft area
  * light overhead-left (gentle gradients across the plates, darker sides), a
  * matching directional light only for crisp contact shadows, a faint cool
  * rim, ambient occlusion, bloom only on the slits, then film grain and a
@@ -21,7 +22,7 @@ import { createTour, OVERVIEW, VIEW_DIR } from "./factoryTour";
 const FOV = 20;
 const TARGET = OVERVIEW.target;
 
-const GrainShader = {
+export const GrainShader = {
   uniforms: {
     tDiffuse: { value: null },
     uTime: { value: 0 },
@@ -56,11 +57,10 @@ const GrainShader = {
 
 let areaLightsReady = false;
 
-/**
- * `tour: true` hands the camera to the scroll tour (render's `progress`);
- * otherwise it holds the overview, as on the look-dev page.
- */
-export function createFactoryView(canvas, { tour = false, reducedMotion = false } = {}) {
+// Room lights at full power.
+export const LIGHT = { key: 5.5, back: 2.2, sun: 0.9, hemi: 0.12, env: 0.16 };
+
+export function createFactoryView(canvas, { reducedMotion = false } = {}) {
   if (!areaLightsReady) {
     RectAreaLightUniformsLib.init();
     areaLightsReady = true;
@@ -85,22 +85,23 @@ export function createFactoryView(canvas, { tour = false, reducedMotion = false 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = environment;
-  scene.environmentIntensity = 0.16;
+  scene.environmentIntensity = LIGHT.env;
 
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.5, 120);
 
   // Soft key: a large overhead panel, front-left.
-  const key = new THREE.RectAreaLight("#fffaf2", 5.5, 10, 10);
+  const key = new THREE.RectAreaLight("#fffaf2", LIGHT.key, 10, 10);
   key.position.set(-4, 11, 7);
   key.lookAt(TARGET);
   scene.add(key);
-  // Faint cool panel from the back-right, for edge separation.
-  const back = new THREE.RectAreaLight("#c8d2ff", 2.2, 8, 4);
+  // Faint cool panel from the back-right, for edge separation. It stays on
+  // while the factory is unlit, which is what draws its silhouette.
+  const back = new THREE.RectAreaLight("#c8d2ff", LIGHT.back, 8, 4);
   back.position.set(9, 5, -9);
   back.lookAt(TARGET);
   scene.add(back);
   // Shadows only: same direction as the key, crisp near contact.
-  const sun = new THREE.DirectionalLight("#ffffff", 0.9);
+  const sun = new THREE.DirectionalLight("#ffffff", LIGHT.sun);
   sun.position.set(-4, 11, 7).normalize().multiplyScalar(20).add(TARGET);
   sun.target.position.copy(TARGET);
   sun.castShadow = true;
@@ -115,7 +116,8 @@ export function createFactoryView(canvas, { tour = false, reducedMotion = false 
   sun.shadow.normalBias = 0.015;
   sun.shadow.radius = 3;
   scene.add(sun, sun.target);
-  scene.add(new THREE.HemisphereLight("#a8b2c8", "#0b0b0c", 0.12));
+  const hemi = new THREE.HemisphereLight("#a8b2c8", "#0b0b0c", LIGHT.hemi);
+  scene.add(hemi);
 
   const factory = createFactory();
   scene.add(factory.group);
@@ -153,20 +155,15 @@ export function createFactoryView(canvas, { tour = false, reducedMotion = false 
 
   const projected = new THREE.Vector3();
   const anchors = factory.checkpoints.map(() => ({ x: 0, y: 0, a: 0 }));
-  const tourPath = tour ? createTour({ small }) : null;
-  const lookAt = new THREE.Vector3();
+  scene.fog.near = OVERVIEW.dist + 4;
+  scene.fog.far = OVERVIEW.dist + 26;
 
-  function render(time, pointer, progress = 1) {
-    const dist = tourPath ? tourPath(progress, lookAt) : OVERVIEW.dist;
-    if (!tourPath) lookAt.copy(TARGET);
-    camera.position.copy(lookAt).addScaledVector(VIEW_DIR, dist);
-    scene.fog.near = dist + 4;
-    scene.fog.far = dist + 26;
-    // Parallax scales with distance so close-ups don't swing around.
-    const sway = dist / OVERVIEW.dist;
-    camera.position.x += pointer.x * 0.6 * sway;
-    camera.position.y += pointer.y * 0.4 * sway;
-    camera.lookAt(lookAt);
+  function render(time, pointer) {
+    // The camera holds one shot; the pointer only adds a little depth.
+    camera.position.copy(TARGET).addScaledVector(VIEW_DIR, OVERVIEW.dist);
+    camera.position.x += pointer.x * 0.3;
+    camera.position.y += pointer.y * 0.2;
+    camera.lookAt(TARGET);
     factory.update(reducedMotion ? 0 : time);
     grain.uniforms.uTime.value = time;
     composer.render();

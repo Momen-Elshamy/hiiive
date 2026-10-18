@@ -9,6 +9,8 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
  *
  * Stations: intake tube → AI lab (wordmark plate) → glass build line →
  * quality gate → four output lanes. The line runs along +x; z faces the camera.
+ * Every station owns its lights and moving parts, so the factory can power on
+ * one station at a time: update(time, power) takes a 0–1 power per station.
  */
 
 const COLORS = {
@@ -209,6 +211,12 @@ function roundedRect(w, h, r) {
   return shape;
 }
 
+// Stations in line order; `power` arrays follow this order.
+export const STATION_COUNT = 5;
+const S = { intake: 0, lab: 1, build: 2, gate: 3, output: 4 };
+const ALL_ON = new Array(STATION_COUNT).fill(1);
+const UNLIT = new THREE.Color("#1b1b1b"); // a light that is switched off: a dark diffuser
+
 export function createFactory() {
   const group = new THREE.Group();
   const disposables = [];
@@ -218,6 +226,10 @@ export function createFactory() {
   };
   const updaters = [];
   const dummy = new THREE.Object3D();
+
+  // What each station switches on, as functions of its power (0 off, 1 on).
+  const powered = Array.from({ length: STATION_COUNT }, () => []);
+  const onPower = (station, apply) => powered[station].push(apply);
 
   // Materials -------------------------------------------------------------------
   const grain = keep(grainTexture());
@@ -249,9 +261,31 @@ export function createFactory() {
       emissiveIntensity: 0.08,
     }),
   );
-  const slit = keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(COLORS.accent).multiplyScalar(3) }));
-  const warmLight = keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(COLORS.warm).multiplyScalar(2) }));
-  const chipLight = keep(new THREE.MeshBasicMaterial({ color: new THREE.Color(COLORS.accent).multiplyScalar(2) }));
+  onPower(S.lab, (p) => (crystal.emissiveIntensity = 0.08 * p));
+
+  /** A light-only material (slits, parts, sparks): unlit grey when off, `scale`× its colour when on. */
+  const lightMaterial = (station, color, scale) => {
+    const on = new THREE.Color(color).multiplyScalar(scale);
+    const material = keep(new THREE.MeshBasicMaterial({ color: on.clone() }));
+    onPower(station, (p) => material.color.copy(UNLIT).lerp(on, p));
+    return material;
+  };
+
+  /** The yellow button on a top plate: painted, and it lights up when its station is on. */
+  const buttonMaterial = (station) => {
+    const material = keep(
+      new THREE.MeshPhysicalMaterial({
+        color: COLORS.accentPaint,
+        roughness: 0.55,
+        clearcoat: 0.2,
+        clearcoatRoughness: 0.4,
+        emissive: COLORS.accent,
+        emissiveIntensity: 0.45,
+      }),
+    );
+    onPower(station, (p) => (material.emissiveIntensity = 0.45 * p));
+    return material;
+  };
 
   const box = (w, h, d, material, r = EDGE) => {
     const mesh = new THREE.Mesh(keep(new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2, h / 2, d / 2))), material);
@@ -280,20 +314,19 @@ export function createFactory() {
 
   // Light spilling from a slit onto the floor, faked with an additive pool.
   const glowGeometry = keep(new THREE.PlaneGeometry(1, 1));
-  const pool = (x, z, w, d, color, opacity, angle = 0) => {
-    const mesh = new THREE.Mesh(
-      glowGeometry,
-      keep(
-        new THREE.ShaderMaterial({
-          uniforms: { uColor: { value: new THREE.Color(color) }, uOpacity: { value: opacity } },
-          vertexShader: uvVertex,
-          fragmentShader: glowFragment,
-          transparent: true,
-          depthWrite: false,
-          blending: THREE.AdditiveBlending,
-        }),
-      ),
+  const pool = (station, x, z, w, d, color, opacity, angle = 0) => {
+    const material = keep(
+      new THREE.ShaderMaterial({
+        uniforms: { uColor: { value: new THREE.Color(color) }, uOpacity: { value: opacity } },
+        vertexShader: uvVertex,
+        fragmentShader: glowFragment,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      }),
     );
+    onPower(station, (p) => (material.uniforms.uOpacity.value = opacity * p));
+    const mesh = new THREE.Mesh(glowGeometry, material);
     mesh.rotation.set(-Math.PI / 2, 0, angle);
     mesh.scale.set(w, d, 1);
     mesh.position.set(x, 0.135, z);
@@ -302,7 +335,7 @@ export function createFactory() {
   };
 
   /** A leg with a rectangular tunnel through it (front to back), a lit slit inside the tunnel's top. */
-  const leg = ({ width, height, depth, opening, openingHeight }) => {
+  const leg = ({ width, height, depth, opening, openingHeight }, slit) => {
     const part = new THREE.Group();
     const side = (width - opening) / 2;
     [-1, 1].forEach((s) => {
@@ -384,9 +417,9 @@ export function createFactory() {
   const studs = new THREE.InstancedMesh(keep(new RoundedBoxGeometry(0.13, 0.11, 0.13, 2, 0.012)), crystal, studCount);
   studs.castShadow = true;
   group.add(studs);
-  updaters.push((time) => {
+  updaters.push((clocks) => {
     for (let i = 0; i < studCount; i++) {
-      const p = loopPath.getPointAt((((i / studCount + time * 0.018) % 1) + 1) % 1);
+      const p = loopPath.getPointAt((((i / studCount + clocks[S.lab] * 0.018) % 1) + 1) % 1);
       dummy.position.set(p.x, 0.19, -p.y);
       dummy.rotation.set(0, 0, 0);
       dummy.scale.setScalar(1);
@@ -397,17 +430,21 @@ export function createFactory() {
   });
 
   // AI lab ----------------------------------------------------------------------------
+  const labSlit = lightMaterial(S.lab, COLORS.accent, 3);
   [-1, 1].forEach((s) => {
-    const part = leg({ width: LAB.legWidth, height: LAB.legHeight, depth: LAB.depth, opening: LAB.opening, openingHeight: LAB.openingHeight });
+    const part = leg(
+      { width: LAB.legWidth, height: LAB.legHeight, depth: LAB.depth, opening: LAB.opening, openingHeight: LAB.openingHeight },
+      labSlit,
+    );
     part.position.x = s * LAB.legX;
     group.add(part);
-    [-1, 1].forEach((f) => pool(s * LAB.legX, f * (LAB.depth / 2 + 0.28), 1.0, 0.9, COLORS.accent, 0.35));
+    [-1, 1].forEach((f) => pool(S.lab, s * LAB.legX, f * (LAB.depth / 2 + 0.28), 1.0, 0.9, COLORS.accent, 0.35));
   });
   const coreWidth = 2 * LAB.legX - LAB.legWidth - 0.02;
   const core = box(coreWidth, 0.95, 1.3, graphite);
   core.position.set(0, 0.475, 0);
   group.add(core);
-  const coreSlit = new THREE.Mesh(keep(new THREE.BoxGeometry(coreWidth * 0.7, 0.014, 0.014)), warmLight);
+  const coreSlit = new THREE.Mesh(keep(new THREE.BoxGeometry(coreWidth * 0.7, 0.014, 0.014)), lightMaterial(S.lab, COLORS.warm, 2));
   coreSlit.position.set(0, 0.62, 0.656);
   group.add(coreSlit);
   const labWidth = 2 * LAB.legX + LAB.legWidth + 0.12;
@@ -419,7 +456,7 @@ export function createFactory() {
     hazard.position.set(s * (labWidth / 2 - 0.45), LAB.legHeight + PLATE.layer + PLATE.thickness / 2, 1.0 + 0.002);
     group.add(hazard);
   });
-  const labButton = box(0.17, 0.07, 0.17, paint, 0.02);
+  const labButton = box(0.17, 0.07, 0.17, buttonMaterial(S.lab), 0.02);
   labButton.position.set(1.55, labCap.top + 0.035, -0.62);
   group.add(labButton);
 
@@ -441,7 +478,7 @@ export function createFactory() {
 
   const shardGeometry = keep(new THREE.TetrahedronGeometry(0.05));
   const shards = new THREE.InstancedMesh(shardGeometry, keep(new THREE.MeshStandardMaterial({ color: COLORS.steel, roughness: 0.35, metalness: 0.6 })), 170);
-  const sparks = new THREE.InstancedMesh(shardGeometry, chipLight, 6);
+  const sparks = new THREE.InstancedMesh(shardGeometry, lightMaterial(S.intake, COLORS.accent, 2), 6);
   shards.castShadow = true;
   group.add(shards, sparks);
   const debris = (count) =>
@@ -459,9 +496,9 @@ export function createFactory() {
   const side = new THREE.Vector3();
   const mouth = intakeCurve.getPointAt(0);
   const mouthDir = intakeCurve.getTangentAt(0);
-  const placeDebris = (mesh, state, time, dt) => {
+  const placeDebris = (mesh, state, clock, step) => {
     state.forEach((d, i) => {
-      d.u += d.speed * dt;
+      d.u += d.speed * step;
       if (d.u > 1) d.u = -0.3;
       if (d.u >= 0) {
         intakeCurve.getPointAt(d.u, dummy.position);
@@ -476,16 +513,16 @@ export function createFactory() {
         dummy.position.z += Math.sin(d.angle) * spread * 0.5;
         dummy.position.y += Math.sin(d.angle * 3) * spread * 0.25;
       }
-      dummy.rotation.set(d.spin.x * time, d.spin.y * time, d.spin.z * time);
+      dummy.rotation.set(d.spin.x * clock, d.spin.y * clock, d.spin.z * clock);
       dummy.scale.setScalar(d.scale * (1 - THREE.MathUtils.smoothstep(d.u, 0.92, 1.0)));
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     });
     mesh.instanceMatrix.needsUpdate = true;
   };
-  updaters.push((time, dt) => {
-    placeDebris(shards, shardState, time, dt);
-    placeDebris(sparks, sparkState, time, dt);
+  updaters.push((clocks, steps) => {
+    placeDebris(shards, shardState, clocks[S.intake], steps[S.intake]);
+    placeDebris(sparks, sparkState, clocks[S.intake], steps[S.intake]);
   });
 
   // Build line: a glass channel with lit parts inside --------------------------------
@@ -501,11 +538,15 @@ export function createFactory() {
   bed.position.set(channelX, 0.385, 0);
   group.add(bed);
   const partCount = 12;
-  const parts = new THREE.InstancedMesh(keep(new RoundedBoxGeometry(0.09, 0.05, 0.09, 2, 0.01)), warmLight, partCount);
+  const parts = new THREE.InstancedMesh(
+    keep(new RoundedBoxGeometry(0.09, 0.05, 0.09, 2, 0.01)),
+    lightMaterial(S.build, COLORS.warm, 2),
+    partCount,
+  );
   group.add(parts);
-  updaters.push((time) => {
+  updaters.push((clocks) => {
     for (let i = 0; i < partCount; i++) {
-      const t = (i / partCount + time * 0.05) % 1;
+      const t = (i / partCount + clocks[S.build] * 0.05) % 1;
       dummy.position.set(channelStart + 0.08 + t * (channelLength - 0.16), 0.44, i % 2 ? 0.08 : -0.08);
       dummy.rotation.set(0, 0, 0);
       dummy.scale.setScalar(Math.min(1, Math.min(t, 1 - t) * 14));
@@ -514,22 +555,26 @@ export function createFactory() {
     }
     parts.instanceMatrix.needsUpdate = true;
   });
-  pool(channelX, 0, channelLength, 1.2, COLORS.warm, 0.25);
+  pool(S.build, channelX, 0, channelLength, 1.2, COLORS.warm, 0.25);
   const channelLight = new THREE.PointLight(COLORS.warm, 0.5, 2.2, 2);
   channelLight.position.set(channelX, 0.6, 0);
   group.add(channelLight);
+  onPower(S.build, (p) => (channelLight.intensity = 0.5 * p));
 
   // Quality gate ----------------------------------------------------------------------
-  const gateLeg = leg({ width: GATE.width, height: GATE.legHeight, depth: GATE.depth, opening: GATE.opening, openingHeight: GATE.openingHeight });
+  const gateLeg = leg(
+    { width: GATE.width, height: GATE.legHeight, depth: GATE.depth, opening: GATE.opening, openingHeight: GATE.openingHeight },
+    lightMaterial(S.gate, COLORS.accent, 3),
+  );
   gateLeg.position.x = GATE.x;
   group.add(gateLeg);
   const gateCap = cap(GATE.width + 0.1, GATE.depth + 0.1, GATE.legHeight, keep(gatePrint()));
   gateCap.part.position.x = GATE.x;
   group.add(gateCap.part);
-  const gateButton = box(0.22, 0.08, 0.22, paint, 0.02);
+  const gateButton = box(0.22, 0.08, 0.22, buttonMaterial(S.gate), 0.02);
   gateButton.position.set(GATE.x, gateCap.top + 0.04, 0);
   group.add(gateButton);
-  pool(GATE.x, GATE.depth / 2 + 0.3, 1.1, 1.0, COLORS.accent, 0.4);
+  pool(S.gate, GATE.x, GATE.depth / 2 + 0.3, 1.1, 1.0, COLORS.accent, 0.4);
 
   // Output lanes --------------------------------------------------------------------
   // Chips read as lights, not stickers: a diffuser gradient on every face (hot
@@ -538,8 +583,8 @@ export function createFactory() {
   const laneOrigin = new THREE.Vector3(GATE.x, 0, GATE.depth / 2 - 0.1);
   const chipGeometry = keep(new RoundedBoxGeometry(0.1, 0.028, 0.065, 2, 0.008));
   const led = keep(ledTexture());
-  const ledMaterial = (color, intensity) =>
-    keep(
+  const ledMaterial = (color, intensity) => {
+    const material = keep(
       new THREE.MeshStandardMaterial({
         color: "#1c1c16",
         roughness: 0.3,
@@ -549,12 +594,15 @@ export function createFactory() {
         emissiveIntensity: intensity,
       }),
     );
+    onPower(S.output, (p) => (material.emissiveIntensity = intensity * p));
+    return material;
+  };
   const chipYellow = ledMaterial(COLORS.accent, 2.1);
   const chipWarm = ledMaterial(COLORS.warm, 1.7);
   const laneSurface = keep(new THREE.MeshStandardMaterial({ color: COLORS.track, roughness: 0.45, metalness: 0.18 }));
   const poolGeometry = keep(new THREE.PlaneGeometry(1, 1));
-  const chipPool = (color, opacity) =>
-    keep(
+  const chipPool = (color, opacity) => {
+    const material = keep(
       new THREE.ShaderMaterial({
         uniforms: { uColor: { value: new THREE.Color(color) }, uOpacity: { value: opacity } },
         vertexShader: instancedVertex,
@@ -564,6 +612,9 @@ export function createFactory() {
         blending: THREE.AdditiveBlending,
       }),
     );
+    onPower(S.output, (p) => (material.uniforms.uOpacity.value = opacity * p));
+    return material;
+  };
   const poolYellow = chipPool(COLORS.accent, 0.6);
   const poolWarm = chipPool(COLORS.warm, 0.45);
   const lanes = LANE_ANGLES.map((angle, i) => {
@@ -582,10 +633,10 @@ export function createFactory() {
     group.add(chips, pools);
     return { dir, angle, chips, pools, offset: i * 0.13 };
   });
-  updaters.push((time) => {
+  updaters.push((clocks) => {
     lanes.forEach(({ dir, angle, chips, pools, offset }) => {
       for (let k = 0; k < 7; k++) {
-        const t = (k / 7 + time * 0.07 + offset) % 1;
+        const t = (k / 7 + clocks[S.output] * 0.07 + offset) % 1;
         const fade = Math.min(1, (1 - t) * 6);
         dummy.position.copy(laneOrigin).addScaledVector(dir, 0.3 + t * (LANE_LENGTH - 0.4)).setY(0.065);
         dummy.rotation.set(0, angle, 0);
@@ -606,23 +657,35 @@ export function createFactory() {
 
   // Checkpoints: where the + buttons sit -------------------------------------------
   const checkpoints = [
-    { key: "intake", position: intakeCurve.getPointAt(0.35).add(new THREE.Vector3(0, 0.5, 0)) },
+    { key: "intake", position: intakeCurve.getPointAt(0.86).add(new THREE.Vector3(0, 0.55, 0)) },
     { key: "lab", position: new THREE.Vector3(-1.75, labCap.top + 0.3, 0.7) },
     { key: "build", position: new THREE.Vector3(channelX, 1.0, 0.2) },
     { key: "gate", position: new THREE.Vector3(GATE.x + 0.6, gateCap.top + 0.25, 0.6) },
     { key: "output", position: laneOrigin.clone().add(new THREE.Vector3(0, 0.35, 2.4)) },
   ];
 
+  // Each station runs on its own clock, which only advances while it has power.
+  const clocks = new Array(STATION_COUNT).fill(0);
+  const steps = new Array(STATION_COUNT).fill(0);
   let last = 0;
-  function update(time) {
+  function update(time, power = ALL_ON) {
     const dt = Math.min(0.05, Math.max(0, time - last));
     last = time;
-    updaters.forEach((fn) => fn(time, dt));
+    for (let i = 0; i < STATION_COUNT; i++) {
+      const p = power[i];
+      steps[i] = dt * p;
+      clocks[i] += steps[i];
+      powered[i].forEach((apply) => apply(p));
+    }
+    updaters.forEach((fn) => fn(clocks, steps));
   }
 
   function dispose() {
     disposables.forEach((thing) => thing.dispose?.());
   }
 
-  return { group, update, checkpoints, dispose };
+  // Centre of the AI lab's top plate: where the home story's pattern plays out.
+  const labTop = new THREE.Vector3(0, labCap.top, 0);
+
+  return { group, update, checkpoints, labTop, dispose };
 }
