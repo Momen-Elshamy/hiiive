@@ -3,7 +3,8 @@ import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
 import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
-import { notFound } from "next/navigation";
+import { resolveRedirect } from "@premast/site-core/services/resolve-redirect.js";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,6 +31,18 @@ function splitLocale(pathSegments) {
     return { localePrefix: pathSegments[0].toLowerCase(), rest: pathSegments.slice(1) };
   }
   return { localePrefix: null, rest: pathSegments };
+}
+
+/**
+ * A CMS redirect for a path with no page (Admin → Redirects, or one written
+ * when an editor renamed a slug). Redirects are stored without the language
+ * prefix, so the visitor's prefix is put back on the target.
+ */
+async function findRedirect(rest, localePrefix, models) {
+  const hit = await resolveRedirect("/" + rest.join("/"), localePrefix, models);
+  if (!hit) return null;
+  const prefixed = localePrefix && hit.toPath !== `/${localePrefix}` && !hit.toPath.startsWith(`/${localePrefix}/`);
+  return { to: prefixed ? `/${localePrefix}${hit.toPath}` : hit.toPath, statusCode: hit.statusCode };
 }
 
 /** Resolve a path to a ContentItem, a standalone Page, or the localized home. */
@@ -89,6 +102,9 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
   if (!path || path.length === 0) return notFound();
   if (!isCmsDbEnabled()) return notFound();
 
+  // Set when no page matches but a redirect does; followed after the try, so
+  // the redirect isn't swallowed by its catch.
+  let moved = null;
   try {
     const connectDB = await siteConfig.getConnectDB();
     await connectDB();
@@ -163,8 +179,10 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
       }
     }
 
-    return notFound();
+    moved = await findRedirect(rest, localePrefix, models);
   } catch {
     return notFound();
   }
+  if (moved) (moved.statusCode === 302 ? redirect : permanentRedirect)(moved.to);
+  return notFound();
 }

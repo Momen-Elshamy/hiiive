@@ -21,3 +21,6 @@ pnpm-debug.log*
 
 # Third-party reference screenshots for the home redesign (local only, not ours to publish)
 docs/home-v2/refs/
+
+# CMS backups written by scripts/
+.cms-backups/

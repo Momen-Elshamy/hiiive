@@ -1,4 +1,4 @@
-// Server-safe Puck blocks for the Studio page. No "use client" — static markup
+// Server-safe Puck blocks for the AI Engineering page (/ai-engineering, once /studio). No "use client" — static markup
 // rendered by Puck's RSC <Render>. Uses the global design tokens (--hv-*,
 // --font-*) from app/globals.css so it matches the home design.
 import styles from "./studioBlocks.module.css";
@@ -12,10 +12,10 @@ function ArrowRight() {
 }
 
 /* ================================================================== */
-/* Studio · Hero                                                       */
+/* AI Engineering · Hero                                                       */
 /* ================================================================== */
 export const StudioHeroBlock = {
-  label: "Studio · Hero",
+  label: "AI Engineering · Hero",
   fields: {
     kicker: { type: "text" },
     title: { type: "textarea" },
@@ -26,10 +26,10 @@ export const StudioHeroBlock = {
     secondaryHref: { type: "text" },
   },
   defaultProps: {
-    kicker: "Hiiive Studio — services",
+    kicker: "Hiiive AI Engineering — services",
     title: "Tech services, built the AI-native way.",
     subtitle:
-      "From the software your team runs on to the funnel that fills it. One partner, working the way AI-native teams actually work — fast, measured, and owned by you.",
+      "From the first MVP to the software your team runs on. One partner, working the way AI-native teams actually work — fast, measured, and owned by you.",
     primaryLabel: "Book a call",
     primaryHref: "https://calendly.com/hiiive/get-to-know",
     secondaryLabel: "See our work",
@@ -62,10 +62,10 @@ export const StudioHeroBlock = {
 };
 
 /* ================================================================== */
-/* Studio · Services (anchored sections)                               */
+/* AI Engineering · Services (anchored sections)                               */
 /* ================================================================== */
 export const StudioServicesBlock = {
-  label: "Studio · Services",
+  label: "AI Engineering · Services",
   fields: {
     services: {
       type: "array",
@@ -98,17 +98,7 @@ export const StudioServicesBlock = {
         bullets: [{ text: "Product design & prototyping" }, { text: "Full-stack build" }, { text: "Launch & instrumentation" }],
       },
       {
-        anchorId: "seo", num: "03", name: "Organic visibility (SEO)",
-        lead: "AI-native search: built to be found by people and by models. Technical foundations plus content that compounds.",
-        bullets: [{ text: "Technical SEO & structure" }, { text: "AI-search readiness" }, { text: "Content architecture" }],
-      },
-      {
-        anchorId: "funnels", num: "04", name: "Digital presence & funnels",
-        lead: "Sites, funnels and conversion structure that turn traffic into pipeline — measured against one number you care about.",
-        bullets: [{ text: "Marketing sites" }, { text: "Conversion funnels" }, { text: "Analytics & experimentation" }],
-      },
-      {
-        anchorId: "consulting", num: "05", name: "AI transformation & consulting",
+        anchorId: "consulting", num: "03", name: "AI transformation & consulting",
         lead: "Audit, roadmap and enablement — so the change actually sticks. We leave your team able to run it without us.",
         bullets: [{ text: "AI opportunity audit" }, { text: "Roadmap & enablement" }, { text: "Team training" }],
       },

@@ -42,9 +42,7 @@ const stats = [
 const services = [
   { num: "01", name: "AI software & internal tools", desc: "Custom systems and agents that take real work off your team." },
   { num: "02", name: "MVP design & build", desc: "From idea to a product in users' hands — weeks, not quarters." },
-  { num: "03", name: "Organic visibility (SEO)", desc: "AI-native search: built to be found by people and by models." },
-  { num: "04", name: "Digital presence & funnels", desc: "Sites, funnels and conversion structure that turn traffic into pipeline." },
-  { num: "05", name: "AI transformation & consulting", desc: "Audit, roadmap and enablement — so the change actually sticks." },
+  { num: "03", name: "AI transformation & consulting", desc: "Audit, roadmap and enablement — so the change actually sticks." },
 ];
 
 const products = [
@@ -180,22 +178,21 @@ export default function HomePageFallback() {
               <h2 className={styles.sectionTitle}>We build with you. Then we keep building.</h2>
             </div>
             <p className={styles.pillarsNote}>
-              Studio embeds in one company's real operation. Lab turns what gets built there into a
-              product the next company can run on.
+              AI Engineering embeds in one company's real operation. The AI Lab turns what gets built
+              there into a product the next company can run on.
             </p>
           </Reveal>
           <Stagger className={styles.pillarRow}>
-            {/* Studio */}
+            {/* AI Engineering */}
             <StaggerItem className={styles.studioCard}>
               <div className={styles.kicker}>
                 <span className={styles.kickerBar} />
-                <span className={styles.cardTag}>Hiiive Studio — AI services</span>
+                <span className={styles.cardTag}>Hiiive AI Engineering — services</span>
               </div>
               <h3 className={styles.cardTitle}>Forward-deployed engineering.</h3>
               <p className={styles.cardLead}>
-                Our engineers work inside your team, on your real operations — from the agentic
-                systems your people run on to the funnel that fills them. In production, not in a
-                deck.
+                Our engineers work inside your team, on your real operations — from the first MVP to
+                the agentic systems your people run on. In production, not in a deck.
               </p>
               <div className={styles.serviceList}>
                 {services.map((s) => (
@@ -208,19 +205,19 @@ export default function HomePageFallback() {
                   </div>
                 ))}
               </div>
-              <a href="#work" className={styles.arrowLink}>Explore Studio <ArrowRight /></a>
+              <a href="/ai-engineering" className={styles.arrowLink}>Explore AI Engineering <ArrowRight /></a>
             </StaggerItem>
-            {/* Lab */}
+            {/* AI Lab */}
             <StaggerItem className={styles.labCard}>
               <div className={styles.labTop}>
                 <div className={styles.kicker}>
                   <span className={styles.kickerBar} />
-                  <span className={styles.cardTag}>Hiiive Lab — AI products</span>
+                  <span className={styles.cardTag}>Hiiive AI Lab — products</span>
                 </div>
                 <h3 className={styles.cardTitle}>Every engagement leaves a product.</h3>
                 <p className={styles.cardLead}>
-                  Lab is where the systems we build with partners become products in their own right
-                  — hardened, extended, and run for the next company with the same problem.
+                  The AI Lab is where the systems we build with partners become products in their own
+                  right — hardened, extended, and run for the next company with the same problem.
                 </p>
                 <div className={styles.productList}>
                   {products.map((p) => (
@@ -234,7 +231,7 @@ export default function HomePageFallback() {
                   ))}
                 </div>
               </div>
-              <a href="#work" className={`${styles.arrowLink} ${styles.labLink}`}>See the Lab <ArrowRight /></a>
+              <a href="/lab" className={`${styles.arrowLink} ${styles.labLink}`}>See the AI Lab <ArrowRight /></a>
             </StaggerItem>
           </Stagger>
         </div>

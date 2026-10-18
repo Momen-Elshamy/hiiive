@@ -7,9 +7,9 @@ const defaultColumns = [
    {
       heading: "AI Engineering",
       links: [
-         { label: "AI software", href: "/studio#ai-software" },
-         { label: "MVP build", href: "/studio/mvp-build" },
-         { label: "AI consulting", href: "/studio#consulting" },
+         { label: "AI software", href: "/ai-engineering#ai-software" },
+         { label: "MVP build", href: "/ai-engineering/mvp-build" },
+         { label: "AI consulting", href: "/ai-engineering#consulting" },
       ],
    },
    {

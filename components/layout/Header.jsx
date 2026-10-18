@@ -12,14 +12,14 @@ import { NavIcon } from "./navIcons";
 export const defaultNavItems = [
    {
       label: "AI Engineering",
-      href: "/studio",
+      href: "/ai-engineering",
       dropdown: [
-         { icon: "code", title: "AI software & internal tools", badge: "", description: "Custom systems and agents that take real work off your team.", href: "/studio#ai-software" },
-         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/studio/mvp-build" },
-         { icon: "sparkles", title: "AI transformation & consulting", badge: "", description: "Audit, roadmap and enablement — so the change actually sticks.", href: "/studio#consulting" },
+         { icon: "code", title: "AI software & internal tools", badge: "", description: "Custom systems and agents that take real work off your team.", href: "/ai-engineering#ai-software" },
+         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/ai-engineering/mvp-build" },
+         { icon: "sparkles", title: "AI transformation & consulting", badge: "", description: "Audit, roadmap and enablement — so the change actually sticks.", href: "/ai-engineering#consulting" },
       ],
       dropdownFooterLabel: "Explore AI Engineering",
-      dropdownFooterHref: "/studio",
+      dropdownFooterHref: "/ai-engineering",
    },
    { label: "Work", href: "/work" },
    {

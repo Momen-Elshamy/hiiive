@@ -135,7 +135,8 @@ All images are in `refs/`.
 - **Preloader** (`Preloader.jsx`): covers the page until the scene can draw, so it shows up complete. The bar follows the real steps (fonts, the three.js chunk, building the scene, compiling every shader, the first frame) and creeps on while one runs; then the hero rises in. It gives up after 12 s and lets a late scene fade in by itself.
 - **Review a moment (dev only):** `/home-v2?s=5.2` pins the story at 5.2 screens; `/home-v2/factory` is the factory look-dev page.
 - **Buttons:** one style for the night pages and the night header, in `components/ui/buttons.module.css`: a 4px rectangle like the rest of the site, primary light on night, secondary an outline.
-- **Nav:** AI Engineering (the three AI services, still under `/studio`) and AI Lab (Dvision, Spoky, Komplyo). The live nav and footer are CMS globals (en + de); the code defaults in `Header.jsx` and `FooterBlock.jsx` match them.
+- **Nav:** AI Engineering (the three AI services) and AI Lab (Dvision, Spoky, Komplyo). The live nav and footer are CMS globals (en + de); the code defaults in `Header.jsx` and `FooterBlock.jsx` match them. The SEO and funnels pages are unpublished.
+- **/studio → /ai-engineering:** the catch-all page now follows CMS redirects (Admin → Redirects). Once this code is deployed, run `node scripts/move-studio-to-ai-engineering.mjs --write` once: it renames the slugs, adds the 301s and repoints every /studio link (dry run without `--write`).
 - **AI Lab pages:** `/lab` and `/lab/<product>` (also under `/de/...`, English copy for now), all from `components/pages/Lab/products.js`. Dvision was called Content OS before.
 - **Mobile:** fewer particles, no AO, the factory framed in the top half with the copy at the bottom; only the active station's text shows.
 - **Google Flow (not needed so far):** images for posters, case photos and a reduced-motion fallback.

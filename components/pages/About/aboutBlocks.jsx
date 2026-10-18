@@ -115,16 +115,16 @@ export const AboutHeroBlock = {
 /* 2. Flywheel — dark section with infinity-loop graphic               */
 /* ================================================================== */
 const FLYWHEEL_D = {
-  kicker: "Our flywheel — learn in the Lab, sell in the Studio",
+  kicker: "Our flywheel — learn in the AI Lab, deliver in AI Engineering",
   title: "We learn on our\nown products.\nYou get what works.",
-  lead: "Every playbook the Studio brings into your company was tested on our own products first — our money, our risk, our scars. By the time it reaches you, it isn't theory anymore. It's knowledge that survived.",
+  lead: "Every playbook AI Engineering brings into your company was tested on our own products first — our money, our risk, our scars. By the time it reaches you, it isn't theory anymore. It's knowledge that survived.",
   quote: "Nothing we recommend is untested. By the time an idea reaches a client, it has already earned its keep in our own P&L.",
   flowTop: "Lessons · Playbooks · Scars",
   flowBottom: "Real-world feedback flows back",
-  labNum: "02 — Lab",
+  labNum: "02 — AI Lab",
   labTitle: "Our own\nproducts",
-  labSub: "Spoky · Komplyo\nour money, our risk",
-  studioNum: "01 — Studio",
+  labSub: "Dvision · Spoky · Komplyo\nour money, our risk",
+  studioNum: "01 — AI Engineering",
   studioTitle: "Your\ncompany",
   studioSub: "forward-deployed engineers\nknowledge, running live",
   loopImage: "/img/about-flywheel.png",
