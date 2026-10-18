@@ -1,4 +1,6 @@
 import HomeStory from "@/components/pages/HomeV2/HomeStory";
+import HomeOutputs from "@/components/pages/HomeV2/HomeOutputs";
+import HomeCases from "@/components/pages/HomeV2/HomeCases";
 
 // Prototype route for the new home story. Kept out of search until it replaces "/".
 export const metadata = {
@@ -7,5 +9,11 @@ export const metadata = {
 };
 
 export default function HomeV2Page() {
-  return <HomeStory />;
+  return (
+    <>
+      <HomeStory />
+      <HomeOutputs />
+      <HomeCases />
+    </>
+  );
 }

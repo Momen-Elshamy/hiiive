@@ -1,0 +1,77 @@
+/* Shared frame for the home v2 sections after the story: night background,
+   the 1280px content column, and the kicker + title + intro head. */
+
+.section {
+  position: relative;
+  z-index: 1;
+  background: var(--hv-night);
+  color: var(--hv-ink-rev);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1360px; /* 1280 content + 2×40 padding */
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.headCopy {
+  max-width: 620px;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--hv-soft-rev);
+}
+
+.kickerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--hv-accent);
+  flex-shrink: 0;
+}
+
+.title {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(34px, 3.8vw, 56px);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--hv-ink-rev);
+}
+
+.intro {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+}
+
+@media (max-width: 767px) {
+  .inner {
+    padding: 0 20px;
+  }
+
+  .head {
+    margin-bottom: 32px;
+  }
+}

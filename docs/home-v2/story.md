@@ -81,11 +81,27 @@ Over the final overview of the factory.
 
 ## After the story
 
-| Section | Style | Content |
-|---|---|---|
-| Products & services | Bento cards (ref 09): dark card, dot grid, one coloured glow, small UI mock or a WebM loop | SPOKY · Content OS · Komplyo + the 5 Studio services |
-| Cases | Photo cards (ref 10): desaturated photo, client logo top-left, result as the headline, carousel | −64% manual ticket handling · 7 wks to paid pilot · 3.2× organic sessions |
-| Final CTA + footer | Current footer | — |
+### 03 · What we ship (bento, ref 09)
+
+- **Headline:** Agents, products and services. All built on AI.
+- **Intro:** Everything that leaves the factory runs in production, inside real companies.
+- **Cards** (dark, dot grid, one coloured glow; each with a small live UI mock instead of an image):
+  - **AI software & internal tools** (big): an agent run log, "Runs inside your tools", **12+** internal tools shipped.
+  - **SaaS products · Lab:** Content OS (in production), Spoky (in validation), Komplyo (in build).
+  - **MVP design & build:** six-week track to a first release, **6 wks** median.
+  - **SEO & GEO:** Google · ChatGPT · Perplexity, **3.4×** organic sessions (Mindverse).
+  - **Digital presence & funnels:** visits → leads → calls → clients.
+  - **AI transformation & consulting:** audit → roadmap → enablement.
+
+### 04 · Proof (photo cards, ref 10)
+
+- **Headline:** Proof, not promises. (copy and numbers from the live /work page)
+- **Cards** in a carousel that runs to the screen edge: Mindverse (3.4×, drawn as a growth chart), ahead (2 wks, FIBO 2026 booth photo), Wavelr (8 wks, solar field photo), then a "Book a call" card.
+- **Images:** Google Flow was out of credits, so Mindverse has a chart instead of a photo and Wavelr uses a crop of its existing image without the baked-in logo. Swap in Flow photos once credits refresh.
+
+### Still to do
+
+- **Footer:** the current footer is light (paper); the new home needs a dark variant like the header.
 
 ---
 

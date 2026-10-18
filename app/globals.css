@@ -20,6 +20,10 @@
   --hv-hairline-rev: #272a33;
   --hv-pill-border: #33363f;
   --hv-night: #000000; /* home story stage, matches the three.js clear colour */
+  --hv-card-night: #0b0c0e; /* cards on the night background */
+  --hv-aurora-blue: #2a46c8; /* the story's aurora curtain colours, for card glows */
+  --hv-aurora-teal: #2aa3c9;
+  --hv-aurora-steel: #9fb4c8;
   --font-display: "Big Shoulders", "Big Shoulders Display", system-ui, sans-serif;
   --font-heading: "Poppins", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
