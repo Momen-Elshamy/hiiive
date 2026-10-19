@@ -11,10 +11,19 @@ import { seoPlugin } from "@premast/site-plugin-seo";
 import { uiPlugin } from "@premast/site-plugin-ui";
 import { i18nPlugin } from "@premast/site-plugin-i18n";
 import { symbolsPlugin } from "@premast/site-plugin-symbols";
+import { mediaPlugin } from "@premast/site-plugin-media";
+import { mcpPlugin } from "@premast/site-plugin-mcp";
 import { SeoScoreField, SearchIndexingField } from "@premast/site-plugin-seo/editor";
 import { buildPuckConfig } from "@premast/site-core/puck";
 
-const plugins = [seoPlugin(), uiPlugin(), i18nPlugin({ locales: ["en", "de"], defaultLocale: "en" }), symbolsPlugin()];
+const plugins = [
+  seoPlugin(),
+  uiPlugin(),
+  i18nPlugin({ locales: ["en", "de"], defaultLocale: "en" }),
+  symbolsPlugin(),
+  mediaPlugin(),
+  mcpPlugin(),
+];
 
 // Merge root fields from all plugins
 const rootFields = {};
@@ -34,6 +43,14 @@ for (const plugin of plugins) {
   if (plugin.categories) Object.assign(allCategories, plugin.categories);
 }
 
+// Collect custom field types registered by plugins.
+// Blocks can reference these by name (e.g. `{ type: "media" }`) and
+// the config builder rewrites them to Puck's `{ type: "custom", render }`.
+const fieldTypes = {};
+for (const plugin of plugins) {
+  if (plugin.fieldTypes) Object.assign(fieldTypes, plugin.fieldTypes);
+}
+
 // Custom field overrides (client-side enhanced fields)
 rootFields.noIndex = {
   type: "custom",
@@ -46,4 +63,4 @@ rootFields.seoScore = {
   render: SeoScoreField,
 };
 
-export const puckConfig = buildPuckConfig(allBlocks, allCategories, {}, rootFields);
+export const puckConfig = buildPuckConfig(allBlocks, allCategories, {}, rootFields, fieldTypes);

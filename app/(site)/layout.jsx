@@ -42,6 +42,13 @@ export default async function SiteLayout({ children }) {
       ]);
       headerData = parsePuckData(headerDoc?.content);
       footerData = parsePuckData(footerDoc?.content);
+
+      // Globals go through the same render hooks as pages, so a reusable
+      // component (symbols plugin) placed in the header or footer renders.
+      [headerData, footerData] = await Promise.all([
+        headerData ? siteConfig.runBeforePageRender(headerData, headerDoc) : null,
+        footerData ? siteConfig.runBeforePageRender(footerData, footerDoc) : null,
+      ]);
     } catch {
       /* DB offline — fallback to static components */
     }
