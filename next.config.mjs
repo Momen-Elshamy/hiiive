@@ -33,6 +33,8 @@ const nextConfig = {
     "@premast/site-plugin-ui",
     "@premast/site-plugin-i18n",
     "@premast/site-plugin-symbols",
+    "@premast/site-plugin-media",
+    "@premast/site-plugin-mcp",
   ],
   // Files under /video carry a content hash in their filename (see
   // hero-waves.<hash>.mp4), so a new clip ships as a new URL and `immutable`
