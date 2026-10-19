@@ -3,7 +3,10 @@ import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
 import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
-import { notFound } from "next/navigation";
+import { redirectLocale, redirectTarget } from "@/lib/redirects";
+import HomePage, { homeMetadata } from "@/components/pages/HomeV2/HomePage";
+import { resolveRedirect } from "@premast/site-core/services/resolve-redirect.js";
+import { notFound, permanentRedirect, redirect, unstable_rethrow } from "next/navigation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,6 +35,19 @@ function splitLocale(pathSegments) {
   return { localePrefix: null, rest: pathSegments };
 }
 
+/**
+ * For a path with nothing at it: follow a CMS redirect (Admin → Redirects, or
+ * one written when an editor renamed a page's or item's slug), else 404.
+ * Both end the render by throwing, as Next's redirect() and notFound() do.
+ */
+async function redirectOrNotFound(rest, localePrefix, models) {
+  const hit = await resolveRedirect("/" + rest.join("/"), redirectLocale(localePrefix), models);
+  if (!hit) notFound();
+  const to = redirectTarget(hit.toPath, localePrefix);
+  if (hit.statusCode === 302) redirect(to);
+  permanentRedirect(to);
+}
+
 /** Resolve a path to a ContentItem, a standalone Page, or the localized home. */
 async function resolveContent(pathSegments) {
   if (!isCmsDbEnabled()) return null;
@@ -43,11 +59,7 @@ async function resolveContent(pathSegments) {
 
   const locale = await resolveLocale(models);
   const { rest } = splitLocale(pathSegments);
-
-  // A bare locale prefix (e.g. /de) maps to the localized home page.
-  if (rest.length === 0) {
-    return findLocalized(Page, { slug: "home", published: true }, locale);
-  }
+  if (rest.length === 0) return null; // a bare prefix is the home page, not CMS content
 
   for (let i = rest.length - 1; i >= 1; i--) {
     const prefix = "/" + rest.slice(0, i).join("/");
@@ -65,10 +77,12 @@ async function resolveContent(pathSegments) {
 }
 
 export async function generateMetadata({ params }) {
-  if (!isCmsDbEnabled()) return {};
-
   const { path } = await params;
   if (!path || path.length === 0) return {};
+  const bare = splitLocale(path);
+  if (bare.localePrefix && bare.rest.length === 0) return homeMetadata(bare.localePrefix);
+  if (!isCmsDbEnabled()) return {};
+
   try {
     const doc = await resolveContent(path);
     if (doc) {
@@ -87,6 +101,9 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
   const { filter } = (await searchParams) ?? {};
 
   if (!path || path.length === 0) return notFound();
+  // A bare language prefix (/de) is the home page in that language.
+  const bare = splitLocale(path);
+  if (bare.localePrefix && bare.rest.length === 0) return <HomePage locale={bare.localePrefix} />;
   if (!isCmsDbEnabled()) return notFound();
 
   try {
@@ -97,23 +114,6 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
 
     const locale = await resolveLocale(models);
     const { localePrefix, rest } = splitLocale(path);
-
-    // Bare locale prefix (/de) -> localized home page.
-    if (localePrefix && rest.length === 0) {
-      const home = await findLocalized(Page, { slug: "home", published: true }, locale);
-      if (!home) return notFound();
-      const puckData = parsePuckData(home.content) ?? { root: {}, content: [] };
-      const finalData = await siteConfig.runBeforePageRender(puckData, home);
-      const jsonLd = puckData.root?.props?.structuredData;
-      return (
-        <>
-          {jsonLd && (
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-          )}
-          <Render config={siteConfig.puckConfig} data={finalData} />
-        </>
-      );
-    }
 
     // --- Try content type match first (on the locale-stripped path) ---
     for (let i = rest.length - 1; i >= 1; i--) {
@@ -127,7 +127,7 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
           { contentType: contentType._id, slug, published: true },
           locale,
         );
-        if (!item) return notFound();
+        if (!item) return await redirectOrNotFound(rest, localePrefix, models);
 
         const puckData = parsePuckData(item.content) ?? { root: {}, content: [] };
         const finalData = await siteConfig.runBeforePageRender(puckData, item);
@@ -163,8 +163,9 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
       }
     }
 
-    return notFound();
-  } catch {
+    return await redirectOrNotFound(rest, localePrefix, models);
+  } catch (error) {
+    unstable_rethrow(error); // let a redirect or 404 through
     return notFound();
   }
 }

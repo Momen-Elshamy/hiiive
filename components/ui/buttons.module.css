@@ -1,0 +1,61 @@
+/* The one button style for the night pages (home v2, the AI Lab pages and the
+   night header): a 4px rectangle, as on the rest of the site. Primary is the
+   inverse of the background (light on night); secondary is an outline.
+   Use as `${buttons.button} ${buttons.primary}`, plus `buttons.small` in the
+   header. */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.button svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--hv-accent);
+  outline-offset: 3px;
+}
+
+.small {
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
+.primary {
+  background: var(--hv-ink-rev);
+  border-color: var(--hv-ink-rev);
+  color: var(--hv-ink);
+}
+
+.primary:hover {
+  opacity: 0.88;
+  color: var(--hv-ink);
+}
+
+.secondary {
+  background: transparent;
+  border-color: var(--hv-pill-border);
+  color: var(--hv-ink-rev);
+}
+
+.secondary:hover {
+  border-color: var(--hv-ink-rev);
+  color: var(--hv-ink-rev);
+}

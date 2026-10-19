@@ -1,0 +1,150 @@
+/* Home v2 preloader: black like the stage, the wordmark, a fine bar with the
+   story's spark riding its tip, and the percentage. JS moves --p (0–1) on the
+   track and the phase in data-preloader (see Preloader.jsx). */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* over the site header */
+  display: grid;
+  place-items: center;
+  background: var(--hv-night);
+  color: var(--hv-ink-rev);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  /* Failsafe if the scripts never take over: lift anyway. */
+  animation: lift 0.8s ease 15s forwards;
+}
+
+.preloader[data-preloader="loading"] {
+  animation: none;
+}
+
+.preloader[data-preloader="done"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.7s ease 0.25s, visibility 0s linear 0.95s;
+}
+
+.inner {
+  --w: 240px; /* bar width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: appear 0.6s ease 0.1s backwards;
+}
+
+.preloader[data-preloader="done"] .inner {
+  opacity: 0;
+  transform: translate3d(0, -10px, 0);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.track {
+  position: relative;
+  width: var(--w);
+  height: 1px;
+  margin-top: 30px;
+  background: var(--hv-hairline-rev);
+}
+
+/* A trail of light that brightens to the brand yellow at its tip. */
+.fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--hv-accent));
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+}
+
+/* The story's spark. */
+.spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fffbe0;
+  box-shadow: 0 0 6px 1px var(--hv-accent);
+  transform: translate(calc(var(--p, 0) * var(--w) - 50%), -50%);
+}
+
+.spark::after {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hv-accent) 45%, transparent), transparent);
+  animation: breathe 1.4s ease-in-out infinite alternate;
+}
+
+.meta {
+  width: var(--w);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--hv-muted-rev);
+}
+
+.value {
+  color: var(--hv-ink-rev);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.55;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .inner {
+    --w: 200px;
+  }
+
+  .wordmark {
+    font-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner,
+  .spark::after {
+    animation: none;
+  }
+
+  .preloader[data-preloader="done"] .inner {
+    transform: none;
+  }
+}

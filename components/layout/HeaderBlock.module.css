@@ -73,7 +73,7 @@
 .headerInner {
   margin: 0 auto;
   display: flex;
-  max-width: 1440px;
+  max-width: 1360px; /* the pages' 1280 content column + 2×40 padding */
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
@@ -218,6 +218,29 @@
   height: 18px;
 }
 
+/* An AI Lab product's own mark: no box, in the text colour; on hover it
+   shows the product's brand colours (see navIcons.jsx). */
+.ddMark {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1b1d1e;
+}
+
+.ddMarkIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.ddItem:hover .ddMarkIcon,
+.ddItem:focus-visible .ddMarkIcon {
+  --mark-1: var(--mark-1-brand);
+  --mark-2: var(--mark-2-brand);
+}
+
 .ddBody {
   display: flex;
   flex-direction: column;
@@ -300,8 +323,9 @@
   flex-direction: column;
 }
 
+/* Indented under its group's link (which sits 24px in). */
 .mobileSubLink {
-  padding: 8px 0 8px 16px;
+  padding: 8px 24px 8px 40px;
   font-size: 15px;
   color: #4a4e55;
   text-decoration: none;
@@ -449,7 +473,7 @@
 }
 
 .mobileLang {
-  padding: 14px 0 4px;
+  padding: 14px 24px 4px;
   font-size: 15px;
 }
 
@@ -463,5 +487,147 @@
   }
   .hamburger {
     display: flex;
+  }
+}
+
+/* ==========================================================================
+   Night variant (new home story). Transparent over the dark stage, dark glass
+   once the page scrolls. Its CTAs use the shared night button
+   (components/ui/buttons.module.css).
+   ========================================================================== */
+.night {
+  background: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.headerOverlay .headerRoot.night {
+  box-shadow: none;
+}
+
+.headerOverlay .headerRoot.nightGlass {
+  background: color-mix(in srgb, var(--hv-night) 62%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 1px 0 var(--hv-hairline-rev);
+}
+
+.night .headerInner {
+  padding: 18px 40px;
+}
+
+.night .headerLogo {
+  font-size: 30px;
+  color: var(--hv-ink-rev);
+}
+
+.night .headerNavLink {
+  color: var(--hv-soft-rev);
+}
+
+.night .headerNavLink:hover,
+.night .navItem:hover .headerNavLink {
+  color: var(--hv-ink-rev);
+}
+
+.night .headerEmail {
+  display: none;
+}
+
+.night .langLink,
+.nightWrap .langLink {
+  color: var(--hv-muted-rev);
+}
+
+.night .langLink:hover,
+.night .langActive,
+.nightWrap .langLink:hover,
+.nightWrap .langActive {
+  color: var(--hv-ink-rev);
+}
+
+.night .langSep,
+.nightWrap .langSep {
+  color: var(--hv-pill-border);
+}
+
+.night .dropdown {
+  background: color-mix(in srgb, var(--hv-ink) 94%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-color: var(--hv-hairline-rev);
+  box-shadow: 0 24px 60px -12px color-mix(in srgb, var(--hv-night) 60%, transparent);
+}
+
+.night .ddItem:hover {
+  background: color-mix(in srgb, var(--hv-ink-rev) 6%, transparent);
+}
+
+.night .ddIconBox {
+  background: var(--hv-hairline-rev);
+  color: var(--hv-accent);
+}
+
+.night .ddItem:hover .ddIconBox {
+  background: var(--hv-accent);
+  color: var(--hv-ink);
+}
+
+.night .ddMark {
+  color: var(--hv-ink-rev);
+}
+
+.night .ddTitle {
+  color: var(--hv-ink-rev);
+}
+
+.night .ddBadge {
+  border-color: var(--hv-pill-border);
+  color: var(--hv-soft-rev);
+}
+
+.night .ddDesc {
+  color: var(--hv-muted-rev);
+}
+
+.night .ddItem:hover .ddDesc {
+  color: var(--hv-soft-rev);
+}
+
+.night .ddFooter {
+  border-top-color: var(--hv-hairline-rev);
+  color: var(--hv-ink-rev);
+}
+
+.night .hamburger span {
+  background: var(--hv-ink-rev);
+}
+
+.nightWrap .mobileMenu {
+  background: color-mix(in srgb, var(--hv-night) 92%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top-color: var(--hv-hairline-rev);
+}
+
+.nightWrap .mobileMenuLink {
+  color: var(--hv-soft-rev);
+}
+
+.nightWrap .mobileMenuLink:hover {
+  color: var(--hv-ink-rev);
+  background: color-mix(in srgb, var(--hv-ink-rev) 4%, transparent);
+}
+
+.nightWrap .mobileSubLink {
+  color: var(--hv-muted-rev);
+}
+
+.mobileCtaNight {
+  margin: 0.5rem 24px 0;
+}
+
+@media (max-width: 900px) {
+  .night .headerInner {
+    padding: 14px 20px;
   }
 }

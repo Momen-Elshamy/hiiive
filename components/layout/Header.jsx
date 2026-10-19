@@ -1,25 +1,40 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import buttons from "@/components/ui/buttons.module.css";
+import { labProducts } from "@/components/pages/Lab/products";
 import styles from "./HeaderBlock.module.css";
 import LangSwitcher from "./LangSwitcher";
-import { NavIcon } from "./navIcons";
+import { NavIcon, isMark } from "./navIcons";
 
+// The fallback nav (and the CMS block's defaults). The live nav is edited in
+// the CMS: Admin → Globals → Header, in each language.
 export const defaultNavItems = [
    {
-      label: "Studio",
-      href: "/studio",
+      label: "AI Engineering",
+      href: "/ai-engineering",
       dropdown: [
-         { icon: "code", title: "AI software & internal tools", badge: "", description: "Custom systems and agents that take real work off your team.", href: "/studio#ai-software" },
-         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/studio#mvp" },
-         { icon: "search", title: "Organic visibility (SEO)", badge: "", description: "AI-native search: built to be found by people and by models.", href: "/studio#seo" },
-         { icon: "funnel", title: "Digital presence & funnels", badge: "", description: "Sites, funnels and conversion structure that turn traffic into pipeline.", href: "/studio#funnels" },
-         { icon: "sparkles", title: "AI transformation & consulting", badge: "", description: "Audit, roadmap and enablement — so the change actually sticks.", href: "/studio#consulting" },
+         { icon: "code", title: "AI software & internal tools", badge: "", description: "Custom systems and agents that take real work off your team.", href: "/ai-engineering#ai-software" },
+         { icon: "rocket", title: "MVP design & build", badge: "", description: "From idea to a product in users' hands — weeks, not quarters.", href: "/ai-engineering/mvp-build" },
+         { icon: "sparkles", title: "AI transformation & consulting", badge: "", description: "Audit, roadmap and enablement — so the change actually sticks.", href: "/ai-engineering#consulting" },
       ],
-      dropdownFooterLabel: "Explore Studio",
-      dropdownFooterHref: "/studio",
+      dropdownFooterLabel: "Explore AI Engineering",
+      dropdownFooterHref: "/ai-engineering",
    },
-   { label: "Lab", href: "/lab" },
+   { label: "Work", href: "/work" },
+   {
+      label: "AI Lab",
+      href: "/lab",
+      dropdown: labProducts("en").map((product) => ({
+         icon: product.icon, // the product's own mark
+         title: product.name,
+         badge: "",
+         description: product.menu,
+         href: `/lab/${product.slug}`,
+      })),
+      dropdownFooterLabel: "Explore AI Lab",
+      dropdownFooterHref: "/lab",
+   },
    { label: "About", href: "/about" },
 ];
 
@@ -31,24 +46,36 @@ function Caret() {
    );
 }
 
+// A link to an AI Lab product (/lab/<slug>, any language) always shows that
+// product's own mark, whatever icon the CMS item was given.
+const LAB_LINK = /\/lab\/([a-z0-9-]+)\/?(?:[?#].*)?$/;
+function iconFor(d) {
+   const slug = (d.href || "").match(LAB_LINK)?.[1];
+   return slug && isMark(slug) ? slug : d.icon;
+}
+
 function Dropdown({ item }) {
    return (
       <div className={styles.dropdownWrap}>
          <div className={styles.dropdown} role="menu">
-            {item.dropdown.map((d, j) => (
-               <a key={j} href={d.href || "/"} className={styles.ddItem} role="menuitem">
-                  <span className={styles.ddIconBox}>
-                     <NavIcon name={d.icon} className={styles.ddIcon} />
-                  </span>
-                  <span className={styles.ddBody}>
-                     <span className={styles.ddTitleRow}>
-                        <span className={styles.ddTitle}>{d.title}</span>
-                        {d.badge ? <span className={styles.ddBadge}>{d.badge}</span> : null}
+            {item.dropdown.map((d, j) => {
+               const icon = iconFor(d);
+               return (
+                  <a key={j} href={d.href || "/"} className={styles.ddItem} role="menuitem">
+                     {/* A product's mark stands on its own; line icons sit in a box. */}
+                     <span className={isMark(icon) ? styles.ddMark : styles.ddIconBox}>
+                        <NavIcon name={icon} className={isMark(icon) ? styles.ddMarkIcon : styles.ddIcon} />
                      </span>
-                     {d.description ? <span className={styles.ddDesc}>{d.description}</span> : null}
-                  </span>
-               </a>
-            ))}
+                     <span className={styles.ddBody}>
+                        <span className={styles.ddTitleRow}>
+                           <span className={styles.ddTitle}>{d.title}</span>
+                           {d.badge ? <span className={styles.ddBadge}>{d.badge}</span> : null}
+                        </span>
+                        {d.description ? <span className={styles.ddDesc}>{d.description}</span> : null}
+                     </span>
+                  </a>
+               );
+            })}
             {item.dropdownFooterLabel ? (
                <a href={item.dropdownFooterHref || "/"} className={styles.ddFooter}>
                   <span>{item.dropdownFooterLabel}</span>
@@ -68,27 +95,33 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
    const [menuOpen, setMenuOpen] = useState(false);
    const closeMenu = () => setMenuOpen(false);
 
-   // The home page opens on the dark hero, so the nav sits transparently on top
-   // of it and only fades to the light paper bar once the user scrolls past it.
-   const pathname = usePathname();
-   const isHome = pathname === "/" || /^\/(en|de)\/?$/.test(pathname || "");
+   // The new pages (the home story and the AI Lab) stay dark from top to
+   // bottom, so their nav does too: it floats transparently over the page at
+   // the top and turns to dark glass once the page scrolls.
+   const pathname = usePathname() || "/";
+   const isHome = pathname === "/" || /^\/(?:en|de)\/?$/.test(pathname);
+   const isNight = isHome || /^\/(?:(?:en|de)\/)?(?:home-v2|lab)(?:\/.*)?$/.test(pathname);
    const [scrolled, setScrolled] = useState(false);
 
    useEffect(() => {
-      if (!isHome) return undefined;
+      if (!isNight) return undefined;
       const onScroll = () => setScrolled(window.scrollY > 24);
       onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       return () => window.removeEventListener("scroll", onScroll);
-   }, [isHome]);
+   }, [isNight]);
 
-   const onDark = isHome && !scrolled && !menuOpen;
+   const rootClass = [
+      styles.headerRoot,
+      isNight ? styles.night : "",
+      isNight && (scrolled || menuOpen) ? styles.nightGlass : "",
+   ].join(" ");
 
    const hasDropdown = (item) => Array.isArray(item.dropdown) && item.dropdown.length > 0;
 
    return (
-      <div className={isHome ? styles.headerOverlay : undefined}>
-         <header className={`${styles.headerRoot} ${onDark ? styles.onDark : ""}`}>
+      <div className={isNight ? `${styles.headerOverlay} ${styles.nightWrap}` : undefined}>
+         <header className={rootClass}>
             <div className={styles.headerInner}>
                <div className={styles.headerLeft}>
                   <a href="/" className={styles.headerLogo}>
@@ -118,7 +151,7 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
                      {email}
                   </a>
                   <LangSwitcher />
-                  <a href={ctaLink} className={styles.headerCta}>
+                  <a href={ctaLink} className={isNight ? `${buttons.button} ${buttons.primary} ${buttons.small}` : styles.headerCta}>
                      {cta}
                   </a>
                </div>
@@ -157,7 +190,11 @@ export default function Header({ logoText, navItems, contactEmail, ctaLabel, cta
                </div>
             ))}
             <LangSwitcher className={styles.mobileLang} />
-            <a href={ctaLink} onClick={closeMenu} className={styles.mobileMenuCta}>
+            <a
+               href={ctaLink}
+               onClick={closeMenu}
+               className={isNight ? `${buttons.button} ${buttons.primary} ${styles.mobileCtaNight}` : styles.mobileMenuCta}
+            >
                {cta}
             </a>
          </nav>

@@ -147,7 +147,7 @@ export const baseCategories = {
       defaultExpanded: true,
    },
    studio: {
-      title: "Studio",
+      title: "AI Engineering",
       components: ["StudioHeroBlock", "StudioServicesBlock"],
       defaultExpanded: true,
    },
@@ -160,15 +160,15 @@ export const baseCategories = {
       components: ["ToolHeroBlock", "EstimatorBlock", "ToolMethodBlock"],
    },
    "studio-mvp": {
-      title: "Studio · MVP Build",
+      title: "AI Engineering · MVP Build",
       components: ["MvpHeroBlock", "MvpProblemBlock", "MvpSprintBlock", "MvpCompareBlock", "MvpAllInBlock"],
    },
    "studio-organic-visibility": {
-      title: "Studio · Organic Visibility",
+      title: "Unpublished · Organic Visibility",
       components: ["OvHeroBlock", "OvProblemBlock", "OvSystemBlock", "OvPhasesBlock"],
    },
    "studio-digital-presence": {
-      title: "Studio · Digital Presence",
+      title: "Unpublished · Digital Presence",
       components: [
          "DpHeroBlock",
          "DpProblemBlock",

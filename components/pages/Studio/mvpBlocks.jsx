@@ -1,4 +1,4 @@
-// Server-safe Puck blocks for the Studio / MVP Build landing page (Pencil
+// Server-safe Puck blocks for the AI Engineering / MVP Build landing page (Pencil
 // node sHYRl). Complex graphics are Pencil-exported assets in /public/img;
 // all copy is editable. Reuses HomeClientsBlock, DpHowBlock, DpFeatureBlock,
 // DpPackagesBlock, DpFaqBlock and HomeCtaBlock for the shared sections.
@@ -28,7 +28,7 @@ const lines = (t) =>
 /* 1. Hero + live-build showcase                                       */
 /* ================================================================== */
 const HERO_D = {
-  crumbParent: "Studio", crumbCurrent: "MVP Build",
+  crumbParent: "AI Engineering", crumbCurrent: "MVP Build",
   kicker: "Service 01 — MVP build",
   headline: "From idea to\na working MVP\nin 3 weeks.",
   subtitle: "Custom AI-powered MVP development for non-technical founders, startups and growing teams. One partner from strategy to launch — no hiring, no agency overhead.",

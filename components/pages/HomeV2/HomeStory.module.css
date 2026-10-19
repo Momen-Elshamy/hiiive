@@ -1,0 +1,463 @@
+/* Home v2 — the scroll story: one tall section, one sticky stage, the
+   three.js canvas fills the stage and the copy floats over it. The height is
+   the scroll travel in homeTimeline.js (SCREENS.end) plus one screen. */
+
+.story {
+  position: relative;
+  height: 1270vh;
+  background: var(--hv-night);
+  color: var(--hv-ink-rev);
+  font-family: var(--font-body);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.stage[data-ready="true"] .canvas {
+  opacity: 1;
+}
+
+/* Behind the preloader the scene shows at once; the canvas only fades in when
+   the scene comes in after the preloader has stopped waiting for it. */
+.story:has([data-preloader="loading"]) .canvas {
+  transition: none;
+}
+
+/* No WebGL: keep a calm glow so the copy still has a backdrop. */
+.stage[data-fallback="true"] {
+  background: radial-gradient(120% 70% at 50% 110%, var(--theme-accent-muted), transparent 60%);
+}
+
+/* Keeps the left copy column readable over the factory (faded in from JS). */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hv-night) 82%, transparent) 0%, color-mix(in srgb, var(--hv-night) 45%, transparent) 30%, transparent 48%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Shared kicker ------------------------------------------------------------ */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hv-soft-rev);
+}
+
+.kickerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--hv-accent);
+  flex-shrink: 0;
+}
+
+/* Scene 1 — hero ----------------------------------------------------------- */
+.hero {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20vh 24px 0;
+  isolation: isolate;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* Soft shade behind the copy so it reads over the brightest aurora bands. */
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14vh;
+  width: min(1100px, 100%);
+  height: 62vh;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hv-night) 72%, transparent), transparent);
+  z-index: -1;
+}
+
+/* Entrance: while the preloader covers the page the hero's lines wait
+   (hidden at once); when it lifts they rise in one after another, the scroll
+   hint last. */
+.hero > *,
+.hint > * {
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(0.35s + var(--i, 0) * 0.08s);
+}
+
+.hero > :nth-child(2) {
+  --i: 1;
+}
+
+.hero > :nth-child(3) {
+  --i: 2;
+}
+
+.hero > :nth-child(4) {
+  --i: 3;
+}
+
+.hero > :nth-child(5) {
+  --i: 4;
+}
+
+.hint > * {
+  --i: 7;
+}
+
+.story:has([data-preloader="loading"]) .hero > *,
+.story:has([data-preloader="loading"]) .hint > * {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: none;
+}
+
+.headline {
+  margin-top: 22px;
+  max-width: 1100px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(38px, 4.6vw, 70px);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--hv-ink-rev);
+}
+
+.headlineAccent {
+  display: block;
+  background: linear-gradient(90deg, var(--hv-accent), var(--hv-ink-rev));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sub {
+  margin-top: 22px;
+  max-width: 560px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+}
+
+.ctaRow {
+  margin-top: 32px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.ctaRowStart {
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+
+.caps {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+}
+
+.cap {
+  padding: 6px 12px;
+  border: 1px solid var(--hv-hairline-rev);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: var(--hv-soft-rev);
+  background: color-mix(in srgb, var(--hv-night) 55%, transparent);
+}
+
+/* Chapter copy: the spark, the factory (with its stepper), the closing CTA - */
+.chapter {
+  position: absolute;
+  top: 16vh;
+  left: max(40px, calc((100% - 1280px) / 2));
+  max-width: 440px;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+.chapterTitle {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(30px, 2.9vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--hv-ink-rev);
+}
+
+.chapterBody {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+}
+
+/* Factory stepper ------------------------------------------------------------- */
+.steps {
+  margin-top: 32px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--hv-hairline-rev);
+}
+
+.step {
+  position: relative;
+  padding: 10px 0 10px 20px;
+}
+
+/* The active station gets a yellow tick on the rail. */
+.step::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 12px;
+  width: 2px;
+  height: 18px;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.stepActive::before {
+  background: var(--hv-accent);
+}
+
+.stepButton {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stepNumber {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-muted-rev);
+  transition: color 0.3s ease;
+}
+
+.stepActive .stepNumber {
+  color: var(--hv-accent);
+}
+
+.stepActive .stepTitle,
+.stepButton:hover .stepTitle {
+  color: var(--hv-ink-rev);
+}
+
+.stepBody {
+  max-height: 0;
+  overflow: hidden;
+  margin-left: 30px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--hv-soft-rev);
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease;
+}
+
+.stepActive .stepBody {
+  max-height: 120px;
+  margin-top: 6px;
+  opacity: 1;
+}
+
+/* + checkpoints pinned to the stations (moved every frame from JS) ---------- */
+.pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform;
+}
+
+.checkpoint {
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+
+.plus {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--hv-ink-rev);
+  color: var(--hv-ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--hv-night) 55%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.pinActive .plus {
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--hv-accent) 35%, transparent),
+    0 0 24px 4px color-mix(in srgb, var(--hv-accent) 25%, transparent);
+}
+
+.checkpoint:hover .plus,
+.plus:focus-visible {
+  transform: rotate(45deg);
+  outline: none;
+}
+
+.card {
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--hv-hairline-rev);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--hv-ink) 90%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translate(-6px, -50%);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.checkpoint:hover .card,
+.checkpoint:focus-within .card {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.cardStep {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: var(--hv-accent);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hv-ink-rev);
+}
+
+.cardBody {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--hv-soft-rev);
+}
+
+/* Scroll hint ---------------------------------------------------------------- */
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--hv-muted-rev);
+}
+
+.hintLine {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(var(--hv-muted-rev), transparent);
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding-top: 16vh;
+  }
+
+  .chapter {
+    top: auto;
+    bottom: 8vh;
+    left: 20px;
+    right: 20px;
+  }
+
+  /* Dark fade behind the copy so it reads over the scene. */
+  .chapter::before {
+    content: "";
+    position: absolute;
+    inset: -56px -20px -8vh;
+    background: linear-gradient(to top, var(--hv-night) 55%, transparent);
+    z-index: -1;
+  }
+
+  .chapterTitle {
+    font-size: 26px;
+  }
+
+  .shade,
+  .card {
+    display: none;
+  }
+
+  /* Phones show only the station being powered on. */
+  .steps {
+    margin-top: 18px;
+  }
+
+  .step:not(.stepActive) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story:has([data-preloader="loading"]) .hero > *,
+  .story:has([data-preloader="loading"]) .hint > * {
+    transform: none;
+  }
+}

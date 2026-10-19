@@ -225,7 +225,7 @@ export const HomeStatsBlock = {
 };
 
 /* ================================================================== */
-/* 4. Pillars (Studio + Lab)                                          */
+/* 4. Pillars (AI Engineering + AI Lab)                                          */
 /* ================================================================== */
 export const HomePillarsBlock = {
   label: "Home · Pillars",
@@ -267,29 +267,27 @@ export const HomePillarsBlock = {
   defaultProps: {
     kicker: "What HIIIVE is",
     title: "We build with you. Then we keep building.",
-    note: "Studio embeds in one company's real operation. Lab turns what gets built there into a product the next company can run on.",
-    studioTag: "Hiiive Studio — AI services",
+    note: "AI Engineering embeds in one company's real operation. The AI Lab turns what gets built there into a product the next company can run on.",
+    studioTag: "Hiiive AI Engineering — services",
     studioTitle: "Forward-deployed engineering.",
-    studioLead: "Our engineers work inside your team, on your real operations — from the agentic systems your people run on to the funnel that fills them. In production, not in a deck.",
+    studioLead: "Our engineers work inside your team, on your real operations — from the first MVP to the agentic systems your people run on. In production, not in a deck.",
     services: [
       { num: "01", name: "AI software & internal tools", desc: "Custom systems and agents that take real work off your team." },
       { num: "02", name: "MVP design & build", desc: "From idea to a product in users' hands — weeks, not quarters." },
-      { num: "03", name: "Organic visibility (SEO)", desc: "AI-native search: built to be found by people and by models." },
-      { num: "04", name: "Digital presence & funnels", desc: "Sites, funnels and conversion structure that turn traffic into pipeline." },
-      { num: "05", name: "AI transformation & consulting", desc: "Audit, roadmap and enablement — so the change actually sticks." },
+      { num: "03", name: "AI transformation & consulting", desc: "Audit, roadmap and enablement — so the change actually sticks." },
     ],
-    studioLinkLabel: "Explore Studio",
-    studioLinkHref: "#work",
-    labTag: "Hiiive Lab — AI products",
+    studioLinkLabel: "Explore AI Engineering",
+    studioLinkHref: "/ai-engineering",
+    labTag: "Hiiive AI Lab — products",
     labTitle: "Every engagement leaves a product.",
-    labLead: "Lab is where the systems we build with partners become products in their own right — hardened, extended, and run for the next company with the same problem.",
+    labLead: "The AI Lab is where the systems we build with partners become products in their own right — hardened, extended, and run for the next company with the same problem.",
     products: [
       { name: "SPOKY", desc: "Validating with real users", status: "In validation" },
-      { name: "CONTENT OS", desc: "Agentic content operations, in daily use", status: "In production" },
+      { name: "DVISION", desc: "Agentic content operations, in daily use", status: "In production" },
       { name: "KOMPLYO", desc: "Compliance workflows, automated", status: "In build" },
     ],
-    labLinkLabel: "See the Lab",
-    labLinkHref: "#work",
+    labLinkLabel: "See the AI Lab",
+    labLinkHref: "/lab",
   },
   render: (p) => (
     <section id="approach" className={styles.pillars}>
