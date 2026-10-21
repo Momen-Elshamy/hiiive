@@ -35,7 +35,7 @@ const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 
 let areaLightsReady = false;
 
-export function createHomeScene(canvas, { spark = "yellow", reducedMotion = false } = {}) {
+export function createHomeScene(canvas, { spark = "yellow", reducedMotion = false, onCleared } = {}) {
   if (!areaLightsReady) {
     RectAreaLightUniformsLib.init();
     areaLightsReady = true;
@@ -56,6 +56,9 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
   renderer.setClearColor(0x000000, 1);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  // Drawn by hand in render(): once a frame, only while the factory is lit
+  // (not again for the AO pass, and not while the pattern plays).
+  renderer.shadowMap.autoUpdate = false;
   renderer.toneMapping = THREE.NeutralToneMapping; // keeps the brand yellow saturated
   renderer.toneMappingExposure = 1.0;
 
@@ -123,6 +126,11 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
   const grain = new ShaderPass(GrainShader);
   composer.addPass(grain);
 
+  // The caller only draws while something moves, so it hears when the canvas
+  // has lost its picture: after a resize, or once a lost WebGL context is back.
+  const cleared = () => onCleared?.();
+  canvas.addEventListener("webglcontextrestored", cleared);
+
   let width = 1;
   let height = 1;
   let shot = null; // the factory's framing, sized to the viewport
@@ -136,6 +144,7 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     gtao.setSize(width * dpr, height * dpr);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    cleared();
   };
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
@@ -225,9 +234,11 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     bloom.radius = lerp(STORY_BLOOM.radius, FACTORY_BLOOM.radius, zoom);
     bloom.threshold = lerp(STORY_BLOOM.threshold, FACTORY_BLOOM.threshold, zoom);
     gtao.enabled = !small && zoom > 0.3;
+    grain.enabled = zoom > 0; // no grain or vignette inside the pattern
     grain.uniforms.uGrain.value = 0.035 * zoom;
     grain.uniforms.uVignette.value = 0.45 * zoom;
     grain.uniforms.uTime.value = time;
+    renderer.shadowMap.needsUpdate = factory.group.visible && sun.intensity > 0;
     composer.render();
 
     factory.checkpoints.forEach((checkpoint, i) => {
@@ -256,6 +267,7 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
 
   function dispose() {
     observer.disconnect();
+    canvas.removeEventListener("webglcontextrestored", cleared);
     story.dispose();
     factory.dispose();
     environment.dispose();
