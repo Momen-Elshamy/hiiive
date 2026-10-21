@@ -15,6 +15,14 @@ const LOAD_TIMEOUT = 12000;
 
 const NO_POINTER = { x: 0, y: 0 };
 
+// Frames are only drawn while something moves: the scroll or the pointer
+// easing in (at the display's rate), and the scene's own slow motion for a
+// while after the last input (at 30 fps). Then the loop stops until the next
+// scroll, pointer move or resize, so a page left open costs nothing.
+const AWAKE = 4000; // ms the scene keeps moving after the last input
+const INTRO = 6000; // ms it moves once it first shows, while the preloader lifts
+const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own motion runs
+
 function Kicker({ children }) {
   return (
     <div className={styles.kicker}>
@@ -61,12 +69,17 @@ export default function HomeStory({ copy, preloader }) {
     const pinned = process.env.NODE_ENV !== "production" ? parseFloat(params.get("s")) : NaN;
 
     let scene = null;
-    let raf = 0;
+    let raf = 0; // 0 while the loop is stopped
     let visible = true;
     let disposed = false;
     let target = Number.isFinite(pinned) ? pinned : 0;
     let current = target;
     let shown = 0;
+    let dirty = true; // something changed that is not drawn yet
+    let awake = 0; // the scene's own motion runs until then (ms)
+    let last = 0; // the previous tick (ms), 0 once the loop has stopped
+    let drawn = -Infinity; // when the last frame was drawn (ms)
+    let clock = 0; // the scene's time (s); it stands still while the loop does
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
     const reach = (value) => {
       loaded.current = Math.max(loaded.current, value);
@@ -87,19 +100,42 @@ export default function HomeStory({ copy, preloader }) {
     const overCopy = ({ x, y }) =>
       x < 20 || x > window.innerWidth - 20 || y < 84 || (zone.phone ? y > zone.top : x < zone.right && y < zone.bottom);
 
+    // Asks for a frame and lets the scene move for `ms` more, starting the loop
+    // if it has stopped; it stops by itself once nothing moves.
+    const wake = (ms = AWAKE) => {
+      dirty = true;
+      awake = Math.max(awake, performance.now() + ms);
+      if (!raf && visible && !document.hidden && !disposed) raf = requestAnimationFrame(tick);
+    };
+
     const readScroll = () => {
       if (Number.isFinite(pinned)) return;
       const rect = section.getBoundingClientRect();
       const travel = rect.height - window.innerHeight;
       target = travel > 0 ? clamp01(-rect.top / travel) * SCREENS.end : 0;
     };
+    const onScroll = () => {
+      readScroll();
+      wake();
+    };
     const onResize = () => {
       readScroll();
       measureCopy();
+      wake();
     };
     const onPointer = (e) => {
       pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.ty = -((e.clientY / window.innerHeight) * 2 - 1);
+      if (!reducedMotion) wake();
+    };
+    const onVisibility = () => {
+      if (!document.hidden) {
+        wake();
+        return;
+      }
+      cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
     };
 
     // Copy is driven straight from the frame loop so it stays locked to the scene.
@@ -124,13 +160,42 @@ export default function HomeStory({ copy, preloader }) {
     };
 
     const tick = (now) => {
-      raf = requestAnimationFrame(tick);
+      raf = 0;
+      if (!visible) {
+        // Scrolled past the story: settle where the scroll is and stop.
+        current = target;
+        applyCopy(current);
+        last = 0;
+        return;
+      }
+      if (last && !reducedMotion) clock += Math.min(now - last, 100) / 1000;
+      last = now;
       current += (target - current) * (reducedMotion ? 1 : 0.085);
       pointer.x += (pointer.tx - pointer.x) * 0.05;
       pointer.y += (pointer.ty - pointer.y) * 0.05;
+      // The easing is over once what is left of it is far below a pixel.
+      const easing =
+        Math.abs(target - current) > 1e-4 ||
+        (!reducedMotion && Math.max(Math.abs(pointer.tx - pointer.x), Math.abs(pointer.ty - pointer.y)) > 1e-3);
+      if (!easing) {
+        current = target;
+        pointer.x = pointer.tx;
+        pointer.y = pointer.ty;
+      }
+      const moving = !reducedMotion && now < awake;
+      if (easing || dirty || (moving && now - drawn >= DRIFT_FRAME - 4)) {
+        draw();
+        drawn = now;
+        dirty = easing; // one more frame for where the easing snapped to
+      }
+      if (easing || dirty || moving) raf = requestAnimationFrame(tick);
+      else last = 0;
+    };
+
+    const draw = () => {
       applyCopy(current);
-      if (!scene || !visible) return;
-      const anchors = scene.render(current, now / 1000, reducedMotion ? NO_POINTER : pointer);
+      if (!scene) return;
+      const anchors = scene.render(current, clock, reducedMotion ? NO_POINTER : pointer);
       if (!stage.dataset.ready) {
         stage.dataset.ready = "true";
         reach(1);
@@ -162,7 +227,7 @@ export default function HomeStory({ copy, preloader }) {
         reach(LOAD.engine);
         // Let the bar paint before building the scene blocks the main thread.
         await new Promise(requestAnimationFrame);
-        home = createHomeScene(canvasRef.current, { spark, reducedMotion });
+        home = createHomeScene(canvasRef.current, { spark, reducedMotion, onCleared: () => wake(0) });
         reach(LOAD.scene);
         await home.warmUp();
       } catch {
@@ -179,10 +244,13 @@ export default function HomeStory({ copy, preloader }) {
       reach(LOAD.shaders);
       scene = home; // the frame loop draws the first frame, which completes the bar
       if (!visible) reach(1); // scrolled past the story: no frame to wait for
+      wake(INTRO);
     })();
 
+    // Off screen, the loop stops; it starts again when the story scrolls back in.
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      if (visible) wake();
     });
     observer.observe(section);
 
@@ -193,19 +261,21 @@ export default function HomeStory({ copy, preloader }) {
     }
     readScroll();
     measureCopy();
-    window.addEventListener("scroll", readScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     window.addEventListener("pointermove", onPointer, { passive: true });
-    raf = requestAnimationFrame(tick);
+    document.addEventListener("visibilitychange", onVisibility);
+    wake(0); // lays out the copy; the scene starts moving once it has loaded
 
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
       clearTimeout(giveUp);
       observer.disconnect();
-      window.removeEventListener("scroll", readScroll);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
+      document.removeEventListener("visibilitychange", onVisibility);
       scene?.dispose();
     };
   }, []);

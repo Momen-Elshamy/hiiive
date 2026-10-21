@@ -1,6 +1,7 @@
 /* "Why Hiiive": a plain row of partner logos, then a bento (refs 09
    Invertase, 10 Harness) of dark cards with halftone light, one simple
-   visual each. Animations start once the section is in view ([data-inview]). */
+   visual each. Animations start once the section is in view ([data-inview]);
+   the looping ones only run while it is on screen ([data-visible]). */
 
 .why {
   --hairline: color-mix(in srgb, var(--hv-ink-rev) 8%, transparent);
@@ -484,6 +485,15 @@
 
 .why[data-inview="true"] .arrow {
   animation-play-state: running;
+}
+
+/* Off screen, the loops hold still (see useInView). */
+.why:not([data-visible="true"]) .pulse,
+.why:not([data-visible="true"]) .liveDot,
+.why:not([data-visible="true"]) .caret,
+.why:not([data-visible="true"]) .logTrack,
+.why:not([data-visible="true"]) .arrow {
+  animation-play-state: paused;
 }
 
 /* Keyframes --------------------------------------------------------------------- */
