@@ -137,8 +137,8 @@ export default function HomeWhy({ copy }) {
             <Trails className={styles.trails} />
             <div className={styles.statementCopy}>
               <h3 className={styles.statementText}>
-                {statement.lines.map((line) => (
-                  <span key={line}>{line}</span>
+                {statement.lines.map((line, i, arr) => (
+                  <span key={line}>{line}{i < arr.length - 1 ? " " : null}</span>
                 ))}
               </h3>
               <p className={styles.cardBody}>{statement.body}</p>
@@ -216,8 +216,8 @@ export default function HomeWhy({ copy }) {
             </pre>
             <div className={styles.handoverCopy}>
               <h3 className={styles.statementText}>
-                {handover.lines.map((line) => (
-                  <span key={line}>{line}</span>
+                {handover.lines.map((line, i, arr) => (
+                  <span key={line}>{line}{i < arr.length - 1 ? " " : null}</span>
                 ))}
               </h3>
               <PixelArrows />

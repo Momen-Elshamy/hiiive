@@ -19,7 +19,7 @@ function Check() {
 }
 const lines = (t) =>
   (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+    <span key={i}>{line}{i < arr.length - 1 ? <>{" "}<br /></> : null}</span>
   ));
 
 /* ================================================================== */

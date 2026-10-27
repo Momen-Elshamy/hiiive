@@ -19,8 +19,8 @@ export default function LabIndex({ base, locale }) {
               {copy.kicker}
             </div>
             <h1 className={`${section.title} ${styles.pageTitle}`}>
-              {copy.title.map((line) => (
-                <span key={line}>{line}</span>
+              {copy.title.map((line, i, arr) => (
+                <span key={line}>{line}{i < arr.length - 1 ? " " : null}</span>
               ))}
             </h1>
             <p className={section.intro}>{copy.intro}</p>

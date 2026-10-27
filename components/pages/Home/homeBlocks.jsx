@@ -72,7 +72,7 @@ export const HomeHeroBlock = {
             </div>
             <h1 className={styles.heroHeadline}>
               {(headline || "").split("\n").map((line, i, arr) => (
-                <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+                <span key={i}>{line}{i < arr.length - 1 ? <>{" "}<br /></> : null}</span>
               ))}
             </h1>
           </div>
@@ -478,7 +478,7 @@ export const HomeCtaBlock = {
           <span className={styles.ctaKicker}>{kicker}</span>
           <h2 className={styles.ctaTitle}>
             {(title || "").split("\n").map((line, i, arr) => (
-              <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+              <span key={i}>{line}{i < arr.length - 1 ? <>{" "}<br /></> : null}</span>
             ))}
           </h2>
           <p className={styles.ctaSub}>{subtitle}</p>
