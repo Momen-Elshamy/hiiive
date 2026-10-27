@@ -34,7 +34,7 @@ function Sparkles() {
 }
 const lines = (t) =>
   (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+    <span key={i}>{line}{i < arr.length - 1 ? <>{" "}<br /></> : null}</span>
   ));
 
 /* ================================================================== */
@@ -90,8 +90,8 @@ export const AboutHeroBlock = {
               <span className={styles.heroKickerLabel}>{p.kicker}</span>
             </div>
             <h1 className={styles.heroH1}>
-              <span className={styles.h1Ink}>{p.line1}</span>
-              <span className={styles.h1Muted}>{p.line2}</span>
+              <span className={styles.h1Ink}>{p.line1}</span>{" "}
+              <span className={styles.h1Muted}>{p.line2}</span>{" "}
               <span className={styles.h1Ink}>{p.line3}</span>
             </h1>
             <div className={styles.ctaRow}>

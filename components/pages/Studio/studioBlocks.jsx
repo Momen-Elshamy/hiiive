@@ -44,7 +44,7 @@ export const StudioHeroBlock = {
         </div>
         <h1 className={styles.heroTitle}>
           {(title || "").split("\n").map((line, i, arr) => (
-            <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
+            <span key={i}>{line}{i < arr.length - 1 ? <>{" "}<br /></> : null}</span>
           ))}
         </h1>
         <p className={styles.heroSub}>{subtitle}</p>
