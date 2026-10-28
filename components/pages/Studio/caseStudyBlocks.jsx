@@ -1,12 +1,15 @@
 // Case Study blocks.
 //
 // - CaseStudyHeroBlock: detail-page hero (used by the "Case Study" content
-//   type template; each /work/<slug> item edits its own copy).
+//   type template; each /work/<slug> item edits its own copy). Its
+//   cardImageAlt is the alt of the item's photo on the cards elsewhere
+//   (/work, case lists, home); the hero itself shows no photo.
 // - CaseStudyListBlock: dynamic listing. Its `items` are injected at public
 //   render time by the beforePageRender hook in lib/case-studies.js, which
 //   reads published Case Study ContentItems (metadata) from the DB — so
 //   adding a case study in admin updates every page that shows the list.
-//   The stored `items` act as the editor preview / offline fallback.
+//   The stored `items` act as the editor preview / offline fallback, so the
+//   injected blocks have no alt field of their own.
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
 
@@ -35,6 +38,7 @@ export const CaseStudyHeroBlock = {
     statLabel: { type: "text" },
     title: { type: "textarea" },
     summary: { type: "textarea" },
+    cardImageAlt: { type: "text", label: "Card photo alt text (/work and home)" },
   },
   defaultProps: {
     crumbParent: "Work",
@@ -44,6 +48,7 @@ export const CaseStudyHeroBlock = {
     statLabel: "what moved, and when",
     title: "Case study title",
     summary: "One-paragraph summary of the problem, what we shipped, and what it changed.",
+    cardImageAlt: "",
   },
   render: (p) => (
     <section className={styles.csHero}>
@@ -83,13 +88,12 @@ export const CaseStudyListBlock = {
       getItemSummary: (i) => i.tag || "Case study",
       arrayFields: {
         image: { type: "text" },
-        imageAlt: { type: "text" },
         tag: { type: "text" },
         stat: { type: "text" },
         body: { type: "textarea" },
         href: { type: "text" },
       },
-      defaultItemProps: { image: "", imageAlt: "", tag: "Segment · Discipline", stat: "0", body: "", href: "/work" },
+      defaultItemProps: { image: "", tag: "Segment · Discipline", stat: "0", body: "", href: "/work" },
     },
   },
   defaultProps: {
@@ -207,7 +211,6 @@ export const WorkFeaturedBlock = {
   label: "Work · Featured",
   fields: {
     image: { type: "text" },
-    imageAlt: { type: "text" },
     tag: { type: "text" },
     title: { type: "textarea" },
     body: { type: "textarea" },
@@ -222,7 +225,6 @@ export const WorkFeaturedBlock = {
   },
   defaultProps: {
     image: "",
-    imageAlt: "",
     tag: "Segment · Discipline",
     title: "Featured case study.",
     body: "",
@@ -271,13 +273,12 @@ export const WorkGridBlock = {
       getItemSummary: (i) => i.tag || "Case",
       arrayFields: {
         image: { type: "text" },
-        imageAlt: { type: "text" },
         tag: { type: "text" },
         stat: { type: "text" },
         line: { type: "textarea" },
         href: { type: "text" },
       },
-      defaultItemProps: { image: "", imageAlt: "", tag: "Segment · Discipline", stat: "0", line: "", href: "/work" },
+      defaultItemProps: { image: "", tag: "Segment · Discipline", stat: "0", line: "", href: "/work" },
     },
   },
   defaultProps: {

@@ -1,7 +1,6 @@
 // Server-safe Puck blocks for the About page (Pencil node v0diL).
 // Content-editable; visual scaffolding fixed CSS. Reuses HomeClientsBlock
 // and HomeCtaBlock for the shared sections.
-import { imageAlt } from "@/lib/image-alts";
 import styles from "./aboutBlocks.module.css";
 
 function ArrowRight() {
@@ -107,7 +106,7 @@ export const AboutHeroBlock = {
           </div>
         </div>
         <div className={styles.heroImage}>
-          {p.imageUrl ? <img src={p.imageUrl} alt={imageAlt(p.imageUrl, p.imageAlt, p.puck)} /> : null}
+          {p.imageUrl ? <img src={p.imageUrl} alt={p.imageAlt || ""} /> : null}
         </div>
       </section>
     );
@@ -168,7 +167,7 @@ export const AboutFlywheelBlock = {
             <p className={styles.flyQuote}>{lines(p.quote)}</p>
           </div>
           <div className={styles.loop}>
-            {p.loopImage ? <img className={styles.loopImg} src={p.loopImage} alt={imageAlt(p.loopImage, p.loopImageAlt, p.puck)} /> : null}
+            {p.loopImage ? <img className={styles.loopImg} src={p.loopImage} alt={p.loopImageAlt || ""} /> : null}
             <div className={styles.loopFlowTop}>
               <span>{p.flowTop}</span><ArrowRight />
             </div>
@@ -282,7 +281,7 @@ export const AboutHiveBlock = {
       <section className={styles.hive}>
         <div className={`${styles.inner} ${styles.hiveGrid}`}>
           <div className={styles.hivePhoto}>
-            {p.imageUrl ? <img src={p.imageUrl} alt={imageAlt(p.imageUrl, p.imageAlt, p.puck)} /> : null}
+            {p.imageUrl ? <img src={p.imageUrl} alt={p.imageAlt || ""} /> : null}
           </div>
           <div>
             <div className={styles.kicker}>

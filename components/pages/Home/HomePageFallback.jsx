@@ -63,16 +63,19 @@ const cases = [
     category: "Logistics operator", discipline: "AI software", stat: "−64%",
     line: "manual ticket handling after an internal agent took over triage.",
     image: "https://images.unsplash.com/photo-1653347094887-e1d2edbfad5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    imageAlt: "A person holding a yellow bag in a long warehouse aisle lined with shelves",
   },
   {
     category: "B2B SaaS", discipline: "MVP build", stat: "7 wks",
     line: "from first workshop to a paid pilot in customers' hands.",
     image: "https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    imageAlt: "Two developers looking at code on a laptop and a monitor",
   },
   {
     category: "Regional retailer", discipline: "Visibility", stat: "3.2×",
     line: "organic sessions in five months with AI-native SEO.",
     image: "https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    imageAlt: "Potted plants on wooden stools and shelves by a bright shop window",
   },
 ];
 
@@ -258,7 +261,7 @@ export default function HomePageFallback() {
           <Stagger className={styles.caseRow}>
             {cases.map((c) => (
               <StaggerItem as="article" key={c.category} className={styles.caseCard}>
-                <img className={styles.caseImage} src={c.image} alt={c.category} loading="lazy" />
+                <img className={styles.caseImage} src={c.image} alt={c.imageAlt} loading="lazy" />
                 <div className={styles.caseBody}>
                   <div className={styles.caseTags}>
                     <span className={styles.caseCategory}>{c.category}</span>
