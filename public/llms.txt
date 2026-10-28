@@ -25,9 +25,11 @@ Key facts:
 
 ## Lab — products
 
-- Content OS — agentic content operations, in daily use. In production.
-- Spoky — validating with real users. In validation.
-- Komplyo — compliance workflows, automated. In build.
+- [AI Lab overview](https://hiiive.ai/lab): HIIIVE's own products, built from what the Studio ships for clients.
+- [Dvision](https://hiiive.ai/lab/dvision): Organic visibility for the AI era, run as a system — found in search and in AI answers.
+- [Spoky](https://hiiive.ai/lab/spoky): AI for PR — media monitoring and smarter pitches.
+- [Komplyo](https://hiiive.ai/lab/komplyo): EU AI Act compliance, from inventory to audit.
+- German versions: [AI Lab](https://hiiive.ai/de/lab), [Dvision](https://hiiive.ai/de/lab/dvision), [Spoky](https://hiiive.ai/de/lab/spoky), [Komplyo](https://hiiive.ai/de/lab/komplyo).
 
 ## Case studies
 
