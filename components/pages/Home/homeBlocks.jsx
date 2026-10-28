@@ -404,8 +404,9 @@ export const HomeWorkBlock = {
         stat: { type: "text" },
         line: { type: "textarea" },
         image: { type: "text" },
+        imageAlt: { type: "text" },
       },
-      defaultItemProps: { category: "Category", discipline: "Discipline", stat: "0", line: "Result", image: "" },
+      defaultItemProps: { category: "Category", discipline: "Discipline", stat: "0", line: "Result", image: "", imageAlt: "" },
     },
   },
   defaultProps: {
@@ -432,7 +433,7 @@ export const HomeWorkBlock = {
         <Stagger className={styles.caseRow}>
           {(cases || []).map((c, i) => (
             <StaggerItem as="article" key={i} className={styles.caseCard}>
-              {c.image ? <img className={styles.caseImage} src={c.image} alt="" loading="lazy" /> : <div className={styles.caseImage} />}
+              {c.image ? <img className={styles.caseImage} src={c.image} alt={c.imageAlt || c.category || ""} loading="lazy" /> : <div className={styles.caseImage} />}
               <div className={styles.caseBody}>
                 <div className={styles.caseTags}>
                   <span className={styles.caseCategory}>{c.category}</span>

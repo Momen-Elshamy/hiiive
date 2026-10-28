@@ -22,6 +22,15 @@ function parsePuckData(content) {
   return null;
 }
 
+/**
+ * What every block receives as puck.metadata. The locale is the document's own
+ * (an English fallback served on /de stays English), so blocks pick matching
+ * default texts such as image alts.
+ */
+function renderMetadata(doc) {
+  return { locale: doc.locale || DEFAULT_LOCALE };
+}
+
 function extractSeoMetadata(puckData, fallbackTitle, { path = "", locale = DEFAULT_LOCALE } = {}) {
   const root = puckData?.root?.props || {};
   return buildPageMetadata({ root, path, locale, fallbackTitle });
@@ -137,7 +146,7 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
             {jsonLd && (
               <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
             )}
-            <Render config={siteConfig.puckConfig} data={finalData} />
+            <Render config={siteConfig.puckConfig} data={finalData} metadata={renderMetadata(item)} />
           </article>
         );
       }
@@ -157,7 +166,7 @@ export default async function ContentCatchAllPage({ params, searchParams }) {
             {jsonLd && (
               <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
             )}
-            <Render config={siteConfig.puckConfig} data={finalData} />
+            <Render config={siteConfig.puckConfig} data={finalData} metadata={renderMetadata(page)} />
           </article>
         );
       }

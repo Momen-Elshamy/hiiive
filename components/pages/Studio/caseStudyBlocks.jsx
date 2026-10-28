@@ -83,12 +83,13 @@ export const CaseStudyListBlock = {
       getItemSummary: (i) => i.tag || "Case study",
       arrayFields: {
         image: { type: "text" },
+        imageAlt: { type: "text" },
         tag: { type: "text" },
         stat: { type: "text" },
         body: { type: "textarea" },
         href: { type: "text" },
       },
-      defaultItemProps: { image: "", tag: "Segment · Discipline", stat: "0", body: "", href: "/work" },
+      defaultItemProps: { image: "", imageAlt: "", tag: "Segment · Discipline", stat: "0", body: "", href: "/work" },
     },
   },
   defaultProps: {
@@ -116,7 +117,7 @@ export const CaseStudyListBlock = {
         <div className={`${styles.grid} ${styles.listGridSpace}`}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <img className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} loading="lazy" /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.listStat}>{c.stat}</span>
@@ -206,6 +207,7 @@ export const WorkFeaturedBlock = {
   label: "Work · Featured",
   fields: {
     image: { type: "text" },
+    imageAlt: { type: "text" },
     tag: { type: "text" },
     title: { type: "textarea" },
     body: { type: "textarea" },
@@ -220,6 +222,7 @@ export const WorkFeaturedBlock = {
   },
   defaultProps: {
     image: "",
+    imageAlt: "",
     tag: "Segment · Discipline",
     title: "Featured case study.",
     body: "",
@@ -231,7 +234,7 @@ export const WorkFeaturedBlock = {
     <section className={styles.featuredWrap}>
       <div className={styles.inner}>
         <a href={p.href || "/work"} className={styles.featured}>
-          {p.image ? <img className={styles.featuredImg} src={p.image} alt="" loading="lazy" /> : <div className={styles.featuredImg} />}
+          {p.image ? <img className={styles.featuredImg} src={p.image} alt={p.imageAlt || p.title || ""} loading="lazy" /> : <div className={styles.featuredImg} />}
           <div className={styles.featuredBody}>
             <span className={styles.gridTag}>{p.tag}</span>
             <h2 className={styles.featuredTitle}>{lines(p.title)}</h2>
@@ -268,12 +271,13 @@ export const WorkGridBlock = {
       getItemSummary: (i) => i.tag || "Case",
       arrayFields: {
         image: { type: "text" },
+        imageAlt: { type: "text" },
         tag: { type: "text" },
         stat: { type: "text" },
         line: { type: "textarea" },
         href: { type: "text" },
       },
-      defaultItemProps: { image: "", tag: "Segment · Discipline", stat: "0", line: "", href: "/work" },
+      defaultItemProps: { image: "", imageAlt: "", tag: "Segment · Discipline", stat: "0", line: "", href: "/work" },
     },
   },
   defaultProps: {
@@ -288,7 +292,7 @@ export const WorkGridBlock = {
         <div className={styles.grid}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <img className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} loading="lazy" /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.gridStat}>{c.stat}</span>

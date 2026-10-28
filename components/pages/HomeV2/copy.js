@@ -107,6 +107,7 @@ export const HOME_COPY = {
           statLabel: "to build it for ahead's booth at FIBO 2026",
           title: "An offline-first big-screen game with a mobile control panel.",
           href: "/work/ahead-fibo-game",
+          imageAlt: "The colourful ahead booth at FIBO 2026 with the game screen",
         },
         wavelr: {
           tag: "MVP & SEO",
@@ -114,6 +115,7 @@ export const HOME_COPY = {
           statLabel: "to a live marketplace, built from zero",
           title: "The verified-PV marketplace for the German solar market.",
           href: "/work/wavelr-pv-marketplace",
+          imageAlt: "Rows of solar panels in a field under a cloudy sky",
         },
       },
       nextStep: {
@@ -226,6 +228,7 @@ export const HOME_COPY = {
           statLabel: "für den ahead-Stand auf der FIBO 2026 gebaut",
           title: "Ein Offline-First-Game für den großen Screen mit mobilem Control-Panel.",
           href: "/de/work/ahead-fibo-game",
+          imageAlt: "Der bunte ahead-Stand auf der FIBO 2026 mit dem Spiel-Screen",
         },
         wavelr: {
           tag: "MVP & SEO",
@@ -233,6 +236,7 @@ export const HOME_COPY = {
           statLabel: "bis zum Live-Marktplatz, von null gebaut",
           title: "Der Marktplatz für geprüfte PV-Assets im deutschen Solarmarkt.",
           href: "/de/work/wavelr-pv-marketplace",
+          imageAlt: "Reihen von Solarmodulen auf einer Wiese unter bewölktem Himmel",
         },
       },
       nextStep: {

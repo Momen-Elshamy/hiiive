@@ -270,10 +270,10 @@ export const DpHowBlock = {
     cards: {
       type: "array", getItemSummary: (i) => i.title || "Card",
       arrayFields: {
-        num: { type: "text" }, title: { type: "text" }, visual: { type: "text" }, body: { type: "textarea" },
+        num: { type: "text" }, title: { type: "text" }, visual: { type: "text" }, alt: { type: "text" }, body: { type: "textarea" },
         chips: { type: "array", getItemSummary: (i) => i.text || "Chip", arrayFields: { text: { type: "text" } }, defaultItemProps: { text: "Tool" } },
       },
-      defaultItemProps: { num: "01", title: "Step", visual: "", body: "", chips: [] },
+      defaultItemProps: { num: "01", title: "Step", visual: "", alt: "", body: "", chips: [] },
     },
     loopNote: { type: "textarea" },
     loopStrip: { type: "text" },
@@ -294,7 +294,7 @@ export const DpHowBlock = {
         <div className={styles.howCards}>
           {(p.cards || []).map((c, i) => (
             <div key={i} className={styles.howCard}>
-              {c.visual ? <img className={styles.howVisualImg} src={c.visual} alt="" loading="lazy" /> : null}
+              {c.visual ? <img className={styles.howVisualImg} src={c.visual} alt={c.alt || ""} loading="lazy" /> : null}
               <div className={styles.howCardBody}>
                 <div className={styles.howTitleRow}>
                   <span className={styles.howNum}>{c.num}</span>

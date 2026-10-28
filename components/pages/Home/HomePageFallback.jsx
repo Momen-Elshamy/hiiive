@@ -258,7 +258,7 @@ export default function HomePageFallback() {
           <Stagger className={styles.caseRow}>
             {cases.map((c) => (
               <StaggerItem as="article" key={c.category} className={styles.caseCard}>
-                <img className={styles.caseImage} src={c.image} alt="" loading="lazy" />
+                <img className={styles.caseImage} src={c.image} alt={c.category} loading="lazy" />
                 <div className={styles.caseBody}>
                   <div className={styles.caseTags}>
                     <span className={styles.caseCategory}>{c.category}</span>
