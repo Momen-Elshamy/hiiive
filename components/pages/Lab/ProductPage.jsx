@@ -97,7 +97,7 @@ export default function ProductPage({ product, base, locale }) {
 /** Title, description, canonical and hreflang links for a product page. */
 export function productMetadata(product, locale) {
   return buildPageMetadata({
-    root: { metaTitle: `${product.name} | ${labCopy(locale).crumb} | HIIIVE`, metaDescription: product.intro },
+    root: { metaTitle: product.meta.title, metaDescription: product.meta.description },
     path: `lab/${product.slug}`,
     locale,
   });
