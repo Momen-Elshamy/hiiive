@@ -4,9 +4,11 @@ import { ThemeRootVars } from "@/theme/ThemeRootVars";
 import "./globals.css";
 import styles from "./layout.module.css";
 
+// Pages set the topic alone as their title; the template adds the brand.
 export const metadata = {
-   title: "HIIIVE",
-   description: "AI-first company builder · Berlin native incubator",
+   title: { template: "%s | HIIIVE", default: "HIIIVE" },
+   description:
+      "HIIIVE is an AI lab & tech house in Berlin. Smart people and smart systems, inventing AI products, agents and software for real companies.",
 };
 
 export default function RootLayout({ children }) {

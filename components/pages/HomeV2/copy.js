@@ -7,7 +7,7 @@ const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
 export const HOME_COPY = {
   en: {
     meta: {
-      title: "HIIIVE — AI lab & tech house, Berlin",
+      title: "AI Lab & Tech House in Berlin",
       description:
         "The lab where AI gets to work on your hardest problems. Smart people and smart systems, inventing AI products, agents and software for real companies.",
     },
@@ -128,7 +128,7 @@ export const HOME_COPY = {
 
   de: {
     meta: {
-      title: "HIIIVE — KI-Lab & Tech House, Berlin",
+      title: "KI-Lab & Tech House in Berlin",
       description:
         "Das Lab, in dem KI Ihre schwierigsten Probleme anpackt. Kluge Köpfe und kluge Systeme entwickeln KI-Produkte, Agenten und Software für echte Unternehmen.",
     },
