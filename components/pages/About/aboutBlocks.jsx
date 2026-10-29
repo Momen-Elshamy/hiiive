@@ -51,6 +51,7 @@ const HERO_D = {
   primaryLabel: "Book a call", primaryHref: "https://calendly.com/hiiive/get-to-know",
   secondaryLabel: "See the work", secondaryHref: "/work",
   imageUrl: "/img/about-hero.jpg",
+  imageAlt: "",
 };
 
 export const AboutHeroBlock = {
@@ -68,6 +69,7 @@ export const AboutHeroBlock = {
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
     imageUrl: { type: "text" },
+    imageAlt: { type: "text" },
   },
   defaultProps: HERO_D,
   render: (raw) => {
@@ -104,7 +106,7 @@ export const AboutHeroBlock = {
           </div>
         </div>
         <div className={styles.heroImage}>
-          {p.imageUrl ? <img src={p.imageUrl} alt="" /> : null}
+          {p.imageUrl ? <img src={p.imageUrl} alt={p.imageAlt || ""} /> : null}
         </div>
       </section>
     );
@@ -128,6 +130,7 @@ const FLYWHEEL_D = {
   studioTitle: "Your\ncompany",
   studioSub: "forward-deployed engineers\nknowledge, running live",
   loopImage: "/img/about-flywheel.png",
+  loopImageAlt: "",
 };
 
 export const AboutFlywheelBlock = {
@@ -146,6 +149,7 @@ export const AboutFlywheelBlock = {
     studioTitle: { type: "textarea" },
     studioSub: { type: "textarea" },
     loopImage: { type: "text" },
+    loopImageAlt: { type: "text" },
   },
   defaultProps: FLYWHEEL_D,
   render: (raw) => {
@@ -163,7 +167,7 @@ export const AboutFlywheelBlock = {
             <p className={styles.flyQuote}>{lines(p.quote)}</p>
           </div>
           <div className={styles.loop}>
-            {p.loopImage ? <img className={styles.loopImg} src={p.loopImage} alt="" /> : null}
+            {p.loopImage ? <img className={styles.loopImg} src={p.loopImage} alt={p.loopImageAlt || ""} /> : null}
             <div className={styles.loopFlowTop}>
               <span>{p.flowTop}</span><ArrowRight />
             </div>
@@ -243,6 +247,7 @@ export const AboutPrinciplesBlock = {
 /* ================================================================== */
 const HIVE_D = {
   imageUrl: "/img/about-office.jpg",
+  imageAlt: "",
   kicker: "The Hive — Berlin-Spandau",
   title: "Rooms don't build.\nPeople do.",
   body: "Home base is Berlin-Spandau — but what makes this place isn't the address, it's who's inside. A senior crew that likes building side by side, because most things simply move faster in the same room. Our forward-deployed engineers spend phases embedded at the client. What counts is what goes live.",
@@ -258,6 +263,7 @@ export const AboutHiveBlock = {
   label: "About · The Hive",
   fields: {
     imageUrl: { type: "text" },
+    imageAlt: { type: "text" },
     kicker: { type: "text" },
     title: { type: "textarea" },
     body: { type: "textarea" },
@@ -275,7 +281,7 @@ export const AboutHiveBlock = {
       <section className={styles.hive}>
         <div className={`${styles.inner} ${styles.hiveGrid}`}>
           <div className={styles.hivePhoto}>
-            {p.imageUrl ? <img src={p.imageUrl} alt="" /> : null}
+            {p.imageUrl ? <img src={p.imageUrl} alt={p.imageAlt || ""} /> : null}
           </div>
           <div>
             <div className={styles.kicker}>
