@@ -9,7 +9,7 @@ export default function HomePage({ locale }) {
   const copy = homeCopy(locale);
   return (
     <>
-      <HomeStory copy={copy.story} preloader={copy.preloader} />
+      <HomeStory copy={copy.story} />
       <HomeWhy copy={copy.why} />
       <HomeCases copy={copy.cases} />
     </>
