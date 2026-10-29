@@ -397,16 +397,19 @@ export const HomeWorkBlock = {
     linkHref: { type: "text" },
     cases: {
       type: "array",
-      getItemSummary: (item) => item.category || "Case",
+      getItemSummary: (item) => item.title || item.category || "Case",
       arrayFields: {
+        // Photo alt fallback: imageAlt, else title, else category (cards saved
+        // before imageAlt and title existed still have a category).
+        title: { type: "text", label: "Case title (photo alt if none is set)" },
         category: { type: "text" },
         discipline: { type: "text" },
         stat: { type: "text" },
         line: { type: "textarea" },
         image: { type: "text" },
-        imageAlt: { type: "text" },
+        imageAlt: { type: "text", label: "Photo alt text" },
       },
-      defaultItemProps: { category: "Category", discipline: "Discipline", stat: "0", line: "Result", image: "", imageAlt: "" },
+      defaultItemProps: { title: "", category: "Category", discipline: "Discipline", stat: "0", line: "Result", image: "", imageAlt: "" },
     },
   },
   defaultProps: {
@@ -415,9 +418,9 @@ export const HomeWorkBlock = {
     linkLabel: "All case studies",
     linkHref: "#work",
     cases: [
-      { category: "Logistics operator", discipline: "AI software", stat: "−64%", line: "manual ticket handling after an internal agent took over triage.", image: "https://images.unsplash.com/photo-1653347094887-e1d2edbfad5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "A person holding a yellow bag in a long warehouse aisle lined with shelves" },
-      { category: "B2B SaaS", discipline: "MVP build", stat: "7 wks", line: "from first workshop to a paid pilot in customers' hands.", image: "https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "Two developers looking at code on a laptop and a monitor" },
-      { category: "Regional retailer", discipline: "Visibility", stat: "3.2×", line: "organic sessions in five months with AI-native SEO.", image: "https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "Potted plants on wooden stools and shelves by a bright shop window" },
+      { title: "Agent-led ticket triage for a logistics operator", category: "Logistics operator", discipline: "AI software", stat: "−64%", line: "manual ticket handling after an internal agent took over triage.", image: "https://images.unsplash.com/photo-1653347094887-e1d2edbfad5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "A person holding a yellow bag in a long warehouse aisle lined with shelves" },
+      { title: "A B2B SaaS MVP from workshop to paid pilot", category: "B2B SaaS", discipline: "MVP build", stat: "7 wks", line: "from first workshop to a paid pilot in customers' hands.", image: "https://images.unsplash.com/photo-1632910121591-29e2484c0259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "Two developers looking at code on a laptop and a monitor" },
+      { title: "AI-native SEO for a regional retailer", category: "Regional retailer", discipline: "Visibility", stat: "3.2×", line: "organic sessions in five months with AI-native SEO.", image: "https://images.unsplash.com/photo-1601985705806-5b9a71f6004f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080", imageAlt: "Potted plants on wooden stools and shelves by a bright shop window" },
     ],
   },
   render: ({ kicker, title, linkLabel, linkHref, cases }) => (
@@ -433,7 +436,7 @@ export const HomeWorkBlock = {
         <Stagger className={styles.caseRow}>
           {(cases || []).map((c, i) => (
             <StaggerItem as="article" key={i} className={styles.caseCard}>
-              {c.image ? <img className={styles.caseImage} src={c.image} alt={c.imageAlt || ""} loading="lazy" /> : <div className={styles.caseImage} />}
+              {c.image ? <img className={styles.caseImage} src={c.image} alt={c.imageAlt || c.title || c.category || ""} loading="lazy" /> : <div className={styles.caseImage} />}
               <div className={styles.caseBody}>
                 <div className={styles.caseTags}>
                   <span className={styles.caseCategory}>{c.category}</span>
