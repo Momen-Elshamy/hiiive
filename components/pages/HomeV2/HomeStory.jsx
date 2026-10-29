@@ -34,6 +34,18 @@ function Kicker({ children }) {
   );
 }
 
+// Whether WebGL runs on a GPU: the browser refuses a context with
+// failIfMajorPerformanceCaveat when it would only render in software.
+function hasFastWebGL() {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl2", { failIfMajorPerformanceCaveat: true });
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return Boolean(gl);
+  } catch {
+    return false;
+  }
+}
+
 function show(el, opacity, transform) {
   if (!el) return;
   el.style.opacity = String(opacity);
@@ -206,6 +218,12 @@ export default function HomeStory({ copy }) {
     };
 
     const buildScene = async () => {
+      // Without a GPU the scene would crawl: keep the calm backdrop and don't
+      // download three.js at all.
+      if (!hasFastWebGL()) {
+        stage.dataset.fallback = "true";
+        return;
+      }
       // The factory's plates print the wordmark and labels with the site fonts.
       await Promise.all([
         document.fonts.load('600 200px "Big Shoulders"'),

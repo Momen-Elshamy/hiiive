@@ -47,6 +47,7 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     canvas,
     antialias: false, // MSAA comes from the composer's target
     powerPreference: "high-performance",
+    failIfMajorPerformanceCaveat: true, // no software rendering: the caller falls back
     // Lets dev screenshots read the canvas; costs a little, so dev only.
     preserveDrawingBuffer: process.env.NODE_ENV !== "production",
   });
