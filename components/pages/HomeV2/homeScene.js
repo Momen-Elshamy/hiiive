@@ -255,7 +255,7 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
    * Compiles every shader the story needs up front (the hidden factory's too),
    * then draws one frame of the powered-up factory so its shadows, AO and glow
    * are ready as well: nothing stutters the first time it comes into view.
-   * Runs before the canvas fades in; the frame loop then draws the real first frame.
+   * Runs behind the preloader; the frame loop then draws the real first frame.
    */
   async function warmUp() {
     try {

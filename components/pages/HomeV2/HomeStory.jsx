@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import buttons from "@/components/ui/buttons.module.css";
 import styles from "./HomeStory.module.css";
+import Preloader from "./Preloader";
 import { SCREENS, STORY, activeStation, clamp01, ramp, stationScreen } from "./homeTimeline";
+
+// How far the page has loaded once each step is done, as shown on the
+// preloader's bar (the three.js chunk is the biggest download). The first
+// frame drawn completes it.
+const LOAD = { start: 0.06, fonts: 0.18, engine: 0.55, scene: 0.72, shaders: 0.92 };
+// Don't hold the page back longer than this; a late scene fades in by itself.
+const LOAD_TIMEOUT = 12000;
 
 const NO_POINTER = { x: 0, y: 0 };
 
@@ -12,27 +20,13 @@ const NO_POINTER = { x: 0, y: 0 };
 // while after the last input (at 30 fps). Then the loop stops until the next
 // scroll, pointer move or resize, so a page left open costs nothing.
 const AWAKE = 4000; // ms the scene keeps moving after the last input
-const INTRO = 6000; // ms it moves once it first shows, while it fades in
+const INTRO = 6000; // ms it moves once it first shows, while the preloader lifts
 const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own motion runs
-
-// Any of these starts building the scene; otherwise it starts once the
-// browser is idle after load, at the latest this long after.
-const START_EVENTS = ["scroll", "pointermove", "touchstart", "keydown"];
-const IDLE_TIMEOUT = 2500; // ms
 
 // Hands the main thread back (for input and paint) between the long steps of
 // building the scene, so none of them blocks the page for long.
 const yieldToMain = () =>
   globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
-
-function Kicker({ children }) {
-  return (
-    <div className={styles.kicker}>
-      <span className={styles.kickerDot} />
-      {children}
-    </div>
-  );
-}
 
 // Whether WebGL runs on a GPU: the browser refuses a context with
 // failIfMajorPerformanceCaveat when it would only render in software.
@@ -44,6 +38,15 @@ function hasFastWebGL() {
   } catch {
     return false;
   }
+}
+
+function Kicker({ children }) {
+  return (
+    <div className={styles.kicker}>
+      <span className={styles.kickerDot} />
+      {children}
+    </div>
+  );
 }
 
 function show(el, opacity, transform) {
@@ -59,7 +62,7 @@ function show(el, opacity, transform) {
  * stations power on one by one while the stepper follows. One canvas, one
  * scroll position (in screens, see homeTimeline.js) for the scene and the copy.
  */
-export default function HomeStory({ copy }) {
+export default function HomeStory({ copy, preloader }) {
   const sectionRef = useRef(null);
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
@@ -70,6 +73,7 @@ export default function HomeStory({ copy }) {
   const panelRef = useRef(null);
   const closingRef = useRef(null);
   const pinRefs = useRef([]);
+  const loaded = useRef(0); // 0–1, read by <Preloader>
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -94,6 +98,11 @@ export default function HomeStory({ copy }) {
     let drawn = -Infinity; // when the last frame was drawn (ms)
     let clock = 0; // the scene's time (s); it stands still while the loop does
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+    const reach = (value) => {
+      loaded.current = Math.max(loaded.current, value);
+    };
+    reach(LOAD.start);
+    const giveUp = setTimeout(() => reach(1), LOAD_TIMEOUT);
 
     // Where the factory copy sits on screen; pins that land on it are hidden.
     const zone = { phone: false, right: 0, bottom: 0, top: 0 };
@@ -204,7 +213,10 @@ export default function HomeStory({ copy }) {
       applyCopy(current);
       if (!scene) return;
       const anchors = scene.render(current, clock, reducedMotion ? NO_POINTER : pointer);
-      if (!stage.dataset.ready) stage.dataset.ready = "true"; // fades the canvas in
+      if (!stage.dataset.ready) {
+        stage.dataset.ready = "true";
+        reach(1);
+      }
       // Checkpoints show once the camera has pulled out to the whole factory.
       const pins = ramp(current, [SCREENS.zoom[1] - 0.3, SCREENS.zoom[1]]) * (1 - ramp(current, SCREENS.cta) * 0.5);
       anchors.forEach((anchor, i) => {
@@ -217,11 +229,12 @@ export default function HomeStory({ copy }) {
       });
     };
 
-    const buildScene = async () => {
+    (async () => {
       // Without a GPU the scene would crawl: keep the calm backdrop and don't
       // download three.js at all.
       if (!hasFastWebGL()) {
         stage.dataset.fallback = "true";
+        reach(1);
         return;
       }
       // The factory's plates print the wordmark and labels with the site fonts.
@@ -229,13 +242,17 @@ export default function HomeStory({ copy }) {
         document.fonts.load('600 200px "Big Shoulders"'),
         document.fonts.load('600 40px "Inter"'),
       ]).catch(() => {});
+      reach(LOAD.fonts);
       let home = null;
       try {
         // three.js only loads on the client, in its own chunk.
         const { createHomeScene } = await import("./homeScene");
         if (disposed) return;
+        reach(LOAD.engine);
+        // Let the bar paint before building the scene blocks the main thread.
         await yieldToMain();
         home = createHomeScene(canvasRef.current, { spark, reducedMotion, onCleared: () => wake(0) });
+        reach(LOAD.scene);
         await yieldToMain();
         await home.warmUp();
         await yieldToMain();
@@ -243,44 +260,18 @@ export default function HomeStory({ copy }) {
         // No WebGL (or the chunk failed to load): the copy keeps a calm backdrop.
         home?.dispose();
         stage.dataset.fallback = "true";
+        reach(1);
         return;
       }
       if (disposed) {
         home.dispose();
         return;
       }
-      scene = home; // the frame loop draws the first frame, which fades the canvas in
+      reach(LOAD.shaders);
+      scene = home; // the frame loop draws the first frame, which completes the bar
+      if (!visible) reach(1); // scrolled past the story: no frame to wait for
       wake(INTRO);
-    };
-
-    // The scene is built on the first scroll, touch, key or pointer move, or
-    // once the browser is idle after the page has loaded, whichever comes
-    // first, so building it never holds back the first paint.
-    let started = false;
-    let cancelIdle = () => {};
-    const start = () => {
-      if (started || disposed) return;
-      started = true;
-      START_EVENTS.forEach((type) => window.removeEventListener(type, start));
-      window.removeEventListener("load", whenIdle);
-      cancelIdle();
-      buildScene();
-    };
-    const whenIdle = () => {
-      if (window.requestIdleCallback) {
-        const id = requestIdleCallback(start, { timeout: IDLE_TIMEOUT });
-        cancelIdle = () => cancelIdleCallback(id);
-      } else {
-        const id = setTimeout(start, IDLE_TIMEOUT / 2); // Safari has no requestIdleCallback
-        cancelIdle = () => clearTimeout(id);
-      }
-    };
-    if (Number.isFinite(pinned)) start();
-    else {
-      START_EVENTS.forEach((type) => window.addEventListener(type, start, { passive: true, once: true }));
-      if (document.readyState === "complete") whenIdle();
-      else window.addEventListener("load", whenIdle, { once: true });
-    }
+    })();
 
     // Off screen, the loop stops; it starts again when the story scrolls back in.
     const observer = new IntersectionObserver(([entry]) => {
@@ -305,9 +296,7 @@ export default function HomeStory({ copy }) {
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
-      START_EVENTS.forEach((type) => window.removeEventListener(type, start));
-      window.removeEventListener("load", whenIdle);
-      cancelIdle();
+      clearTimeout(giveUp);
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -327,6 +316,8 @@ export default function HomeStory({ copy }) {
 
   return (
     <section ref={sectionRef} className={styles.story} aria-label={copy.ariaLabel}>
+      {/* Outside the sticky stage, so it can sit over the site header. */}
+      <Preloader progress={loaded} label={preloader.label} ariaLabel={preloader.ariaLabel} />
       <div ref={stageRef} className={styles.stage}>
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <div ref={shadeRef} className={styles.shade} aria-hidden="true" />

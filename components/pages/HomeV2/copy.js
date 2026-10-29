@@ -11,6 +11,7 @@ export const HOME_COPY = {
       description:
         "The lab where AI gets to work on your hardest problems. Smart people and smart systems, inventing AI products, agents and software for real companies.",
     },
+    preloader: { label: "Opening the lab", ariaLabel: "Loading the page" },
     story: {
       ariaLabel: "The Hiiive story",
       hero: {
@@ -131,6 +132,7 @@ export const HOME_COPY = {
       description:
         "Das Lab, in dem KI Ihre schwierigsten Probleme anpackt. Kluge Köpfe und kluge Systeme entwickeln KI-Produkte, Agenten und Software für echte Unternehmen.",
     },
+    preloader: { label: "Das Lab öffnet", ariaLabel: "Seite wird geladen" },
     story: {
       ariaLabel: "Die Hiiive-Geschichte",
       hero: {
