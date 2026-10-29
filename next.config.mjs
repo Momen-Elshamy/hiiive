@@ -27,6 +27,11 @@ aliases["@puckeditor/core/puck.css"] = resolve(puckDir, "dist/index.css");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ["mongoose"],
+  // AVIF first (smaller than WebP), WebP for browsers without AVIF support.
+  // AVIF is slower to encode, but each size is encoded once and then cached.
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
   transpilePackages: [
     "@premast/site-core",
     "@premast/site-plugin-seo",
@@ -39,11 +44,21 @@ const nextConfig = {
   // Files under /video carry a content hash in their filename (see
   // hero-waves.<hash>.mp4), so a new clip ships as a new URL and `immutable`
   // can never pin a stale one. Keep that convention when adding videos here.
+  //
+  // Files under /img have no hash, so they get a year without `immutable`.
+  // When you change an image's content, give the file a new name (or purge
+  // it in Cloudflare): browsers and the edge keep the old one for up to a
+  // year. The /_next/image optimizer copies this max-age onto its WebP/AVIF
+  // responses, so optimized images are cached as long.
   async headers() {
     return [
       {
         source: "/video/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/img/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000" }],
       },
     ];
   },

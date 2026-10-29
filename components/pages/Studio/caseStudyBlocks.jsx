@@ -7,6 +7,7 @@
 //   reads published Case Study ContentItems (metadata) from the DB — so
 //   adding a case study in admin updates every page that shows the list.
 //   The stored `items` act as the editor preview / offline fallback.
+import { CmsImage } from "@/components/ui/CmsImage";
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
 
@@ -17,6 +18,11 @@ function ArrowRight() {
     </svg>
   );
 }
+// Rendered widths: the .inner container caps content at 1280px (1360 - 2*40
+// padding) and stacks everything into one column below 900px (24px padding).
+const GRID_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px";
+const FEATURED_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 51vw, 656px";
+
 const lines = (t) =>
   (t || "").split("\n").map((line, i, arr) => (
     <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
@@ -116,7 +122,7 @@ export const CaseStudyListBlock = {
         <div className={`${styles.grid} ${styles.listGridSpace}`}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.listStat}>{c.stat}</span>
@@ -231,7 +237,7 @@ export const WorkFeaturedBlock = {
     <section className={styles.featuredWrap}>
       <div className={styles.inner}>
         <a href={p.href || "/work"} className={styles.featured}>
-          {p.image ? <img className={styles.featuredImg} src={p.image} alt="" loading="lazy" /> : <div className={styles.featuredImg} />}
+          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} width={1600} height={960} sizes={FEATURED_IMG_SIZES} /> : <div className={styles.featuredImg} />}
           <div className={styles.featuredBody}>
             <span className={styles.gridTag}>{p.tag}</span>
             <h2 className={styles.featuredTitle}>{lines(p.title)}</h2>
@@ -288,7 +294,7 @@ export const WorkGridBlock = {
         <div className={styles.grid}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.gridStat}>{c.stat}</span>
