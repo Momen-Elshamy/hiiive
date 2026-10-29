@@ -1,6 +1,7 @@
 // Server-safe Puck blocks for the Studio / Digital Presence landing page.
 // Content-editable (text, prices, list items via Puck); visual scaffolding is
 // fixed CSS. Uses the global design tokens (--hv-*, --font-*) from globals.css.
+import { CmsImage } from "@/components/ui/CmsImage";
 import styles from "./digitalPresenceBlocks.module.css";
 
 function ArrowRight() {
@@ -294,7 +295,13 @@ export const DpHowBlock = {
         <div className={styles.howCards}>
           {(p.cards || []).map((c, i) => (
             <div key={i} className={styles.howCard}>
-              {c.visual ? <img className={styles.howVisualImg} src={c.visual} alt="" loading="lazy" /> : null}
+              {c.visual ? <CmsImage
+                  className={styles.howVisualImg}
+                  src={c.visual}
+                  width={1232}
+                  height={510}
+                  sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px"
+                /> : null}
               <div className={styles.howCardBody}>
                 <div className={styles.howTitleRow}>
                   <span className={styles.howNum}>{c.num}</span>
@@ -326,6 +333,21 @@ export const DpHowBlock = {
 /* ================================================================== */
 /* 5. Image feature                                                   */
 /* ================================================================== */
+// The photo is a CSS background, so next/image can't optimize it. Unsplash
+// (imgix) can: swap a pinned `fm=jpg` for `auto=format` and it serves AVIF or
+// WebP to browsers that accept them. Other URLs pass through unchanged.
+function modernBgUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname !== "images.unsplash.com") return url;
+    u.searchParams.delete("fm");
+    u.searchParams.set("auto", "format");
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 export const DpFeatureBlock = {
   label: "DP · Feature",
   fields: {
@@ -345,7 +367,7 @@ export const DpFeatureBlock = {
       style={p.imageUrl ? {
         // Layer order mirrors the Pencil fill stack: bottom ink gradient →
         // slight ink tint → gray saturation-blend (desaturates) → photo.
-        backgroundImage: `linear-gradient(180deg, rgba(27,29,30,0) 35%, rgba(27,29,30,0.8) 100%), linear-gradient(rgba(27,29,30,0.08), rgba(27,29,30,0.08)), linear-gradient(rgba(148,153,164,0.9), rgba(148,153,164,0.9)), url(${p.imageUrl})`,
+        backgroundImage: `linear-gradient(180deg, rgba(27,29,30,0) 35%, rgba(27,29,30,0.8) 100%), linear-gradient(rgba(27,29,30,0.08), rgba(27,29,30,0.08)), linear-gradient(rgba(148,153,164,0.9), rgba(148,153,164,0.9)), url(${modernBgUrl(p.imageUrl)})`,
         backgroundBlendMode: "normal, normal, saturation, normal",
       } : undefined}
     >
