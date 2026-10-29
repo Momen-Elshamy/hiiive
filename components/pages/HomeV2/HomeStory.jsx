@@ -15,6 +15,11 @@ const AWAKE = 4000; // ms the scene keeps moving after the last input
 const INTRO = 6000; // ms it moves once it first shows, while it fades in
 const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own motion runs
 
+// Any of these starts building the scene; otherwise it starts once the
+// browser is idle after load, at the latest this long after.
+const START_EVENTS = ["scroll", "pointermove", "touchstart", "keydown"];
+const IDLE_TIMEOUT = 2500; // ms
+
 function Kicker({ children }) {
   return (
     <div className={styles.kicker}>
@@ -195,7 +200,7 @@ export default function HomeStory({ copy }) {
       });
     };
 
-    (async () => {
+    const buildScene = async () => {
       // The factory's plates print the wordmark and labels with the site fonts.
       await Promise.all([
         document.fonts.load('600 200px "Big Shoulders"'),
@@ -221,7 +226,36 @@ export default function HomeStory({ copy }) {
       }
       scene = home; // the frame loop draws the first frame, which fades the canvas in
       wake(INTRO);
-    })();
+    };
+
+    // The scene is built on the first scroll, touch, key or pointer move, or
+    // once the browser is idle after the page has loaded, whichever comes
+    // first, so building it never holds back the first paint.
+    let started = false;
+    let cancelIdle = () => {};
+    const start = () => {
+      if (started || disposed) return;
+      started = true;
+      START_EVENTS.forEach((type) => window.removeEventListener(type, start));
+      window.removeEventListener("load", whenIdle);
+      cancelIdle();
+      buildScene();
+    };
+    const whenIdle = () => {
+      if (window.requestIdleCallback) {
+        const id = requestIdleCallback(start, { timeout: IDLE_TIMEOUT });
+        cancelIdle = () => cancelIdleCallback(id);
+      } else {
+        const id = setTimeout(start, IDLE_TIMEOUT / 2); // Safari has no requestIdleCallback
+        cancelIdle = () => clearTimeout(id);
+      }
+    };
+    if (Number.isFinite(pinned)) start();
+    else {
+      START_EVENTS.forEach((type) => window.addEventListener(type, start, { passive: true, once: true }));
+      if (document.readyState === "complete") whenIdle();
+      else window.addEventListener("load", whenIdle, { once: true });
+    }
 
     // Off screen, the loop stops; it starts again when the story scrolls back in.
     const observer = new IntersectionObserver(([entry]) => {
@@ -246,6 +280,9 @@ export default function HomeStory({ copy }) {
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      START_EVENTS.forEach((type) => window.removeEventListener(type, start));
+      window.removeEventListener("load", whenIdle);
+      cancelIdle();
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
