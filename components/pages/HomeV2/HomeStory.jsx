@@ -20,6 +20,11 @@ const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own m
 const START_EVENTS = ["scroll", "pointermove", "touchstart", "keydown"];
 const IDLE_TIMEOUT = 2500; // ms
 
+// Hands the main thread back (for input and paint) between the long steps of
+// building the scene, so none of them blocks the page for long.
+const yieldToMain = () =>
+  globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
+
 function Kicker({ children }) {
   return (
     <div className={styles.kicker}>
@@ -211,9 +216,11 @@ export default function HomeStory({ copy }) {
         // three.js only loads on the client, in its own chunk.
         const { createHomeScene } = await import("./homeScene");
         if (disposed) return;
-        await new Promise(requestAnimationFrame);
+        await yieldToMain();
         home = createHomeScene(canvasRef.current, { spark, reducedMotion, onCleared: () => wake(0) });
+        await yieldToMain();
         await home.warmUp();
+        await yieldToMain();
       } catch {
         // No WebGL (or the chunk failed to load): the copy keeps a calm backdrop.
         home?.dispose();

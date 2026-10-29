@@ -262,6 +262,8 @@ export function createHomeScene(canvas, { spark = "yellow", reducedMotion = fals
     } catch {
       // Not fatal: the frame below compiles whatever is left.
     }
+    // A separate task for the frame, so compiling and drawing don't block as one.
+    await new Promise((resolve) => setTimeout(resolve, 0));
     render(SCREENS.stations[STATION_COUNT - 1], 0, { x: 0, y: 0 });
   }
 
