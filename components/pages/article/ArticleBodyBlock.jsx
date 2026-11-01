@@ -1,5 +1,5 @@
 import styles from "./ArticleBodyBlock.module.css";
-import { RichTextField } from "../../puck/fields/RichTextField.jsx";
+import { LazyRichTextField } from "../../puck/fields/LazyRichTextField.jsx";
 
 export default function ArticleBody({ body }) {
    return (
@@ -17,7 +17,7 @@ export const ArticleBodyBlock = {
    fields: {
       body: {
          type: "custom",
-         render: RichTextField,
+         render: LazyRichTextField,
       },
    },
    defaultProps: {
