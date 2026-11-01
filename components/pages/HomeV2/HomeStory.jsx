@@ -11,7 +11,7 @@ import { SCREENS, STORY, activeStation, clamp01, ramp, stationScreen } from "./h
 // frame drawn completes it.
 const LOAD = { start: 0.06, fonts: 0.18, engine: 0.55, scene: 0.72, shaders: 0.92 };
 // Don't hold the page back longer than this; a late scene fades in by itself.
-const LOAD_TIMEOUT = 12000;
+const LOAD_TIMEOUT = 5000;
 
 const NO_POINTER = { x: 0, y: 0 };
 
@@ -237,6 +237,10 @@ export default function HomeStory({ copy, preloader }) {
         reach(1);
         return;
       }
+      // three.js only loads on the client, in its own chunk. It downloads while
+      // the fonts load; a failure is handled where it is awaited below.
+      const engine = import("./homeScene");
+      engine.catch(() => {});
       // The factory's plates print the wordmark and labels with the site fonts.
       await Promise.all([
         document.fonts.load('600 200px "Big Shoulders"'),
@@ -245,8 +249,7 @@ export default function HomeStory({ copy, preloader }) {
       reach(LOAD.fonts);
       let home = null;
       try {
-        // three.js only loads on the client, in its own chunk.
-        const { createHomeScene } = await import("./homeScene");
+        const { createHomeScene } = await engine;
         if (disposed) return;
         reach(LOAD.engine);
         // Let the bar paint before building the scene blocks the main thread.
