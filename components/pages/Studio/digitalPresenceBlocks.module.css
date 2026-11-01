@@ -228,6 +228,7 @@
 .planPrice { font-family: var(--font-display); font-weight: 500; font-size: 48px; line-height: 1; color: var(--hv-ink); margin-top: 16px; }
 .planFeatured .planPrice { color: var(--hv-ink-rev); }
 .planPeriod { font-size: 15px; color: var(--hv-muted); }
+.planFeatured .planPeriod { color: var(--hv-muted-rev); }
 .planDesc { margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--hv-ink-soft); }
 .planFeatured .planDesc { color: var(--hv-muted-rev); }
 .planFeaturesIntro { margin-top: 20px; font-size: 13px; font-weight: 600; color: var(--hv-ink-rev); }

@@ -11,7 +11,7 @@
   --hv-white: #ffffff;
   --hv-ink: #1b1d1e;
   --hv-ink-soft: #4a4e55;
-  --hv-muted: #9499a4;
+  --hv-muted: #646973; /* 4.7:1 on --hv-paper, 5.5:1 on white (WCAG AA); --hv-muted-rev is the one for dark backgrounds */
   --hv-hairline: #d6d7da;
   --hv-accent: #f7f42c;
   --hv-ink-rev: #ededed;
