@@ -237,7 +237,8 @@ export const WorkFeaturedBlock = {
     <section className={styles.featuredWrap}>
       <div className={styles.inner}>
         <a href={p.href || "/work"} className={styles.featured}>
-          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} width={1600} height={960} sizes={FEATURED_IMG_SIZES} /> : <div className={styles.featuredImg} />}
+          {/* The largest image above the fold on /work (its LCP): fetched with the HTML, not lazily. */}
+          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} width={1600} height={960} sizes={FEATURED_IMG_SIZES} preload /> : <div className={styles.featuredImg} />}
           <div className={styles.featuredBody}>
             <span className={styles.gridTag}>{p.tag}</span>
             <h2 className={styles.featuredTitle}>{lines(p.title)}</h2>
