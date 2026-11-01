@@ -285,7 +285,7 @@
 
 .ddDesc {
   font-size: 13px;
-  color: #9499a4;
+  color: var(--hv-muted);
   line-height: 1.4;
   transition: color 0.15s ease;
 }
@@ -339,7 +339,7 @@
 
 .headerEmail {
   font-size: 14px;
-  color: #9499a4;
+  color: var(--hv-muted);
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s ease;
@@ -454,7 +454,7 @@
 }
 
 .langLink {
-  color: #9499a4;
+  color: var(--hv-muted);
   text-decoration: none;
   transition: color 0.15s ease;
 }
