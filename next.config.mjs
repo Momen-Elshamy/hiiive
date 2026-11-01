@@ -36,13 +36,17 @@ const nextConfig = {
     "@premast/site-plugin-media",
     "@premast/site-plugin-mcp",
   ],
-  // Files under /video carry a content hash in their filename (see
-  // hero-waves.<hash>.mp4), so a new clip ships as a new URL and `immutable`
-  // can never pin a stale one. Keep that convention when adding videos here.
+  // Files under /video and /fonts carry a content hash in their filename (see
+  // hero-waves.<hash>.mp4), so a new file ships as a new URL and `immutable`
+  // can never pin a stale one. Keep that convention when adding files here.
   async headers() {
     return [
       {
         source: "/video/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/fonts/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];
