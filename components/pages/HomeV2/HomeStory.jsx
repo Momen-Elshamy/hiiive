@@ -11,7 +11,7 @@ import { SCREENS, STORY, activeStation, clamp01, ramp, stationScreen } from "./h
 // frame drawn completes it.
 const LOAD = { start: 0.06, fonts: 0.18, engine: 0.55, scene: 0.72, shaders: 0.92 };
 // Don't hold the page back longer than this; a late scene fades in by itself.
-const LOAD_TIMEOUT = 12000;
+const LOAD_TIMEOUT = 5000;
 
 const NO_POINTER = { x: 0, y: 0 };
 
@@ -22,6 +22,23 @@ const NO_POINTER = { x: 0, y: 0 };
 const AWAKE = 4000; // ms the scene keeps moving after the last input
 const INTRO = 6000; // ms it moves once it first shows, while the preloader lifts
 const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own motion runs
+
+// Hands the main thread back (for input and paint) between the long steps of
+// building the scene, so none of them blocks the page for long.
+const yieldToMain = () =>
+  globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
+
+// Whether WebGL runs on a GPU: the browser refuses a context with
+// failIfMajorPerformanceCaveat when it would only render in software.
+function hasFastWebGL() {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl2", { failIfMajorPerformanceCaveat: true });
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return Boolean(gl);
+  } catch {
+    return false;
+  }
+}
 
 function Kicker({ children }) {
   return (
@@ -213,6 +230,17 @@ export default function HomeStory({ copy, preloader }) {
     };
 
     (async () => {
+      // Without a GPU the scene would crawl: keep the calm backdrop and don't
+      // download three.js at all.
+      if (!hasFastWebGL()) {
+        stage.dataset.fallback = "true";
+        reach(1);
+        return;
+      }
+      // three.js only loads on the client, in its own chunk. It downloads while
+      // the fonts load; a failure is handled where it is awaited below.
+      const engine = import("./homeScene");
+      engine.catch(() => {});
       // The factory's plates print the wordmark and labels with the site fonts.
       await Promise.all([
         document.fonts.load('600 200px "Big Shoulders"'),
@@ -221,15 +249,16 @@ export default function HomeStory({ copy, preloader }) {
       reach(LOAD.fonts);
       let home = null;
       try {
-        // three.js only loads on the client, in its own chunk.
-        const { createHomeScene } = await import("./homeScene");
+        const { createHomeScene } = await engine;
         if (disposed) return;
         reach(LOAD.engine);
         // Let the bar paint before building the scene blocks the main thread.
-        await new Promise(requestAnimationFrame);
+        await yieldToMain();
         home = createHomeScene(canvasRef.current, { spark, reducedMotion, onCleared: () => wake(0) });
         reach(LOAD.scene);
+        await yieldToMain();
         await home.warmUp();
+        await yieldToMain();
       } catch {
         // No WebGL (or the chunk failed to load): the copy keeps a calm backdrop.
         home?.dispose();
