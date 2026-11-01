@@ -22,7 +22,9 @@ const aliases = Object.fromEntries(
 const puckDir = dirname(require.resolve("@puckeditor/core/package.json"));
 aliases["@puckeditor/core$"] = resolve(puckDir, "dist/index.mjs");
 aliases["@puckeditor/core/rsc"] = resolve(puckDir, "dist/rsc.mjs");
-aliases["@puckeditor/core/puck.css"] = resolve(puckDir, "dist/index.css");
+// no-external.css is index.css without its `@import` of Inter from rsms.me, a
+// render-blocking request to another site; the site serves Inter itself.
+aliases["@puckeditor/core/puck.css"] = resolve(puckDir, "dist/no-external.css");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
