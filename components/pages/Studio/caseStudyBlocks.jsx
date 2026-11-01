@@ -122,7 +122,7 @@ export const CaseStudyListBlock = {
         <div className={`${styles.grid} ${styles.listGridSpace}`}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <CmsImage className={styles.gridImg} src={c.image} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.listStat}>{c.stat}</span>
@@ -238,7 +238,7 @@ export const WorkFeaturedBlock = {
       <div className={styles.inner}>
         <a href={p.href || "/work"} className={styles.featured}>
           {/* The largest image above the fold on /work (its LCP): fetched with the HTML, not lazily. */}
-          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} width={1600} height={960} sizes={FEATURED_IMG_SIZES} preload /> : <div className={styles.featuredImg} />}
+          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} alt={p.imageAlt || p.title || ""} width={1600} height={960} sizes={FEATURED_IMG_SIZES} preload fetchPriority="high" /> : <div className={styles.featuredImg} />}
           <div className={styles.featuredBody}>
             <span className={styles.gridTag}>{p.tag}</span>
             <h2 className={styles.featuredTitle}>{lines(p.title)}</h2>
@@ -295,7 +295,7 @@ export const WorkGridBlock = {
         <div className={styles.grid}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <CmsImage className={styles.gridImg} src={c.image} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.gridStat}>{c.stat}</span>

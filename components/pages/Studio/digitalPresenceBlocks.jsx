@@ -298,6 +298,7 @@ export const DpHowBlock = {
               {c.visual ? <CmsImage
                   className={styles.howVisualImg}
                   src={c.visual}
+                  alt={c.alt || ""}
                   width={1232}
                   height={510}
                   sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px"

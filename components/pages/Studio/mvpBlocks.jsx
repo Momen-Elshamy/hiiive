@@ -78,7 +78,8 @@ export const MvpHeroBlock = {
               width={1410}
               height={1500}
               sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 45vw, 582px"
-              preload // the page's LCP: fetched with the HTML, not lazily
+              preload // the page's LCP: fetched with the HTML, not lazily, and first
+              fetchPriority="high"
             />
           </div>
         </div>
