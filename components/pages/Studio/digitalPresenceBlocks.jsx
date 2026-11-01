@@ -271,10 +271,10 @@ export const DpHowBlock = {
     cards: {
       type: "array", getItemSummary: (i) => i.title || "Card",
       arrayFields: {
-        num: { type: "text" }, title: { type: "text" }, visual: { type: "text" }, body: { type: "textarea" },
+        num: { type: "text" }, title: { type: "text" }, visual: { type: "text" }, alt: { type: "text" }, body: { type: "textarea" },
         chips: { type: "array", getItemSummary: (i) => i.text || "Chip", arrayFields: { text: { type: "text" } }, defaultItemProps: { text: "Tool" } },
       },
-      defaultItemProps: { num: "01", title: "Step", visual: "", body: "", chips: [] },
+      defaultItemProps: { num: "01", title: "Step", visual: "", alt: "", body: "", chips: [] },
     },
     loopNote: { type: "textarea" },
     loopStrip: { type: "text" },

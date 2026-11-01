@@ -142,7 +142,7 @@ export default function HomeCases({ copy }) {
         {cases.map((c, i) => (
           <li key={c.client} className={styles.slide} style={{ "--i": i }}>
             <a href={c.href} className={`${styles.caseCard} ${c.chart ? styles.chartCard : ""}`}>
-              {c.chart ? <GrowthChart values={c.chart} /> : <img className={styles.photo} src={c.image} alt="" loading="lazy" />}
+              {c.chart ? <GrowthChart values={c.chart} /> : <img className={styles.photo} src={c.image} alt={c.imageAlt || c.title || ""} loading="lazy" />}
               <span className={styles.shade} aria-hidden="true" />
               <div className={styles.top}>
                 {c.logo ? (
