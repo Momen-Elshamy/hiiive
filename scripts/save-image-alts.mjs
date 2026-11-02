@@ -4,12 +4,12 @@
 //   node scripts/save-image-alts.mjs           # dry run: prints the changes
 //   node scripts/save-image-alts.mjs --write   # applies them
 //
-// It fills the About page's three image alt fields, each published case
-// study's "Card photo alt text" (on its hero block; the /work cards and the
-// home cases read it from there), and the photo alt of each "Home · Work" card
-// on any page, global or content item. It only fills an empty field, and only
-// while the block still shows the image the text describes, so nothing an
-// editor typed or changed is overwritten. Before writing it backs the docs up to
+// It fills the image alt fields of the About page (three) and the MVP Build
+// page (two), each published case study's "Card photo alt text" (on its hero
+// block; the /work cards and the home cases read it from there), and the photo
+// alt of each "Home · Work" card on any page, global or content item. It only
+// fills an empty field, and only while the block still shows the image the
+// text describes, so nothing an editor typed or changed is overwritten. Before writing it backs the docs up to
 // .cms-backups/; each write only lands if the doc is unchanged since it was read.
 import fs from "node:fs";
 import mongoose from "mongoose";
@@ -17,21 +17,33 @@ import mongoose from "mongoose";
 const WRITE = process.argv.includes("--write");
 process.loadEnvFile(".env.local");
 
-// About page blocks: [block type, image prop, alt prop, image the block ships with, alts].
-const ABOUT = [
-  ["AboutHeroBlock", "imageUrl", "imageAlt", "/img/about-hero.jpg", {
-    en: "Glowing yellow light trail looping through a dark 3D ribbon",
-    de: "Leuchtende gelbe Lichtspur, die sich durch ein dunkles 3D-Band windet",
-  }],
-  ["AboutFlywheelBlock", "loopImage", "loopImageAlt", "/img/about-flywheel.png", {
-    en: "Flywheel diagram: AI Lab and AI Engineering as two connected loops",
-    de: "Flywheel-Diagramm: AI Lab und AI Engineering als zwei verbundene Kreisläufe",
-  }],
-  ["AboutHiveBlock", "imageUrl", "imageAlt", "/img/about-office.jpg", {
-    en: "The hiiive team laughing around a table in the Berlin-Spandau office",
-    de: "Das hiiive-Team lacht gemeinsam an einem Tisch im Büro in Berlin-Spandau",
-  }],
-];
+// Page blocks by page slug: [block type, image prop, alt prop, image the block ships with, alts].
+const PAGES = {
+  about: [
+    ["AboutHeroBlock", "imageUrl", "imageAlt", "/img/about-hero.jpg", {
+      en: "Glowing yellow light trail looping through a dark 3D ribbon",
+      de: "Leuchtende gelbe Lichtspur, die sich durch ein dunkles 3D-Band windet",
+    }],
+    ["AboutFlywheelBlock", "loopImage", "loopImageAlt", "/img/about-flywheel.png", {
+      en: "Flywheel diagram: AI Lab and AI Engineering as two connected loops",
+      de: "Flywheel-Diagramm: AI Lab und AI Engineering als zwei verbundene Kreisläufe",
+    }],
+    ["AboutHiveBlock", "imageUrl", "imageAlt", "/img/about-office.jpg", {
+      en: "The hiiive team laughing around a table in the Berlin-Spandau office",
+      de: "Das hiiive-Team lacht gemeinsam an einem Tisch im Büro in Berlin-Spandau",
+    }],
+  ],
+  "ai-engineering/mvp-build": [
+    ["MvpHeroBlock", "showcaseImage", "showcaseImageAlt", "/img/mvp-showcase.png", {
+      en: "Live build, week three — a real product, live",
+      de: "Live-Build in Woche drei – ein echtes Produkt, live",
+    }],
+    ["MvpProblemBlock", "timelineImage", "timelineImageAlt", "/img/mvp-timeline.png", {
+      en: "Typical first build — how six months disappear",
+      de: "Typischer erster Build – wie sechs Monate verschwinden",
+    }],
+  ],
+};
 
 // Case study items by slug: [card image (metadata.image), alts].
 const CASES = {
@@ -102,8 +114,8 @@ function fill(data, type, imageProp, altProp, src, alt, notes) {
   if (!block) return notes.push(`${type}: not on the page`), false;
   const props = block.props || {};
   if (props[altProp]) return notes.push(`${type}: already has "${props[altProp]}"`), false;
-  // A missing image prop renders the block's default image.
-  if (imageProp && (props[imageProp] ?? src) !== src) return notes.push(`${type}: shows another image, left empty`), false;
+  // A missing or empty image prop renders the block's default image.
+  if (imageProp && (props[imageProp] || src) !== src) return notes.push(`${type}: shows another image, left empty`), false;
   block.props = { ...props, [altProp]: alt };
   notes.push(`${type}.${altProp} = "${alt}"`);
   return true;
@@ -121,7 +133,7 @@ const caseItems = caseType
   ? await items.find({ contentType: caseType._id, slug: { $in: Object.keys(CASES) }, published: true }).toArray()
   : [];
 const found = [
-  ...(await pages.find({ $or: [{ slug: "about" }, homeWork] }).toArray()).map((doc) => ({ col: pages, name: `page ${doc.locale} /${doc.slug}`, doc })),
+  ...(await pages.find({ $or: [{ slug: { $in: Object.keys(PAGES) } }, homeWork] }).toArray()).map((doc) => ({ col: pages, name: `page ${doc.locale} /${doc.slug}`, doc })),
   ...(await globals.find(homeWork).toArray()).map((doc) => ({ col: globals, name: `global ${doc.locale} ${doc.key}`, doc })),
   ...caseItems.map((doc) => ({ col: items, name: `case study ${doc.locale} /${doc.slug}`, doc, isCase: true })),
   ...(await items.find(homeWork).toArray()).map((doc) => ({ col: items, name: `item ${doc.locale} /${doc.slug}`, doc })),
@@ -137,8 +149,8 @@ for (const { col, name, doc, isCase } of docs) {
   const notes = [];
   let changed = false;
 
-  if (col === pages && doc.slug === "about") {
-    for (const [type, imageProp, altProp, src, byLocale] of ABOUT) {
+  if (col === pages && Object.hasOwn(PAGES, doc.slug)) {
+    for (const [type, imageProp, altProp, src, byLocale] of PAGES[doc.slug]) {
       if (alts(byLocale)) changed = fill(data, type, imageProp, altProp, src, alts(byLocale), notes) || changed;
     }
   } else if (isCase) {
