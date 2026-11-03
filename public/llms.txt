@@ -1,6 +1,6 @@
 # HIIIVE
 
-> HIIIVE (hiiive.ai) is an agentic product company from Berlin, founded 2024. Two engines: the Studio puts forward-deployed engineers inside client companies and builds agentic systems on their real operations — AI software and internal tools, MVP builds, organic visibility (AI-native SEO), digital presence and funnels, AI transformation. The Lab turns what gets built there into HIIIVE's own products (Content OS in production, Spoky in validation, Komplyo in build). Every engagement leaves a product we keep building.
+> HIIIVE (hiiive.ai) is an agentic product company from Berlin, founded 2024. Two engines: the Studio puts forward-deployed engineers inside client companies and builds agentic systems on their real operations — AI software and internal tools, MVP builds, organic visibility (AI-native SEO), digital presence and funnels, AI transformation. The Lab turns what gets built there into HIIIVE's own products (Dvision, Spoky and Komplyo). Every engagement leaves a product we keep building.
 
 Key facts:
 - Agentic product company, Berlin, Germany. Founded 2024.
