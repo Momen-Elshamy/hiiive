@@ -27,6 +27,9 @@ const DRIFT_FRAME = 1000 / 30; // ms between frames while only the scene's own m
 // building the scene, so none of them blocks the page for long.
 const yieldToMain = () =>
   globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
+// Resolves once the next frame is painted (rAF runs just before the paint, the
+// timeout just after), so a progress update shows before a long step blocks.
+const afterPaint = () => new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
 
 // Whether WebGL runs on a GPU: the browser refuses a context with
 // failIfMajorPerformanceCaveat when it would only render in software.
@@ -253,10 +256,10 @@ export default function HomeStory({ copy, preloader }) {
         if (disposed) return;
         reach(LOAD.engine);
         // Let the bar paint before building the scene blocks the main thread.
-        await yieldToMain();
+        await afterPaint();
         home = createHomeScene(canvasRef.current, { spark, reducedMotion, onCleared: () => wake(0) });
         reach(LOAD.scene);
-        await yieldToMain();
+        await afterPaint();
         await home.warmUp();
         await yieldToMain();
       } catch {

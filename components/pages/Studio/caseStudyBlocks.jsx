@@ -10,7 +10,7 @@
 //   adding a case study in admin updates every page that shows the list.
 //   The stored `items` act as the editor preview / offline fallback, so the
 //   injected blocks have no alt field of their own.
-import { CmsImage } from "@/components/ui/CmsImage";
+import { CmsImage, GRID_IMG_SIZES } from "@/components/ui/CmsImage";
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
 import { lines } from "@/components/ui/lines";
@@ -22,9 +22,7 @@ function ArrowRight() {
     </svg>
   );
 }
-// Rendered widths: the .inner container caps content at 1280px (1360 - 2*40
-// padding) and stacks everything into one column below 900px (24px padding).
-const GRID_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px";
+// Rendered width of the featured photo, in the same .inner grid as GRID_IMG_SIZES.
 const FEATURED_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 51vw, 656px";
 
 /* ================================================================== */
@@ -123,7 +121,7 @@ export const CaseStudyListBlock = {
         <div className={`${styles.grid} ${styles.listGridSpace}`}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.listStat}>{c.stat}</span>
@@ -296,7 +294,7 @@ export const WorkGridBlock = {
         <div className={styles.grid}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || c.tag || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.gridStat}>{c.stat}</span>

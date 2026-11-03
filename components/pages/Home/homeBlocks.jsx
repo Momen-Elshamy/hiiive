@@ -398,8 +398,8 @@ export const HomeWorkBlock = {
       type: "array",
       getItemSummary: (item) => item.title || item.category || "Case",
       arrayFields: {
-        // Photo alt fallback: imageAlt, else title, else category (cards saved
-        // before imageAlt and title existed still have a category).
+        // Photo alt: imageAlt, else the title. A category ("Logistics operator")
+        // doesn't describe the photo, so a card with neither keeps an empty alt.
         title: { type: "text", label: "Case title (photo alt if none is set)" },
         category: { type: "text" },
         discipline: { type: "text" },
@@ -435,7 +435,7 @@ export const HomeWorkBlock = {
         <Stagger className={styles.caseRow}>
           {(cases || []).map((c, i) => (
             <StaggerItem as="article" key={i} className={styles.caseCard}>
-              {c.image ? <img className={styles.caseImage} src={c.image} alt={c.imageAlt || c.title || c.category || ""} loading="lazy" /> : <div className={styles.caseImage} />}
+              {c.image ? <img className={styles.caseImage} src={c.image} alt={c.imageAlt || c.title || ""} loading="lazy" /> : <div className={styles.caseImage} />}
               <div className={styles.caseBody}>
                 <div className={styles.caseTags}>
                   <span className={styles.caseCategory}>{c.category}</span>

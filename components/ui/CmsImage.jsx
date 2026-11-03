@@ -10,6 +10,10 @@
 // the image loads. The CSS class still decides the rendered box.
 import Image from "next/image";
 
+// `sizes` for a card in the 3-column .inner grid: content capped at 1280px
+// (1360 - 2*40 padding), one column below 900px (24px padding).
+export const GRID_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px";
+
 const isOptimizable = (src) =>
   typeof src === "string" && src.startsWith("/") && !src.startsWith("//") && !src.includes("?");
 

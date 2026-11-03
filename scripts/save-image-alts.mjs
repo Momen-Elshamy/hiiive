@@ -110,7 +110,7 @@ function fillHomeWork(data, locale, notes) {
 
 /** Sets props[altProp] = alt on the first block of a type, if empty and still showing src. */
 function fill(data, type, imageProp, altProp, src, alt, notes) {
-  const block = data.content?.find((b) => b.type === type);
+  const [block] = blocksOf(data, type);
   if (!block) return notes.push(`${type}: not on the page`), false;
   const props = block.props || {};
   if (props[altProp]) return notes.push(`${type}: already has "${props[altProp]}"`), false;
@@ -144,7 +144,9 @@ const docs = found.filter(({ doc }) => !seen.has(String(doc._id)) && seen.add(St
 
 const changes = [];
 for (const { col, name, doc, isCase } of docs) {
-  const alts = (byLocale) => byLocale[doc.locale];
+  // Rows from before the locale field (locale: null) are English.
+  const locale = doc.locale || "en";
+  const alts = (byLocale) => byLocale[locale];
   const data = JSON.parse(doc.content || "{}");
   const notes = [];
   let changed = false;
@@ -158,7 +160,7 @@ for (const { col, name, doc, isCase } of docs) {
     if (doc.metadata?.image !== src) notes.push(`card shows ${doc.metadata?.image || "no image"}, left empty`);
     else if (alts(byLocale)) changed = fill(data, "CaseStudyHeroBlock", null, "cardImageAlt", src, alts(byLocale), notes);
   }
-  changed = fillHomeWork(data, doc.locale, notes) || changed;
+  changed = fillHomeWork(data, locale, notes) || changed;
 
   console.log(`${name}:\n  ${notes.join("\n  ")}`);
   if (changed) changes.push({ col, name, doc, content: JSON.stringify(data) });

@@ -47,15 +47,17 @@ export const MvpHeroBlock = {
     primaryHref: { type: "text" },
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
-    showcaseImage: { type: "text" },
+    // The page reserves the image's box from width/height below before it loads.
+    showcaseImage: { type: "text", label: "Showcase image (portrait, 1410 × 1500)" },
     showcaseImageAlt: { type: "text", label: "Showcase image alt text" },
   },
   defaultProps: HERO_D,
   render: (raw) => {
     const p = { ...HERO_D, ...raw };
     const showcaseSrc = p.showcaseImage || "/img/mvp-showcase.png";
-    // The default alt describes the default image only; a swapped image needs its own.
-    const showcaseAlt = p.showcaseImageAlt || (showcaseSrc === HERO_D.showcaseImage ? HERO_D.showcaseImageAlt : "");
+    // The default alt describes the default image only; a swapped image needs its
+    // own. Read from raw: p always holds the default alt, merged in above.
+    const showcaseAlt = raw.showcaseImageAlt || (showcaseSrc === HERO_D.showcaseImage ? HERO_D.showcaseImageAlt : "");
     return (
       <section className={styles.hero}>
         <div className={styles.inner}>
@@ -111,7 +113,7 @@ export const MvpProblemBlock = {
   fields: {
     headline: { type: "textarea" },
     subhead: { type: "textarea" },
-    timelineImage: { type: "text" },
+    timelineImage: { type: "text", label: "Timeline image (wide, 2355 × 855)" },
     timelineImageAlt: { type: "text", label: "Timeline image alt text" },
     quote: { type: "textarea" },
     points: {
@@ -125,7 +127,7 @@ export const MvpProblemBlock = {
   render: (raw) => {
     const p = { ...PROBLEM_D, ...raw };
     const timelineSrc = p.timelineImage || "/img/mvp-timeline.png";
-    const timelineAlt = p.timelineImageAlt || (timelineSrc === PROBLEM_D.timelineImage ? PROBLEM_D.timelineImageAlt : "");
+    const timelineAlt = raw.timelineImageAlt || (timelineSrc === PROBLEM_D.timelineImage ? PROBLEM_D.timelineImageAlt : "");
     return (
       <section className={styles.problem}>
         <div className={styles.inner}>

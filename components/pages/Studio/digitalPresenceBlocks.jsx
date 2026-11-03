@@ -1,7 +1,7 @@
 // Server-safe Puck blocks for the Studio / Digital Presence landing page.
 // Content-editable (text, prices, list items via Puck); visual scaffolding is
 // fixed CSS. Uses the global design tokens (--hv-*, --font-*) from globals.css.
-import { CmsImage } from "@/components/ui/CmsImage";
+import { CmsImage, GRID_IMG_SIZES } from "@/components/ui/CmsImage";
 import styles from "./digitalPresenceBlocks.module.css";
 import { lines } from "@/components/ui/lines";
 
@@ -267,7 +267,7 @@ export const DpHowBlock = {
     cards: {
       type: "array", getItemSummary: (i) => i.title || "Card",
       arrayFields: {
-        num: { type: "text" }, title: { type: "text" }, visual: { type: "text" }, alt: { type: "text" }, body: { type: "textarea" },
+        num: { type: "text" }, title: { type: "text" }, visual: { type: "text", label: "Visual (wide, 1232 × 510)" }, alt: { type: "text" }, body: { type: "textarea" },
         chips: { type: "array", getItemSummary: (i) => i.text || "Chip", arrayFields: { text: { type: "text" } }, defaultItemProps: { text: "Tool" } },
       },
       defaultItemProps: { num: "01", title: "Step", visual: "", alt: "", body: "", chips: [] },
@@ -297,7 +297,7 @@ export const DpHowBlock = {
                   alt={c.alt || ""}
                   width={1232}
                   height={510}
-                  sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px"
+                  sizes={GRID_IMG_SIZES}
                 /> : null}
               <div className={styles.howCardBody}>
                 <div className={styles.howTitleRow}>

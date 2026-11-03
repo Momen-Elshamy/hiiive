@@ -47,11 +47,11 @@ const nextConfig = {
   // hero-waves.<hash>.mp4), so a new file ships as a new URL and `immutable`
   // can never pin a stale one. Keep that convention when adding files here.
   //
-  // Files under /img have no hash, so they get a year without `immutable`.
-  // When you change an image's content, give the file a new name (or purge
-  // it in Cloudflare): browsers and the edge keep the old one for up to a
-  // year. The /_next/image optimizer copies this max-age onto its WebP/AVIF
-  // responses, so optimized images are cached as long.
+  // Files under /img have no hash and get replaced under the same name, so
+  // they are cached for a day and then revalidated in the background for up
+  // to a week: a changed image shows within a day without a Cloudflare purge.
+  // The /_next/image optimizer copies this max-age onto its WebP/AVIF
+  // responses, so optimized images follow the same day.
   async headers() {
     return [
       {
@@ -64,7 +64,7 @@ const nextConfig = {
       },
       {
         source: "/img/:path*",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000" }],
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
       },
     ];
   },
