@@ -36,6 +36,7 @@ const HERO_D = {
   primaryLabel: "Book a scoping call", primaryHref: "https://calendly.com/hiiive/get-to-know",
   secondaryLabel: "Try the cost estimator", secondaryHref: "/tools/mvp-cost-estimator",
   showcaseImage: "/img/mvp-showcase.png",
+  showcaseImageAlt: "Live build, week three — a real product, live",
 };
 
 export const MvpHeroBlock = {
@@ -51,10 +52,14 @@ export const MvpHeroBlock = {
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
     showcaseImage: { type: "text" },
+    showcaseImageAlt: { type: "text", label: "Showcase image alt text" },
   },
   defaultProps: HERO_D,
   render: (raw) => {
     const p = { ...HERO_D, ...raw };
+    const showcaseSrc = p.showcaseImage || "/img/mvp-showcase.png";
+    // The default alt describes the default image only; a swapped image needs its own.
+    const showcaseAlt = p.showcaseImageAlt || (showcaseSrc === HERO_D.showcaseImage ? HERO_D.showcaseImageAlt : "");
     return (
       <section className={styles.hero}>
         <div className={styles.inner}>
@@ -73,8 +78,8 @@ export const MvpHeroBlock = {
             </div>
             <CmsImage
               className={styles.showcaseImg}
-              src={p.showcaseImage || "/img/mvp-showcase.png"}
-              alt="Live build, week three — a real product, live"
+              src={showcaseSrc}
+              alt={showcaseAlt}
               width={1410}
               height={1500}
               sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 45vw, 582px"
@@ -95,6 +100,7 @@ const PROBLEM_D = {
   headline: "Great ideas don't fail because they're bad.\nThey fail because they never launch.",
   subhead: "Most founders spend months trying to hire developers, manage freelancers, or build features customers never actually use.",
   timelineImage: "/img/mvp-timeline.png",
+  timelineImageAlt: "Typical first build — how six months disappear",
   quote: "Shipping your first product shouldn't take six months and most of your runway. That's why we built the 3-week MVP engagement.",
   points: [
     { num: "01", title: "Budget is exhausted", desc: "Spending gets locked into development before you ship anything usable." },
@@ -110,6 +116,7 @@ export const MvpProblemBlock = {
     headline: { type: "textarea" },
     subhead: { type: "textarea" },
     timelineImage: { type: "text" },
+    timelineImageAlt: { type: "text", label: "Timeline image alt text" },
     quote: { type: "textarea" },
     points: {
       type: "array",
@@ -121,6 +128,8 @@ export const MvpProblemBlock = {
   defaultProps: PROBLEM_D,
   render: (raw) => {
     const p = { ...PROBLEM_D, ...raw };
+    const timelineSrc = p.timelineImage || "/img/mvp-timeline.png";
+    const timelineAlt = p.timelineImageAlt || (timelineSrc === PROBLEM_D.timelineImage ? PROBLEM_D.timelineImageAlt : "");
     return (
       <section className={styles.problem}>
         <div className={styles.inner}>
@@ -130,8 +139,8 @@ export const MvpProblemBlock = {
             <div>
               <CmsImage
                 className={styles.timelineImg}
-                src={p.timelineImage || "/img/mvp-timeline.png"}
-                alt="Typical first build — how six months disappear"
+                src={timelineSrc}
+                alt={timelineAlt}
                 width={2355}
                 height={855}
                 sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 50vw, 664px"
