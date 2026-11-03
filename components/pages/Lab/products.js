@@ -2,7 +2,8 @@
 // product page all read from here, through labProducts(locale). Copy follows
 // each product's own site (dvision.ai, myspoky.com, komplyo.de). `glows` is
 // each product's halftone light (constant, so the canvases draw once); `ui`
-// is the small illustrative window on the product page.
+// is the small illustrative window on the product page; `meta` is the product
+// page's search title (topic only, the brand is added) and description.
 
 const PRODUCTS = [
   {
@@ -16,6 +17,11 @@ const PRODUCTS = [
     ],
     copy: {
       en: {
+        meta: {
+          title: "Dvision: Get Found in Search and AI Answers",
+          description:
+            "Dvision gets companies found in search and in AI answers: one growth engineer per company and a content system with a human expert in the loop.",
+        },
         menu: "Organic visibility for the AI era, run as a system.",
         tagline: "From invisible to inevitable.",
         intro:
@@ -37,6 +43,11 @@ const PRODUCTS = [
         ],
       },
       de: {
+        meta: {
+          title: "Dvision: Sichtbar in Suche und KI-Antworten",
+          description:
+            "Dvision macht Unternehmen in Suche und KI-Antworten auffindbar: ein Growth Engineer pro Unternehmen und ein Content-System mit Experten im Loop.",
+        },
         menu: "Organische Sichtbarkeit im KI-Zeitalter.",
         tagline: "Von unsichtbar zu unübersehbar.",
         intro:
@@ -70,6 +81,11 @@ const PRODUCTS = [
     ],
     copy: {
       en: {
+        meta: {
+          title: "Spoky: AI PR Platform for Media Coverage",
+          description:
+            "Spoky is an AI PR platform for startups and businesses: it watches the media for you, finds the articles that matter and helps you pitch smarter.",
+        },
         menu: "AI for PR: media monitoring and smarter pitches.",
         tagline: "PR outreach, automated with intelligence.",
         intro:
@@ -90,6 +106,11 @@ const PRODUCTS = [
         ],
       },
       de: {
+        meta: {
+          title: "Spoky: KI-PR-Plattform für Medienpräsenz",
+          description:
+            "Spoky ist eine KI-PR-Plattform für Startups und Unternehmen: Sie beobachtet die Medien, findet die relevanten Artikel und hilft, besser zu pitchen.",
+        },
         menu: "KI für PR: Medienbeobachtung und bessere Pitches.",
         tagline: "Intelligente PR-Arbeit mit KI.",
         intro:
@@ -122,6 +143,11 @@ const PRODUCTS = [
     ],
     copy: {
       en: {
+        meta: {
+          title: "Komplyo: EU AI Act Compliance Software",
+          description:
+            "Komplyo is EU AI Act compliance software: your AI inventory, risk classes and documentation in one place, from the first AI system to the audit dossier.",
+        },
         menu: "EU AI Act compliance, from inventory to audit.",
         tagline: "AI in use. Everything in view.",
         intro:
@@ -142,6 +168,11 @@ const PRODUCTS = [
         ],
       },
       de: {
+        meta: {
+          title: "Komplyo: Software für EU-AI-Act-Compliance",
+          description:
+            "Komplyo ist Software für EU-AI-Act-Compliance: KI-Inventar, Risikoklassen und Dokumentation an einem Ort, vom ersten KI-System bis zum Audit-Dossier.",
+        },
         menu: "EU-AI-Act-Compliance, vom Inventar bis zum Audit.",
         tagline: "KI im Einsatz. Alles im Blick.",
         intro:

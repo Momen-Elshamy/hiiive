@@ -6,8 +6,9 @@ const BOOK_A_CALL = "https://calendly.com/hiiive/get-to-know";
 export const LAB_COPY = {
   en: {
     meta: {
-      title: "AI Lab | HIIIVE",
-      description: "Products that started as work for one company and are made for many: Dvision, Spoky and Komplyo.",
+      title: "AI Lab: AI Products for Companies",
+      description:
+        "Products that started as work for one company and are made for many: Dvision for AI search visibility, Spoky for PR and Komplyo for EU AI Act compliance.",
     },
     kicker: "AI Lab",
     title: ["Built with one.", "Made for many."],
@@ -31,8 +32,9 @@ export const LAB_COPY = {
   },
   de: {
     meta: {
-      title: "KI-Lab | HIIIVE",
-      description: "Produkte, die als Arbeit für ein Unternehmen begannen und für viele gemacht sind: Dvision, Spoky und Komplyo.",
+      title: "KI-Lab: KI-Produkte für Unternehmen",
+      description:
+        "Produkte, die als Arbeit für ein Unternehmen begannen und für viele gemacht sind: Dvision für KI-Sichtbarkeit, Spoky für PR, Komplyo für den EU AI Act.",
     },
     kicker: "KI-Lab",
     title: ["Mit einem gebaut.", "Für viele gemacht."],

@@ -2,7 +2,7 @@ import { Render } from "@puckeditor/core/rsc";
 import { siteConfig } from "@/site.config";
 import { isCmsDbEnabled } from "@/lib/cms-mode";
 import { resolveLocale, findLocalized, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
-import { buildPageMetadata } from "@/lib/seo";
+import { brandTitle, buildPageMetadata } from "@/lib/seo";
 import { redirectLocale, redirectTarget } from "@/lib/redirects";
 import HomePage, { homeMetadata } from "@/components/pages/HomeV2/HomePage";
 import { resolveRedirect } from "@premast/site-core/services/resolve-redirect.js";
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }) {
       const urlInfo = { path: rest.join("/"), locale: localePrefix || DEFAULT_LOCALE };
       const puckData = parsePuckData(doc.content);
       if (puckData) return extractSeoMetadata(puckData, doc.title, urlInfo);
-      return { title: doc.title };
+      return { title: { absolute: brandTitle(doc.title) } };
     }
   } catch { /* DB offline */ }
   return {};
