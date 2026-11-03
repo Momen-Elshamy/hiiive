@@ -2,6 +2,7 @@
 // Content-editable; visual scaffolding fixed CSS. Reuses HomeClientsBlock
 // and HomeCtaBlock for the shared sections.
 import styles from "./aboutBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -32,11 +33,6 @@ function Sparkles() {
     </svg>
   );
 }
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <>{line.endsWith("-") ? null : " "}<br /></> : null}</span>
-  ));
-
 /* ================================================================== */
 /* 1. Hero — mission, split headline, imagery                          */
 /* ================================================================== */

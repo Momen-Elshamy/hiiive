@@ -9,6 +9,7 @@
 //   The stored `items` act as the editor preview / offline fallback.
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -17,11 +18,6 @@ function ArrowRight() {
     </svg>
   );
 }
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <>{line.endsWith("-") ? null : " "}<br /></> : null}</span>
-  ));
-
 /* ================================================================== */
 /* Case Study · Hero (detail page)                                     */
 /* ================================================================== */

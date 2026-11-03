@@ -2,6 +2,7 @@
 // rendered by Puck's RSC <Render>. Uses the global design tokens (--hv-*,
 // --font-*) from app/globals.css so it matches the home design.
 import styles from "./studioBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -43,9 +44,7 @@ export const StudioHeroBlock = {
           <span className={styles.kickerLabel}>{kicker}</span>
         </div>
         <h1 className={styles.heroTitle}>
-          {(title || "").split("\n").map((line, i, arr) => (
-            <span key={i}>{line}{i < arr.length - 1 ? <>{line.endsWith("-") ? null : " "}<br /></> : null}</span>
-          ))}
+          {lines(title)}
         </h1>
         <p className={styles.heroSub}>{subtitle}</p>
         <div className={styles.ctaRow}>
