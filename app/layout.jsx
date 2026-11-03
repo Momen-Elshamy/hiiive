@@ -5,10 +5,10 @@ import "./globals.css";
 import styles from "./layout.module.css";
 
 // Pages set the topic alone as their title; the template adds the brand.
+// No default description: it would be English on German pages too, so a page
+// without its own leaves the snippet to the search engine.
 export const metadata = {
    title: { template: "%s | HIIIVE", default: "HIIIVE" },
-   description:
-      "HIIIVE is an AI lab & tech house in Berlin. Smart people and smart systems, inventing AI products, agents and software for real companies.",
 };
 
 export default function RootLayout({ children }) {
