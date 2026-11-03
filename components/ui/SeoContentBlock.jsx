@@ -1,9 +1,9 @@
 // SEO content section — kicker + display heading + rich-text body. Meant for
 // long-form, editable content near the end of landing pages (definitions,
 // guides, FAQs-as-prose) so pages rank for informational queries.
-// Server-safe: the RichTextField only runs inside the admin editor.
+// Server-safe: the rich text field only loads inside the admin editor.
 import styles from "./SeoContentBlock.module.css";
-import { RichTextField } from "../puck/fields/RichTextField.jsx";
+import { LazyRichTextField } from "../puck/fields/LazyRichTextField.jsx";
 
 const D = {
   kicker: "Guide",
@@ -18,7 +18,7 @@ export const SeoContentBlock = {
     title: { type: "text" },
     body: {
       type: "custom",
-      render: RichTextField,
+      render: LazyRichTextField,
     },
   },
   defaultProps: D,

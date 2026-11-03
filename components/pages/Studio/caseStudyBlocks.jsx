@@ -1,12 +1,16 @@
 // Case Study blocks.
 //
 // - CaseStudyHeroBlock: detail-page hero (used by the "Case Study" content
-//   type template; each /work/<slug> item edits its own copy).
+//   type template; each /work/<slug> item edits its own copy). Its
+//   cardImageAlt is the alt of the item's photo on the cards elsewhere
+//   (/work, case lists, home); the hero itself shows no photo.
 // - CaseStudyListBlock: dynamic listing. Its `items` are injected at public
 //   render time by the beforePageRender hook in lib/case-studies.js, which
 //   reads published Case Study ContentItems (metadata) from the DB — so
 //   adding a case study in admin updates every page that shows the list.
-//   The stored `items` act as the editor preview / offline fallback.
+//   The stored `items` act as the editor preview / offline fallback, so the
+//   injected blocks have no alt field of their own.
+import { CmsImage, GRID_IMG_SIZES } from "@/components/ui/CmsImage";
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
 import { lines } from "@/components/ui/lines";
@@ -18,6 +22,9 @@ function ArrowRight() {
     </svg>
   );
 }
+// Rendered width of the featured photo, in the same .inner grid as GRID_IMG_SIZES.
+const FEATURED_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 51vw, 656px";
+
 /* ================================================================== */
 /* Case Study · Hero (detail page)                                     */
 /* ================================================================== */
@@ -31,6 +38,7 @@ export const CaseStudyHeroBlock = {
     statLabel: { type: "text" },
     title: { type: "textarea" },
     summary: { type: "textarea" },
+    cardImageAlt: { type: "text", label: "Card photo alt text (/work and home)" },
   },
   defaultProps: {
     crumbParent: "Work",
@@ -40,6 +48,7 @@ export const CaseStudyHeroBlock = {
     statLabel: "what moved, and when",
     title: "Case study title",
     summary: "One-paragraph summary of the problem, what we shipped, and what it changed.",
+    cardImageAlt: "",
   },
   render: (p) => (
     <section className={styles.csHero}>
@@ -112,7 +121,7 @@ export const CaseStudyListBlock = {
         <div className={`${styles.grid} ${styles.listGridSpace}`}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.listStat}>{c.stat}</span>
@@ -227,7 +236,8 @@ export const WorkFeaturedBlock = {
     <section className={styles.featuredWrap}>
       <div className={styles.inner}>
         <a href={p.href || "/work"} className={styles.featured}>
-          {p.image ? <img className={styles.featuredImg} src={p.image} alt="" loading="lazy" /> : <div className={styles.featuredImg} />}
+          {/* The largest image above the fold on /work (its LCP): fetched with the HTML, not lazily. */}
+          {p.image ? <CmsImage className={styles.featuredImg} src={p.image} alt={p.imageAlt || p.title || ""} width={1600} height={960} sizes={FEATURED_IMG_SIZES} preload fetchPriority="high" /> : <div className={styles.featuredImg} />}
           <div className={styles.featuredBody}>
             <span className={styles.gridTag}>{p.tag}</span>
             <h2 className={styles.featuredTitle}>{lines(p.title)}</h2>
@@ -284,7 +294,7 @@ export const WorkGridBlock = {
         <div className={styles.grid}>
           {(items || []).map((c, i) => (
             <a key={i} href={c.href || "/work"} className={styles.gridCard}>
-              {c.image ? <img className={styles.gridImg} src={c.image} alt="" loading="lazy" /> : <div className={styles.gridImg} />}
+              {c.image ? <CmsImage className={styles.gridImg} src={c.image} alt={c.imageAlt || c.title || ""} width={1600} height={900} sizes={GRID_IMG_SIZES} /> : <div className={styles.gridImg} />}
               <div className={styles.gridBody}>
                 <span className={styles.gridTag}>{c.tag}</span>
                 <span className={styles.gridStat}>{c.stat}</span>

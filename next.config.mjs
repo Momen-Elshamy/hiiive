@@ -22,11 +22,18 @@ const aliases = Object.fromEntries(
 const puckDir = dirname(require.resolve("@puckeditor/core/package.json"));
 aliases["@puckeditor/core$"] = resolve(puckDir, "dist/index.mjs");
 aliases["@puckeditor/core/rsc"] = resolve(puckDir, "dist/rsc.mjs");
-aliases["@puckeditor/core/puck.css"] = resolve(puckDir, "dist/index.css");
+// no-external.css is index.css without its `@import` of Inter from rsms.me, a
+// render-blocking request to another site; the site serves Inter itself.
+aliases["@puckeditor/core/puck.css"] = resolve(puckDir, "dist/no-external.css");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ["mongoose"],
+  // AVIF first (smaller than WebP), WebP for browsers without AVIF support.
+  // AVIF is slower to encode, but each size is encoded once and then cached.
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
   transpilePackages: [
     "@premast/site-core",
     "@premast/site-plugin-seo",
@@ -36,14 +43,28 @@ const nextConfig = {
     "@premast/site-plugin-media",
     "@premast/site-plugin-mcp",
   ],
-  // Files under /video carry a content hash in their filename (see
-  // hero-waves.<hash>.mp4), so a new clip ships as a new URL and `immutable`
-  // can never pin a stale one. Keep that convention when adding videos here.
+  // Files under /video and /fonts carry a content hash in their filename (see
+  // hero-waves.<hash>.mp4), so a new file ships as a new URL and `immutable`
+  // can never pin a stale one. Keep that convention when adding files here.
+  //
+  // Files under /img have no hash and get replaced under the same name, so
+  // they are cached for a day and then revalidated in the background for up
+  // to a week: a changed image shows within a day without a Cloudflare purge.
+  // The /_next/image optimizer copies this max-age onto its WebP/AVIF
+  // responses, so optimized images follow the same day.
   async headers() {
     return [
       {
         source: "/video/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/fonts/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/img/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
       },
     ];
   },

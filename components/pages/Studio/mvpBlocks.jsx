@@ -3,6 +3,7 @@
 // all copy is editable. Reuses HomeClientsBlock, DpHowBlock, DpFeatureBlock,
 // DpPackagesBlock, DpFaqBlock and HomeCtaBlock for the shared sections.
 // Defaults are merged at render (Puck only applies defaultProps in the editor).
+import { CmsImage } from "@/components/ui/CmsImage";
 import styles from "./mvpBlocks.module.css";
 import { lines } from "@/components/ui/lines";
 
@@ -31,6 +32,7 @@ const HERO_D = {
   primaryLabel: "Book a scoping call", primaryHref: "https://calendly.com/hiiive/get-to-know",
   secondaryLabel: "Try the cost estimator", secondaryHref: "/tools/mvp-cost-estimator",
   showcaseImage: "/img/mvp-showcase.png",
+  showcaseImageAlt: "Live build, week three — a real product, live",
 };
 
 export const MvpHeroBlock = {
@@ -45,11 +47,17 @@ export const MvpHeroBlock = {
     primaryHref: { type: "text" },
     secondaryLabel: { type: "text" },
     secondaryHref: { type: "text" },
-    showcaseImage: { type: "text" },
+    // The page reserves the image's box from width/height below before it loads.
+    showcaseImage: { type: "text", label: "Showcase image (portrait, 1410 × 1500)" },
+    showcaseImageAlt: { type: "text", label: "Showcase image alt text" },
   },
   defaultProps: HERO_D,
   render: (raw) => {
     const p = { ...HERO_D, ...raw };
+    const showcaseSrc = p.showcaseImage || "/img/mvp-showcase.png";
+    // The default alt describes the default image only; a swapped image needs its
+    // own. Read from raw: p always holds the default alt, merged in above.
+    const showcaseAlt = raw.showcaseImageAlt || (showcaseSrc === HERO_D.showcaseImage ? HERO_D.showcaseImageAlt : "");
     return (
       <section className={styles.hero}>
         <div className={styles.inner}>
@@ -66,7 +74,16 @@ export const MvpHeroBlock = {
                 {p.secondaryLabel ? <a href={p.secondaryHref || "#"} className={styles.btnGhost}>{p.secondaryLabel}</a> : null}
               </div>
             </div>
-            <img className={styles.showcaseImg} src={p.showcaseImage || "/img/mvp-showcase.png"} alt="Live build, week three — a real product, live" loading="lazy" />
+            <CmsImage
+              className={styles.showcaseImg}
+              src={showcaseSrc}
+              alt={showcaseAlt}
+              width={1410}
+              height={1500}
+              sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 45vw, 582px"
+              preload // the page's LCP: fetched with the HTML, not lazily, and first
+              fetchPriority="high"
+            />
           </div>
         </div>
       </section>
@@ -81,6 +98,7 @@ const PROBLEM_D = {
   headline: "Great ideas don't fail because they're bad.\nThey fail because they never launch.",
   subhead: "Most founders spend months trying to hire developers, manage freelancers, or build features customers never actually use.",
   timelineImage: "/img/mvp-timeline.png",
+  timelineImageAlt: "Typical first build — how six months disappear",
   quote: "Shipping your first product shouldn't take six months and most of your runway. That's why we built the 3-week MVP engagement.",
   points: [
     { num: "01", title: "Budget is exhausted", desc: "Spending gets locked into development before you ship anything usable." },
@@ -95,7 +113,8 @@ export const MvpProblemBlock = {
   fields: {
     headline: { type: "textarea" },
     subhead: { type: "textarea" },
-    timelineImage: { type: "text" },
+    timelineImage: { type: "text", label: "Timeline image (wide, 2355 × 855)" },
+    timelineImageAlt: { type: "text", label: "Timeline image alt text" },
     quote: { type: "textarea" },
     points: {
       type: "array",
@@ -107,6 +126,8 @@ export const MvpProblemBlock = {
   defaultProps: PROBLEM_D,
   render: (raw) => {
     const p = { ...PROBLEM_D, ...raw };
+    const timelineSrc = p.timelineImage || "/img/mvp-timeline.png";
+    const timelineAlt = raw.timelineImageAlt || (timelineSrc === PROBLEM_D.timelineImage ? PROBLEM_D.timelineImageAlt : "");
     return (
       <section className={styles.problem}>
         <div className={styles.inner}>
@@ -114,7 +135,14 @@ export const MvpProblemBlock = {
           <p className={styles.problemSub}>{p.subhead}</p>
           <div className={styles.problemGrid}>
             <div>
-              <img className={styles.timelineImg} src={p.timelineImage || "/img/mvp-timeline.png"} alt="Typical first build — how six months disappear" loading="lazy" />
+              <CmsImage
+                className={styles.timelineImg}
+                src={timelineSrc}
+                alt={timelineAlt}
+                width={2355}
+                height={855}
+                sizes="(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 50vw, 664px"
+              />
               <p className={styles.problemQuote}>{p.quote}</p>
             </div>
             <div className={styles.points}>

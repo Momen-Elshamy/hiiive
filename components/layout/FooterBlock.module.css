@@ -68,7 +68,7 @@
   font-weight: 600;
   letter-spacing: 1.4px;
   text-transform: uppercase;
-  color: #9499a4;
+  color: var(--hv-muted);
 }
 
 .footerColLink {
@@ -98,7 +98,7 @@
 .footerCopy {
   margin: 0;
   font-size: 13px;
-  color: #9499a4;
+  color: var(--hv-muted);
 }
 
 .footerLegal {
@@ -108,7 +108,7 @@
 
 .footerLegalLink {
   font-size: 13px;
-  color: #9499a4;
+  color: var(--hv-muted);
   text-decoration: none;
   transition: color 0.15s ease;
 }

@@ -25,12 +25,10 @@ export default async function RootLayout({ children }) {
                 llms.txt spec defines for this (llmstxt.org). Kept as a raw link so
                 per-page `alternates` metadata can't overwrite it. */}
             <link rel="describedby" type="text/markdown" href="/llms.txt" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-            <link
-               href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@100..900&family=Inter:wght@100..900&family=Poppins:wght@500;600;700&display=swap"
-               rel="stylesheet"
-            />
+            {/* The fonts above the fold (the @font-face rules are in globals.css):
+                fetched with the HTML instead of after the CSS is parsed. */}
+            <link rel="preload" href="/fonts/inter-var-latin.c9407645.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+            <link rel="preload" href="/fonts/big-shoulders-var-latin.5faff1f8.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
          </head>
          <body className={styles.body} suppressHydrationWarning>
             <ThemeRootVars />
