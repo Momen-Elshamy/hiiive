@@ -1,6 +1,6 @@
 # HIIIVE
 
-> HIIIVE (hiiive.ai) is an agentic product company from Berlin, founded 2024. Two engines: the Studio puts forward-deployed engineers inside client companies and builds agentic systems on their real operations — AI software and internal tools, MVP builds, organic visibility (AI-native SEO), digital presence and funnels, AI transformation. The Lab turns what gets built there into HIIIVE's own products (Content OS in production, Spoky in validation, Komplyo in build). Every engagement leaves a product we keep building.
+> HIIIVE (hiiive.ai) is an agentic product company from Berlin, founded 2024. Two engines: the Studio puts forward-deployed engineers inside client companies and builds agentic systems on their real operations — AI software and internal tools, MVP builds, organic visibility (AI-native SEO), digital presence and funnels, AI transformation. The Lab turns what gets built there into HIIIVE's own products (Dvision, Spoky and Komplyo). Every engagement leaves a product we keep building.
 
 Key facts:
 - Agentic product company, Berlin, Germany. Founded 2024.
@@ -25,9 +25,11 @@ Key facts:
 
 ## Lab — products
 
-- Content OS — agentic content operations, in daily use. In production.
-- Spoky — validating with real users. In validation.
-- Komplyo — compliance workflows, automated. In build.
+- [AI Lab overview](https://hiiive.ai/lab): HIIIVE's own products, built from what the Studio ships for clients.
+- [Dvision](https://hiiive.ai/lab/dvision): Organic visibility for the AI era, run as a system — found in search and in AI answers.
+- [Spoky](https://hiiive.ai/lab/spoky): AI for PR — media monitoring and smarter pitches.
+- [Komplyo](https://hiiive.ai/lab/komplyo): EU AI Act compliance, from inventory to audit.
+- German versions: [AI Lab](https://hiiive.ai/de/lab), [Dvision](https://hiiive.ai/de/lab/dvision), [Spoky](https://hiiive.ai/de/lab/spoky), [Komplyo](https://hiiive.ai/de/lab/komplyo).
 
 ## Case studies
 

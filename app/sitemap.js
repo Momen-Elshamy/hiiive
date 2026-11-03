@@ -1,6 +1,7 @@
 import { siteConfig } from "@/site.config";
-import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { DEFAULT_LOCALE, LOCALES } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/seo";
+import { labProducts } from "@/components/pages/Lab/products";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,15 @@ export default async function sitemap() {
     });
   }
 
+  // The AI Lab is code routes, not CMS content, so the DB never lists it:
+  // the index and each product, in every language.
+  for (const locale of LOCALES) {
+    push(urlFor("lab", locale), { priority: 0.8 });
+    for (const product of labProducts(locale)) {
+      push(urlFor(`lab/${product.slug}`, locale), { priority: 0.7 });
+    }
+  }
+
   // Content items (case studies etc.) under their content type's urlPrefix.
   const contentTypes = await ContentType.find({}, { _id: 1, urlPrefix: 1 }).lean();
   const ctMap = Object.fromEntries(contentTypes.map((ct) => [ct._id.toString(), ct.urlPrefix]));
@@ -53,10 +63,6 @@ export default async function sitemap() {
     { published: true },
     { slug: 1, locale: 1, contentType: 1, updatedAt: 1, content: 1 },
   ).lean();
-
-  // llms.txt is a real crawlable resource, not a page — list it so AI-readiness
-  // checkers and crawlers find it without having to guess the path.
-  push(`${SITE_URL}/llms.txt`, { changeFrequency: "monthly", priority: 0.3 });
 
   for (const item of items) {
     if (isNoIndex(item.content)) continue;
