@@ -20,7 +20,9 @@
   color: #111111;
 }
 
-.siteMain {
+/* Scoped under .siteShell so it beats layout.module.css's .main whatever order
+   Next emits the two stylesheets in (an async root layout reorders them). */
+.siteShell .siteMain {
   width: 100%;
   max-width: none;
   margin: 0;
