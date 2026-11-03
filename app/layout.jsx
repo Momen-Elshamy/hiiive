@@ -1,6 +1,5 @@
 import { AntdProvider } from "./antd-provider";
 import { ThemeRootVars } from "@/theme/ThemeRootVars";
-import { resolveLocale } from "@/lib/i18n";
 
 import "./globals.css";
 import styles from "./layout.module.css";
@@ -10,14 +9,9 @@ export const metadata = {
    description: "AI-first company builder · Berlin native incubator",
 };
 
-export default async function RootLayout({ children }) {
-   // The root layout wraps every route, so the document language has to come
-   // from the request. Same resolver as the pages, so `lang` always matches the
-   // language the page renders in. /admin is pinned to en by the middleware.
-   const locale = await resolveLocale();
-
+export default function RootLayout({ children }) {
    return (
-      <html lang={locale} suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning>
          <head>
             {/* AI-readable summary of the site. `describedby` is the relation the
                 llms.txt spec defines for this (llmstxt.org). Kept as a raw link so
