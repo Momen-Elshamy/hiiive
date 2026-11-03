@@ -13,6 +13,7 @@
 import { CmsImage } from "@/components/ui/CmsImage";
 import dpStyles from "./digitalPresenceBlocks.module.css";
 import styles from "./caseStudyBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -25,11 +26,6 @@ function ArrowRight() {
 // padding) and stacks everything into one column below 900px (24px padding).
 const GRID_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) calc((100vw - 120px) / 3), 414px";
 const FEATURED_IMG_SIZES = "(max-width: 900px) calc(100vw - 48px), (max-width: 1360px) 51vw, 656px";
-
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-  ));
 
 /* ================================================================== */
 /* Case Study · Hero (detail page)                                     */

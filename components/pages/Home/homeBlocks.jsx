@@ -6,6 +6,7 @@ import styles from "./HomePageFallback.module.css";
 import { Reveal, Stagger, StaggerItem } from "./motion";
 import HeroVideo from "./HeroVideo";
 import Flywheel from "./Flywheel";
+import { lines } from "@/components/ui/lines";
 
 /* ---------- shared bits ---------------------------------------------------- */
 function ArrowRight() {
@@ -71,9 +72,7 @@ export const HomeHeroBlock = {
               <span className={styles.kickerLabel}>{kicker}</span>
             </div>
             <h1 className={styles.heroHeadline}>
-              {(headline || "").split("\n").map((line, i, arr) => (
-                <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-              ))}
+              {lines(headline)}
             </h1>
           </div>
           <div className={`${styles.heroRight} ${styles.heroReveal2}`}>
@@ -481,9 +480,7 @@ export const HomeCtaBlock = {
         <Reveal className={styles.ctaL}>
           <span className={styles.ctaKicker}>{kicker}</span>
           <h2 className={styles.ctaTitle}>
-            {(title || "").split("\n").map((line, i, arr) => (
-              <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-            ))}
+            {lines(title)}
           </h2>
           <p className={styles.ctaSub}>{subtitle}</p>
         </Reveal>

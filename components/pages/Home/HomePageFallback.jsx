@@ -283,7 +283,7 @@ export default function HomePageFallback() {
           <Reveal className={styles.ctaL}>
             <span className={styles.ctaKicker}>Next step</span>
             <h2 className={styles.ctaTitle}>
-              Let's look at the work<br />you shouldn't be doing.
+              Let's look at the work{" "}<br />you shouldn't be doing.
             </h2>
             <p className={styles.ctaSub}>
               A 30-minute call. We map one workflow, tell you if AI is the answer, and what it would
