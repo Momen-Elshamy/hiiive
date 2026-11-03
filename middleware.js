@@ -103,6 +103,12 @@ export async function middleware(request) {
     return response;
   }
 
+  // The admin UI is English whatever the visitor's locale cookie says, so pin
+  // the locale header (read by the root layout for <html lang>).
+  if (firstSeg === "admin") {
+    requestHeaders.set("x-premast-locale", DEFAULT_LOCALE);
+  }
+
   // No URL locale prefix — forward with the cleaned headers so the
   // page/layout falls back to cookie or default locale.
   return NextResponse.next({ request: { headers: requestHeaders } });
