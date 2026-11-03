@@ -4,6 +4,7 @@
 // DpPackagesBlock, DpFaqBlock and HomeCtaBlock for the shared sections.
 // Defaults are merged at render (Puck only applies defaultProps in the editor).
 import styles from "./mvpBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -19,11 +20,6 @@ function Check() {
     </svg>
   );
 }
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-  ));
-
 /* ================================================================== */
 /* 1. Hero + live-build showcase                                       */
 /* ================================================================== */

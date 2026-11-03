@@ -3,11 +3,7 @@
 // interactive "use client" <MvpEstimator/> (same pattern as HeaderBlock).
 import MvpEstimator, { ESTIMATOR_DEFAULTS } from "./MvpEstimator";
 import styles from "./estimator.module.css";
-
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-  ));
+import { lines } from "@/components/ui/lines";
 
 /* ================================================================== */
 /* Tool · Hero                                                         */

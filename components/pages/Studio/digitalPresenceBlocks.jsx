@@ -2,6 +2,7 @@
 // Content-editable (text, prices, list items via Puck); visual scaffolding is
 // fixed CSS. Uses the global design tokens (--hv-*, --font-*) from globals.css.
 import styles from "./digitalPresenceBlocks.module.css";
+import { lines } from "@/components/ui/lines";
 
 function ArrowRight() {
   return (
@@ -17,11 +18,6 @@ function Check() {
     </svg>
   );
 }
-const lines = (t) =>
-  (t || "").split("\n").map((line, i, arr) => (
-    <span key={i}>{line}{i < arr.length - 1 ? <br /> : null}</span>
-  ));
-
 /* ================================================================== */
 /* 1. Hero + live monitor                                              */
 /* ================================================================== */
